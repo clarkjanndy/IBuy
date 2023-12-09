@@ -1,0 +1,259 @@
+{% extends "frontend/app.html"%}
+
+{% load static %}
+
+{% block content %}
+<main>
+    <div class="container">
+
+        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                        <div class="card mb-3">
+                            <div class="card-body">
+
+                                <div class="pt-4 pb-2">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="{% static 'frontend/img/iBuy.png' %}" alt="" width="200">
+                                    </div>
+                                    <!-- <h5 class="card-title text-center pb-0 fs-4">iBuy</h5> -->
+                                    <p class="text-center small">Enter your personal details to create account</p>
+                                </div>
+
+                                <form class="row g-3" id="registerForm">
+
+                                    <div class="col-lg-6">
+                                        <label for="first_name" class="form-label">First Name: </label>                                       
+                                        <input type="text" name="first_name" class="form-control" id="first_name"
+                                            required placeholder="First Name">
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <label for="middle_name" class="form-label">Middle Name: </label>                                       
+                                        <input type="text" name="middle_name" class="form-control" id="middle_name"
+                                            required placeholder="Middle Name">                                            
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <label for="last_name" class="form-label">Last Name: </label>                                       
+                                        <input type="text" name="last_name" class="form-control" id="last_name"
+                                            required placeholder="Last Name">                                            
+                                    </div>
+
+
+                                    <div class="col-lg-6">
+                                        <label for="suffix" class="form-label">Suffix: </label>                                    
+                                        <input type="text" name="suffix" class="form-control" id="suffix"
+                                            required placeholder="Suffix">                                    
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <label for="birthday" class="form-label">Birthday: </label>                                       
+                                        <input type="date" name="birthday" class="form-control" id="birthday"
+                                            required>
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <label for="gender" class="form-label">Gender: </label>                                     
+                                        <select class="form-select" name="gender" id="gender">
+                                            <option selected disabled value="">---</option>
+                                            <option value="M">Male</option>
+                                            <option value="F">Female</option>
+                                        </select>                                           
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <label for="address" class="form-label">Address: </label>                                       
+                                        <input type="text" name="address" class="form-control" id="address"
+                                            required placeholder="Address">                                            
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <label for="student_id" class="form-label">Student ID: </label>                                       
+                                        <input type="text" name="student_id" class="form-control" id="student_id"
+                                            required placeholder="Student ID">                                            
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <label for="mobile_number" class="form-label">Mobile #: </label>                                       
+                                        <input type="text" name="mobile_number" class="form-control" id="mobile_number"
+                                            required placeholder="Mobile #">                                            
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <label for="username" class="form-label">Username: </label>
+                                        <input type="email" name="username" class="form-control" id="username"
+                                            required placeholder="Username">                                            
+                                    </div>                                  
+
+                                    <div class="col-lg-6">
+                                        <label for="email" class="form-label">Email: </label>                                        
+                                        <input type="email" name="email" class="form-control" id="email"
+                                            required placeholder="Email">                                        
+                                    </div>
+                                    
+                                    <div class="col-lg-6">
+                                        <label for="password" class="form-label">Password:</label>
+                                        <input type="password" name="password" class="form-control" id="password"
+                                            required placeholder="Password">
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <label for="password1" class="form-label">Confirm Password:</label>
+                                        <input type="password" name="password1" class="form-control" id="password1"
+                                            required placeholder="Confirm Password">
+                                    </div>
+
+                                    <!-- <div class="col-lg-12">
+                                        <input class="form-check-input" type="checkbox" id="agree">
+                                        <label class="form-check-label" for="gridCheck1">
+                                          I certify that I have read and accept the Terms and Conditions and Privacy Policy of iBuy 
+                                        </label>
+                                    </div> -->
+
+                                    <div class="col-12">
+                                        <button class="btn btn-primary w-100" type="submit">Register</button>
+                                    </div>
+                                    <div class="col-12">
+                                        <p class="small mb-0">Already have account? <a href="/login">Login</a></p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+</main><!-- End #main -->
+<script src=" {% static 'frontend/vendor/others/just-validate.min.js' %}"></script>
+<script>
+    const registerForm = document.getElementById('registerForm');
+    const registerFormValidator = new window.JustValidate('#registerForm', {
+        errorFieldCssClass: 'is-invalid',
+    });
+
+    registerFormValidator
+        .addField('#first_name', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .addField('#last_name', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .addField('#birthday', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .addField('#gender', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .addField('#address', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .addField('#student_id', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .addField('#mobile_number', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },{
+            rule: 'integer',
+            errorMessage: 'Invalid mobile number.',
+        },{
+            rule: 'maxLength',
+            value: 11,
+            errorMessage: 'Invalid mobile number.'
+        },{
+            rule: 'minLength',
+            value: 11,
+            errorMessage: 'Invalid mobile number.',
+        }])
+        .addField('#username', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },{
+            rule: 'minLength',
+            value: 8,
+        }])
+        .addField('#email', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },{
+            rule: 'email',
+            errorMessage: 'Invalid email.',
+        }])
+        .addField('#password', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },{
+            rule: 'password',
+            errorMessage: 'Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special case character.',
+        },])
+        .addField('#password1', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },{
+            validator: () => {
+                password = document.getElementById('password');
+                password1 = document.getElementById('password1');
+                return password.value === password1.value;
+            },
+            errorMessage: 'Password did not match.',
+        }])
+        // .addField('#agree', [{
+        //     rule: 'required',
+        //     errorMessage: 'Sorry, but you must agree to the terms and conditions to proceed. Please review and accept the terms before continuing.',
+        // },])
+        .onSuccess((event) => {
+            event.preventDefault();
+            // Make your API call here (e.g., using the fetch() method)
+            const url = 'api/v1/register'; 
+            const formData = new FormData(registerForm);
+            const payload =  {
+                headers: {
+                  "X-CSRFToken":  "{{csrf_token}}"
+                },
+                method: 'POST',
+                body: formData,
+            }
+
+            fetch(url, payload)
+                .then(response => response.json())
+                .then(response => {
+                    // process success here
+                    if (response.status === 'success'){
+                        window.location.href = '/admin/dashboard';
+                        
+                    // process failed here
+                    }else{
+                        // store error data
+                        errors = response.data
+                        // create a blank variable to store error
+                        field_errors = {}
+                        // add hashtags to keys
+                        Object.keys(errors).forEach(key => {
+                            const value = errors[key];
+                            field_errors[`#${key}`] = value
+                        });
+                        // show field errors to user
+                        registerFormValidator.showErrors(field_errors)
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                        confirmButtonColor: '#4154f1',
+                    })
+                });
+        });
+</script>
+{%endblock content%}

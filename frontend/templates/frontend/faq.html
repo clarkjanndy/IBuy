@@ -1,0 +1,54 @@
+{% extends "frontend/app.html"%}
+
+{% load static %}
+{% load extra_tags %}
+
+{% block content %}
+{% include "frontend/sidebar.html" %}
+<main id="main" class="main">
+
+  
+  <div class="pagetitle">
+    <h1>Frequently Asked Questions</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Frequently Asked Questions</a></li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+
+  <section class="section profile">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Below you will answers to the questions we get asked the most about what we do.</h5>
+        <div class="accordion accordion-flush" id="faq-group-2">
+
+          {% for faq in faq_list %}
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" data-bs-target="#faqsTwo-{{faq.id}}" type="button" data-bs-toggle="collapse">
+                {{faq.question}}
+              </button>
+            </h2>
+            <div id="faqsTwo-{{faq.id}}" class="accordion-collapse collapse" data-bs-parent="#faq-group-2">
+              <div class="accordion-body">
+                {{faq.answer}}
+              </div>
+            </div>
+          </div>
+          {% empty %}
+          <div class="alert alert-primary alert-dismissible fade show" role="alert" id="generalAlert">
+            <small>Nothing to show here.</small>
+          </div>
+          {% endfor %}
+
+        </div>
+
+      </div>
+    </div><!-- End F.A.Q Group 2 -->
+
+  </section>
+
+</main><!-- End #main -->
+{%endblock content%}

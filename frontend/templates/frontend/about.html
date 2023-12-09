@@ -1,0 +1,47 @@
+{% extends "frontend/app.html"%}
+
+{% load static %}
+{% load extra_tags %}
+
+{% block content %}
+{% include "frontend/sidebar.html" %}
+<main id="main" class="main">
+
+  
+  <div class="pagetitle">
+    <h1>About</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">About</a></li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+
+  <section class="section profile">
+    <div class="card basic">
+      <div class="card-body">
+        <h5 class="card-title">Below are informations about us.</h5>
+
+        {% for inf in systeminformation_list %}
+          <div>
+            <h6>{{inf.title}}</h6>
+            <p>{{inf.content}}</p>
+
+            <div class="d-flex justify-content-end">
+              <p><span>Last update: </span> <b>{{inf.modified_at|date:"M d, Y"}}</b></p>
+            </div>
+          </div>
+        {% empty %}
+          <div class="alert alert-primary alert-dismissible fade show" role="alert" id="generalAlert">
+            <small>Nothing to show here.</small>
+          </div>
+        {% endfor %}
+
+      </div>
+    </div>
+
+  </section>
+
+</main><!-- End #main -->
+{%endblock content%}

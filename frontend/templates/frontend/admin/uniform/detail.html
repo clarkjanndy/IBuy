@@ -1,0 +1,165 @@
+{% extends "frontend/app.html"%}
+
+{% load static %}
+
+{% block content %}
+{% include "frontend/sidebar.html" %}
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1>Manage Uniforms</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/admin/manage-uniforms">Manage Uniforms</a></li>
+        <li class="breadcrumb-item">{{uniform.name}}</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section profile">
+    <!-- Django messages -->
+    {% if messages %}
+      {% for message in messages %}
+        {% include 'frontend/alert.html' %}
+      {% endfor %}
+    {% endif %}
+
+    <div class="card">
+      <div class="card-body">
+        <div class="row  profile-overview pt-3">
+
+          <div class="col-lg-12 ">
+            <div class="d-flex justify-content-end">
+              <a class="btn btn-sm btn-primary" href="/admin/manage-uniforms/{{uniform.id}}/edit">Edit Information <i class="bi bi-chevron-right"></i></a>
+            </div>
+          </div>
+
+          <div class="col-lg-12">
+            <h5 class="card-title">Desciption</h5>
+            <p class="small fst-italic">{{uniform.description|default:"No bio"}}</p>
+          </div>
+
+          <div class="col-lg-6">
+            <h5 class="card-title">General Information</h5>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-4 label ">Category</div>
+              <div class="col-lg-9 col-md-8">{{uniform.category.name}}</div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-4 label ">Name</div>
+              <div class="col-lg-9 col-md-8">{{uniform.name}}</div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-4 label ">Extra Name</div>
+              <div class="col-lg-9 col-md-8">{{uniform.extra_name}}</div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-4 label">Barcode</div>
+              <div class="col-lg-9 col-md-8">{{uniform.barcode}}</div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-4 label">Price</div>
+              <div class="col-lg-9 col-md-8">&#8369; {{uniform.price}}</div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-4 label">Pre-order Allowed</div>
+              <div class="col-lg-9 col-md-8">
+                {% if uniform.allow_pre_order %}
+                  <span class="badge text-bg-success">Yes</span>
+                {% else %}
+                  <span class="badge text-bg-danger">No</span>
+                {% endif %}
+                </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-4 label">Available Sizes</div>
+              <div class="col-lg-9 col-md-8">
+                {% for size in uniform.available_sizes %}
+                  <span class="badge text-bg-primary rounded-pill">{{size}}</span>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-4 label">Status</div>
+              <div class="col-lg-9 col-md-8">
+                <span class="badge text-bg-{% if uniform.is_active %}success{% else %}secondary{% endif %}">{{uniform.status}}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <h5 class="card-title">Inventory Information</h5>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-4 label ">Quantity</div>
+              <div class="col-lg-9 col-md-8">{{uniform.inventory.quantity}}</div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-4 label ">Last Updated</div>
+              <div class="col-lg-9 col-md-8">{{uniform.inventory.modified_at|date:"E d, Y"}}</div>
+            </div>
+
+            <h5 class="card-title">Other Information</h5>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-4 label ">Created by</div>
+              <div class="col-lg-9 col-md-8">{{uniform.created_by.get_full_name}}</div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-4 label ">Modified by</div>
+              <div class="col-lg-9 col-md-8">{{uniform.modified_by.get_full_name}}</div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-4 label ">Created Date</div>
+              <div class="col-lg-9 col-md-8">{{uniform.created_at|date:"E d, Y"}}</div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-4 label ">Last Updated</div>
+              <div class="col-lg-9 col-md-8">{{uniform.modified_at|date:"E d, Y"}}</div>
+            </div>
+          </div>
+
+          <div class="col-lg-12">
+            <h5 class="card-title">Images</h5>
+
+            <div class="d-flex justify-content-end">
+              <a class="btn btn-sm btn-primary" href="/admin/manage-uniforms/{{uniform.id}}/images">View All Images <i class="bi bi-chevron-right"></i></a>
+            </div>
+
+            <div class="row mt-3">
+              {% for image in uniform.images.all %}
+              <div class="col-lg-2 col-md-3">
+                <div class="card">
+                    <img src="{{image.image.url}}" alt="uniform image" class="card-image-item square-image">
+                </div>
+              </div>
+              {% empty %}
+              <div class="col">
+                <div class="alert alert-primary alert-dismissible fade show" role="alert" id="generalAlert">
+                  <small>No image for this uniform yet. Try <a href="/admin/manage-uniforms/{{uniform.id}}/images">uploading</a> one.</small>
+                </div>
+              </div>
+              {% endfor %}
+            </div>       
+          
+          </div>
+        </div><!-- End Bordered Tabs -->
+
+      </div>
+    </div>
+  </section>
+
+</main><!-- End #main -->
+{%endblock content%}

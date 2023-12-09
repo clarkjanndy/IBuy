@@ -1,0 +1,64 @@
+from django.db import models
+from . extras import TimeStampedModel
+
+from . user import User
+__all__ = ['Category','Uniform', 'UniformImage', 'Inventory']
+
+class Category(TimeStampedModel):
+    name = models.CharField(max_length=255)
+
+    def __str__(self) -> str:
+        return self.name
+    
+    class Meta:
+        verbose_name_plural = 'categories'
+    
+class Uniform(TimeStampedModel):
+
+    STATUSES = (
+        ('active', 'Active'),
+        ('inactive', 'Inactive'),
+        ('draft', 'Draft')
+    )
+
+    name = models.CharField(max_length=255)
+    extra_name = models.CharField(max_length=255)
+    barcode = models.CharField(max_length=255, unique=True)
+    description = models.TextField(blank=True, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    category = models.ForeignKey(Category, related_name='uniforms', on_delete=models.CASCADE)
+    available_sizes = models.JSONField(default=list)
+    allow_pre_order = models.BooleanField(default=False)
+    status = models.CharField(max_length=10, choices=STATUSES, default='active')
+    created_by = models.ForeignKey(User, related_name='created_uniforms', on_delete=models.CASCADE)
+    modified_by = models.ForeignKey(User, related_name='modified_uniforms', on_delete=models.CASCADE)
+
+    @property
+    def is_active(self):
+        return True if self.status == 'active' else False
+    
+    @property
+    def main_image(self):
+        instance = UniformImage.objects.filter(uniform = self).order_by('-created_at').first()
+        return instance.image.url if instance else None
+        
+    def __str__(self) -> str:
+        return self.name
+    
+    
+class UniformImage(TimeStampedModel):
+    uniform = models.ForeignKey(Uniform, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='uniform-images/')
+
+    def __str__(self) -> str:
+        return self.image.url
+
+class Inventory(TimeStampedModel):
+    uniform = models.OneToOneField(Uniform, on_delete=models.CASCADE, related_name='inventory', primary_key=True)
+    quantity = models.PositiveIntegerField()
+
+    def __str__(self) -> str:
+        return self.uniform.name
+
+    class Meta:
+        verbose_name_plural = 'inventories'

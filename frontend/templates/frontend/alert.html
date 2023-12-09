@@ -1,0 +1,12 @@
+{% load extra_tags %}
+<div class="alert alert-{{message.tags|default:"info"|bootstrapy_alert}} alert-dismissible fade show" role="alert" id="generalAlert">
+    {{message}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<script>
+    setTimeout(() => {
+        const generalAlert = document.getElementById('generalAlert');
+        generalAlert.classList.add('d-none');
+    }, 5000);
+</script>
