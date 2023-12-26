@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.views.generic import ListView, TemplateView, DetailView
 
-from backend.models import Uniform, Category, UniformImage
+from backend.models import Uniform, Category
 
 from .custom_mixins import AdminRequiredMixin
 
@@ -9,7 +9,7 @@ __all__ = ['UniformList', 'UniformCreate', 'UniformDetail', 'UniformImages', 'Un
 
 class UniformList(AdminRequiredMixin, ListView):
     template_name = 'frontend/admin/uniform/list.html'
-    queryset = Uniform.objects.all()
+    queryset = Uniform.objects.select_related('category').all()
     paginate_by = 10
     ordering = ('-modified_at', )
 
