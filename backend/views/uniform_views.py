@@ -59,7 +59,7 @@ class CategoryById(RetrieveUpdateAPIView):
 
 class UniformListCreate(ListCreateAPIView):
     permission_classes = (IsAdminOrReadOnly, )
-    queryset = Uniform.objects.all()
+    queryset = Uniform.objects.select_related('category', 'inventory').all()
     serializer_class = UniformSerializer
 
     def post(self, request, *args, **kwargs):
@@ -122,8 +122,7 @@ class UniformImageListCreate(ListCreateAPIView):
         })
     
     def get(self, request, *args, **kwargs):
-        uniform = get_object_or_404(Uniform, pk = kwargs['pk'])
-        query = self.get_queryset().filter(uniform = uniform)
+        query = self.get_queryset().filter(uniform_id = kwargs['pk'])
         serializer = self.serializer_class(query, many = True)
         return Response({
             "status": "success", 
