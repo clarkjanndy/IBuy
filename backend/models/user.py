@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
 __all__ = ['User']
 
@@ -44,4 +45,8 @@ class User(AbstractUser):
     @property
     def get_status(self):
         return 'active' if self.is_active else 'inactive'
+    
+    @property
+    def default_photo_url(self):        
+        return f"{settings.STATIC_URL}frontend/img/default-profile.webp"
     
