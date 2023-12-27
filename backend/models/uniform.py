@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from . extras import TimeStampedModel
 
@@ -40,7 +41,13 @@ class Uniform(TimeStampedModel):
     @property
     def main_image(self):
         instance = UniformImage.objects.filter(uniform = self).order_by('-created_at').first()
-        return instance.image.url if instance else None
+        if instance:
+            return instance.image.url if hasattr(instance.image, 'url') else self.default_photo_url        
+        return self.default_photo_url
+    
+    @property
+    def default_photo_url(self):        
+        return f"{settings.STATIC_URL}frontend/img/no-image.png"
         
     def __str__(self) -> str:
         return self.name

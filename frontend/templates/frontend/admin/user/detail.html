@@ -147,7 +147,7 @@
                       
                       <div class="pt-2">
                         <input type="file" id="photo" name="photo" accept="image/*" hidden>
-                        <label for="photo" class="btn btn-primary btn-sm"><i class="bi bi-upload"></i></label>
+                        <label for="photo" class="btn btn-primary btn-sm text-light"><i class="bi bi-upload"></i></label>
                       </div>
                    
                     </div>
@@ -181,14 +181,13 @@
                     </div>
                   </div>
 
-                  {% if not person.is_superuser %}
-                  <div class="row mb-3">
+                  <div class="row mb-3" id="studentIdContainer"> 
                     <label for="student_id" class="col-md-4 col-lg-3 col-form-label">Student Id</label>
                     <div class="col-md-8 col-lg-9">
-                      <input name="student_id" type="text" class="form-control" id="student_id" value="{{person.student_id}}">
+                      <input name="student_id" type="text" class="form-control" id="student_id" 
+                      value="{{person.student_id|default:""}}">
                     </div>
                   </div>
-                  {% endif %}
 
                   <div class="row mb-3">
                     <label for="birthday" class="col-md-4 col-lg-3 col-form-label">Birthday</label>
@@ -308,6 +307,34 @@
     const updateUserFormValidator = new window.JustValidate('#updateUserForm', {
         errorFieldCssClass: 'is-invalid',
     });
+
+    //track changes on the role dropdown
+    const roleSelect = document.getElementById('role');
+    const studentIdContainer = document.getElementById('studentIdContainer');
+
+    const handleShowStudId = (selectedRole) => {
+      // hide if selected role is admin
+      if (selectedRole == 'admin'){
+        studentIdContainer.classList.add('d-none')
+      
+      // show if otherwise
+      }else{
+        studentIdContainer.classList.remove('d-none')
+         
+        //add rules to validator
+        updateUserFormValidator
+          .addField('#student_id', [{
+              rule: 'required',
+              errorMessage: 'This field is required',
+          },])
+      }
+    }
+    handleShowStudId(roleSelect.value)
+    
+    roleSelect.addEventListener('change', (evt) => {
+      const selectedRole = roleSelect.value
+      handleShowStudId(selectedRole)
+    })
 
     updateUserFormValidator
         .addField('#first_name', [{

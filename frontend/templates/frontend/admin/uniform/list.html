@@ -86,7 +86,8 @@
                   <td>
                     {% if uniform.main_image %}
                     <div class="d-flex justify-content-center align-items-center square-container-100 ">
-                      <img class="square-image" src="{{uniform.main_image}}" alt="uniform image">
+                      <img class="square-image" src="{{uniform.main_image}}" alt="uniform image"
+                      onerror="this.src='{{uniform.default_photo_url}}';">
                     </div>
                     {% else %}
                     <span class="badge text-bg-secondary">Preview unavailable</span>
