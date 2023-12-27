@@ -224,8 +224,21 @@
                   console.log(response)
                   // process success here
                   if (response.status === 'success'){
-                    //redirect to user profile
                     location.reload();
+                  
+                  // process fail here
+                  }else{
+                        const errors = response.data
+                        // create a blank variable to store error
+                        const field_errors = {}
+                        // add hashtags to keys
+                        Object.keys(errors).forEach(key => {
+                            const value = errors[key];
+                            field_errors[`#${key}`] = value
+                        });
+
+                        // show field errors to user
+                        createCategoryFormValidator.showErrors(field_errors)
                   }
               })
               .catch(error => {

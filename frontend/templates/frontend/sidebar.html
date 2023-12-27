@@ -220,6 +220,13 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
+        <a class="nav-link {% if not current_page == 'uniforms'%}collapsed{% endif %}" href="/uniforms">
+          <i class="bi bi-globe"></i>
+          <span>Browse Uniforms</span>
+        </a>
+      </li><!-- Browse Uniforms -->
+
+      <li class="nav-item">
         <a class="nav-link {% if not current_page == 'admin-dashboard'%}collapsed{% endif %}" href="/admin/dashboard">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>

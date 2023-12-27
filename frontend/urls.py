@@ -5,7 +5,10 @@ urlpatterns = [
     # Auth
     path('login', views.LoginView.as_view()),
     path('register', views.RegistrationView.as_view()),
-
+    
+    # Uniforms
+    path('uniforms', views.UniformBrowse.as_view()),
+    
     # Profile
     path('profile', views.UserMyProfile.as_view()),
 

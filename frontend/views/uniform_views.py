@@ -3,10 +3,46 @@ from django.views.generic import ListView, TemplateView, DetailView
 
 from backend.models import Uniform, Category
 
-from .custom_mixins import AdminRequiredMixin
+from . custom_mixins import AdminRequiredMixin, LoginRequiredMixin
 
-__all__ = ['UniformList', 'UniformCreate', 'UniformDetail', 'UniformImages', 'UniformEdit'] 
+__all__ = ['UniformBrowse', 'UniformList', 'UniformCreate', 'UniformDetail', 'UniformImages', 'UniformEdit'] 
 
+# normal user views here
+class UniformBrowse(LoginRequiredMixin, ListView):
+    template_name = 'frontend/uniform/list.html'
+    queryset = Uniform.objects.select_related('category').filter(status='active')
+    paginate_by = 12
+    ordering = ('-modified_at', )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        context.update({'current_page': 'uniforms'})
+        context.update({'categories': Category.objects.all()})
+        return context
+
+    def get_queryset(self):
+        # Get current request
+        request = self.request
+        # Get query params
+        params = request.GET
+        queryset = super().get_queryset()
+        
+        if 'category' in params:
+            queryset = queryset.filter(
+                Q(category__name__icontains = params['category']) 
+            )
+        
+        # filter results here
+        if 'q' in params:
+            queryset = queryset.filter(
+                Q(name__icontains = params['q']) |
+                Q(extra_name__icontains = params['q']) 
+            )
+        
+        return queryset
+    
+# admin management views here
 class UniformList(AdminRequiredMixin, ListView):
     template_name = 'frontend/admin/uniform/list.html'
     queryset = Uniform.objects.select_related('category').all()

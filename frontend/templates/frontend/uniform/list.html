@@ -1,0 +1,220 @@
+{% extends "frontend/app.html"%}
+
+{% load static %}
+
+{% block content %}
+{% include "frontend/sidebar.html" %}
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1>Browse Uniforms</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">Browse Uniforms</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section">
+
+    <div class="row">
+      <div class="col-lg-12">
+
+        <div class="card">
+          <div class="card-body">
+
+            <!-- Searching -->
+            <form class="d-flex justify-content-end mb-4 mt-3">
+              <div class="form-group">
+                <input class="form-control" type="search" name="q" placeholder="Search" value="{{request.GET.q}}">
+              </div>
+
+              <input class="form-control" type="hidden" name="category" placeholder="Search" value="{{request.GET.category}}">
+            </form><!-- End Searching -->
+
+            <div class="row mb-3">
+              <div class="col-lg-2 d-none d-md-block">
+                <b><i class="bi bi-filter"></i> Categories</b>
+                <hr>
+                {% for cat in categories %}
+                  <div class="row">
+                    <div class="col-2">
+                      {% if cat.name == request.GET.category %}
+                        <i class="bi bi-chevron-right text-primary"></i>
+                      {% endif %}
+                    </div>
+
+                    <div class="col">
+                     
+                      <a href="uniforms?category={{cat.name}}&q={{request.GET.q}}"
+                      class="text-primary">
+                      {{cat.name}}</a>
+                    </div> 
+                  </div>
+                {% endfor %}
+              </div>
+
+              <div class="col">
+                <div class="row">
+                  {% for uniform in uniform_list %}
+                  <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card shadow">
+                      <div class="d-flex justify-content-center align-items-center square-container-w-auto ">
+                        <img src="{{uniform.main_image}}" class="square-image"
+                          onerror="this.src='{{uniform.default_photo_url}}';">
+                      </div>
+
+                      <div class="card-body">
+                        <p class="card-title">{{uniform.name}}<br><small>{{uniform.extra_name|default:" "}}</small> </p>
+                        <b>{{uniform.category.name}}</b>
+                        <div>
+                          <small class="text-muted">&#x20B1; {{uniform.price}} | {{uniform.inventory.quantity|default:"0"}} pcs.</small>
+                        </div>
+                        
+
+                        <div class="d-flex justify-content-end">
+                          <div>
+                            <a href="#" class="btn btn-primary">View  <i class="bi bi-chevron-double-right"></i></a>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                  {% empty %}
+                  <div class="col-12">
+                    <div class="alert alert-primary fade show" role="alert">
+                      No Uniforms found.
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Basic Pagination -->
+            <div class="d-flex justify-content-between">
+              <span class="current">
+                Page {{ page_obj.number }} of {{ paginator.num_pages }}
+              </span>
+
+              <nav aria-label="">
+                <ul class="pagination">
+                  <li class="page-item">
+                    <a class="page-link {% if not page_obj.has_previous %} disabled {% endif %}" href="?page={% if page_obj.has_previous %}{{ page_obj.previous_page_number }}{% endif %}&category={{request.GET.category}}&q={{request.GET.q}}
+                      ">
+                      Previous
+                    </a>
+                  </li>
+
+                  {% for i in paginator.get_elided_page_range %}
+                  {% if page_obj.number == i %}
+                  <li class="active page-item">
+                    <span class="page-link">{{ i }}</span>
+                  </li>
+                  {% else %}
+                  {% if i == paginator.ELLIPSIS %}
+                  <li class="page-item {% if not page_obj.number in paginator.get_elided_page_range %}active{%endif %}">
+                    <span class="page-link">{{ i }}</span>
+                  </li>
+                  {% else %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ i }}&category={{request.GET.category}}&q={{request.GET.q}}">{{ i }}</a>
+                  </li>
+                  {% endif %}
+                  {% endif %}
+                  {% endfor %}
+
+                  <li class="page-item">
+                    <a class="page-link {% if not page_obj.has_next %} disabled {% endif %}" href="?page={% if page_obj.has_next %}{{ page_obj.next_page_number }}&category={{request.GET.category}}{% endif %}&q={{request.GET.q}}
+                      ">Next
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div><!-- End Basic Pagination -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Create Category Modal -->
+  <div class="modal fade" id="createCategoryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="createCategoryForm">
+          <div class="modal-body">
+
+            <div class="col-lg-12">
+              <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div><!-- End Create Category Modal-->
+
+</main><!-- End #main -->
+<script src=" {% static 'frontend/vendor/others/just-validate.min.js' %}"></script>
+<script>
+  //form validator for create Category
+  const createCategoryForm = document.getElementById('createCategoryForm');
+  const createCategoryFormValidator = new window.JustValidate('#createCategoryForm', {
+    errorFieldCssClass: 'is-invalid',
+  });
+
+  createCategoryFormValidator
+    .addField('#name', [{
+      rule: 'required',
+      errorMessage: 'This field is required',
+    },])
+    .onSuccess((event) => {
+      event.preventDefault();
+      form = event.target
+      // Make your API call here (e.g., using the fetch() method)
+      const url = '/api/v1/categories';
+      const formData = new FormData(form);
+      const payload = {
+        headers: {
+          "X-CSRFToken": "{{csrf_token}}"
+        },
+        method: 'POST',
+        body: formData
+      }
+      fetch(url, payload)
+        .then(response => response.json())
+        .then(response => {
+          console.log(response)
+          // process success here
+          if (response.status === 'success') {
+            //redirect to user profile
+            location.reload();
+          }
+        })
+        .catch(error => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong!',
+            confirmButtonColor: '#4154f1',
+          })
+        });
+    })
+</script>
+
+{%endblock content%}

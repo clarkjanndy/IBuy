@@ -1269,6 +1269,12 @@ h6 {
   overflow: hidden; /* Hide the overflowing content */
 }
 
+.square-container-w-auto {
+  width: auto; /* Set the width of the container */
+  height: 200px; /* Set the height of the container */
+  overflow: hidden; /* Hide the overflowing content */
+}
+
 .square-image {
   width: 100%; /* Make the image take 100% of the container's width */
   height: 100%; /* Make the image take 100% of the container's height */
