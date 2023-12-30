@@ -139,6 +139,7 @@
   const quantityErrorText = document.getElementById('quantityErrorText');
 
   let selectedSize = null
+  let currentQuantity = parseInt(quantityInput.value, 10);
   let availableQuantity = parseInt(quantityText.innerText, 10);
 
   const handleSelectSize = (clickedButton) => {
@@ -158,10 +159,10 @@
   }
 
   const incrementQuantity = () => {
-    let currentQuantity = parseInt(quantityInput.value, 10);
     // Ensure the quantity does not exceed the available quantity
     if (currentQuantity < availableQuantity) {
-      quantityInput.value = currentQuantity + 1;
+      currentQuantity++
+      quantityInput.value = currentQuantity;
     } else {
       quantityErrorText.classList.remove('d-none')
       setTimeout(() => {
@@ -171,10 +172,10 @@
   }
 
   const decrementQuantity = () => {
-    let currentQuantity = parseInt(quantityInput.value, 10);
     // Ensure the quantity does not go below 1
     if (currentQuantity > 1) {
-      quantityInput.value = currentQuantity - 1;
+      currentQuantity--
+      quantityInput.value = currentQuantity;
     }
   }
 
