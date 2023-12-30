@@ -9,7 +9,8 @@ from . models import (
     Category, 
     Uniform, 
     UniformImage, 
-    Inventory
+    Inventory,
+    Cart
 )
 
 # Register your admin manager here
@@ -69,7 +70,10 @@ class InventoryAdmin(admin.ModelAdmin):
     
     def price(self, object):
         return object.uniform.price
-
+    
+class CartAdmin(admin.ModelAdmin):
+    list_display = ('uniform', 'user', 'quantity', 'created_at', 'modified_at',)
+    search_fields = ('uniform__name', '')
 
 # Register your models here.
 admin.site.register(User, UserAdmin)
@@ -77,9 +81,10 @@ admin.site.register(FAQ, FAQAdmin)
 admin.site.register(SystemInformation, SystemInformationAdmin)
 
 admin.site.register(Category, CategoryAdmin)
-
 admin.site.register(Uniform, UniformAdmin)
 admin.site.register(UniformImage, UniformImageAdmin)
 admin.site.register(Inventory, InventoryAdmin)
+
+admin.site.register(Cart, CartAdmin)
 
 

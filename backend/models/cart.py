@@ -16,6 +16,10 @@ class Cart(TimeStampedModel):
 
     def __str__(self) -> str:
         return self.uniform.name
+    
+    @property
+    def total(self):
+        return self.uniform.price * self.quantity
 
     
    
