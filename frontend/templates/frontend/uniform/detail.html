@@ -87,6 +87,7 @@
                           <button class="btn btn-outline-primary btn-sm"
                             onclick="handleSelectSize(this)">{{size}}</button>
                           {% endfor %}
+                          <div class="text-danger d-none" id="sizeErrorText">Select a size.</div>
                         </div>
                       </div>
 
@@ -116,8 +117,13 @@
                   </div>
                 </section>
 
-                <button class="btn btn-primary"><i class="bi bi-cart-plus"></i> Add to Cart</button>
-                <button class="btn btn-primary">Buy Now</button>
+                <button class="btn btn-primary" onclick="handleAddToCart()"
+                {% if uniform.inventory.quantity < 1 %}disabled{% endif %}
+                ><i class="bi bi-cart-plus"></i> Add to
+                  Cart</button>
+                <button class="btn btn-primary"
+                {% if uniform.inventory.quantity < 1 %}disabled{% endif %}
+                >Buy Now</button>
 
               </div>
             </div>
@@ -133,14 +139,23 @@
       </div>
   </section>
 </main><!-- End #main -->
+<script src=" {% static 'frontend/vendor/others/just-validate.min.js' %}"></script>
 <script>
   const quantityText = document.getElementById("quantityText")
   const quantityInput = document.getElementById('quantityInput');
   const quantityErrorText = document.getElementById('quantityErrorText');
+  const sizeErrorText = document.getElementById('sizeErrorText');
 
   let selectedSize = null
   let currentQuantity = parseInt(quantityInput.value, 10);
   let availableQuantity = parseInt(quantityText.innerText, 10);
+
+  const showError = (element) => {
+    element.classList.remove('d-none')
+    setTimeout(() => {
+      element.classList.add('d-none');
+    }, 3000);
+  }
 
   const handleSelectSize = (clickedButton) => {
     // Get all buttons within the container
@@ -164,10 +179,7 @@
       currentQuantity++
       quantityInput.value = currentQuantity;
     } else {
-      quantityErrorText.classList.remove('d-none')
-      setTimeout(() => {
-        quantityErrorText.classList.add('d-none');
-      }, 3000);
+      showError(quantityErrorText)
     }
   }
 
@@ -177,6 +189,57 @@
       currentQuantity--
       quantityInput.value = currentQuantity;
     }
+  }
+
+  const handleAddToCart = () => {
+    const url = '/api/v1/carts';
+    const payload = {
+      headers: {
+        "X-CSRFToken": "{{csrf_token}}",
+        "Content-Type": "application/json"
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        "quantity": currentQuantity,
+        "variant": selectedSize,
+        "uniform": "{{uniform.id}}"
+      })
+    }
+
+    fetch(url, payload)
+      .then(response => response.json())
+      .then(response => {
+        // process success here
+        if (response.status === 'success') {
+          const data = response.data
+          Swal.fire({
+            title: "Success!",
+            text: "Item has been added to your cart.",
+            icon: "success"
+          }).then((result) => {
+            window.location.reload()
+          });
+        } else {
+          const errors = response.data
+
+          if (errors.hasOwnProperty('variant')) {
+            showError(sizeErrorText)
+          }
+
+          if (errors.hasOwnProperty('quantity')) {
+            showError(quantityErrorText)
+          }
+        }
+      })
+      .catch(error => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+          confirmButtonColor: '#4154f1',
+        })
+      });
+
   }
 
 
