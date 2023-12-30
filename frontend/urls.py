@@ -12,6 +12,9 @@ urlpatterns = [
     
     # Profile
     path('profile', views.UserMyProfile.as_view()),
+    
+    # Cart
+    path('my-cart', views.MyCart.as_view()),
 
     # FAQ
     path('faq', views.FAQ.as_view()),
