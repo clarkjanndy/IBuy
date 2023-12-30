@@ -7,9 +7,14 @@ from backend.models import Cart, Inventory
 __all__ = ['CartSerializer']
 
 class CartSerializer(CustomModelSerializer):
+    total_price = serializers.SerializerMethodField()
+
     class Meta:
         model = Cart
         exclude = ('user', )
+        
+    def get_total_price(self, instance):
+        return instance.total_price
         
     def validate(self, attrs):
         attrs = super().validate(attrs)

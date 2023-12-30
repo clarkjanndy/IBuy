@@ -18,7 +18,7 @@ class Cart(TimeStampedModel):
         return self.uniform.name
     
     @property
-    def total(self):
+    def total_price(self):
         return self.uniform.price * self.quantity
 
     
