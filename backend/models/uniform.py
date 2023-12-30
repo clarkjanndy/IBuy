@@ -33,6 +33,9 @@ class Uniform(TimeStampedModel):
     status = models.CharField(max_length=10, choices=STATUSES, default='active')
     created_by = models.ForeignKey(User, related_name='created_uniforms', on_delete=models.CASCADE)
     modified_by = models.ForeignKey(User, related_name='modified_uniforms', on_delete=models.CASCADE)
+    
+    def __str__(self) -> str:
+        return self.name
 
     @property
     def is_active(self):
@@ -52,9 +55,6 @@ class Uniform(TimeStampedModel):
     @property
     def default_photo_url(self):        
         return f"{settings.STATIC_URL}frontend/img/no-image.png"
-        
-    def __str__(self) -> str:
-        return self.name
     
     
 class UniformImage(TimeStampedModel):

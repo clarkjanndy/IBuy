@@ -10,7 +10,10 @@ urlpatterns = [
 
     # Profile
     path('profile', views.UserMyProfile.as_view()),
-
+    
+    # Cart
+    path('carts', views.CartListCreate.as_view()),
+    
     # Users
     path('users', views.UserListCreate.as_view()),
     path('users/<int:pk>', views.UserById.as_view()),
