@@ -8,6 +8,7 @@ urlpatterns = [
     
     # Uniforms
     path('uniforms', views.UniformBrowse.as_view()),
+    path('uniforms/<int:pk>', views.UniformView.as_view()),
     
     # Profile
     path('profile', views.UserMyProfile.as_view()),

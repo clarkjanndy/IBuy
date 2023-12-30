@@ -39,8 +39,12 @@ class Uniform(TimeStampedModel):
         return True if self.status == 'active' else False
     
     @property
+    def uniform_images(self):
+        return UniformImage.objects.filter(uniform=self).order_by('-created_at')
+    
+    @property
     def main_image(self):
-        instance = UniformImage.objects.filter(uniform = self).order_by('-created_at').first()
+        instance = UniformImage.objects.filter(uniform=self).order_by('-created_at').first()
         if instance:
             return instance.image.url if hasattr(instance.image, 'url') else self.default_photo_url        
         return self.default_photo_url

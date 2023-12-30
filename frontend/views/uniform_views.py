@@ -5,7 +5,15 @@ from backend.models import Uniform, Category
 
 from . custom_mixins import AdminRequiredMixin, LoginRequiredMixin
 
-__all__ = ['UniformBrowse', 'UniformList', 'UniformCreate', 'UniformDetail', 'UniformImages', 'UniformEdit'] 
+__all__ = [
+    'UniformBrowse', 
+    'UniformView', 
+    'UniformList', 
+    'UniformCreate', 
+    'UniformDetail', 
+    'UniformImages', 
+    'UniformEdit'
+] 
 
 # normal user views here
 class UniformBrowse(LoginRequiredMixin, ListView):
@@ -41,6 +49,16 @@ class UniformBrowse(LoginRequiredMixin, ListView):
             )
         
         return queryset
+    
+class UniformView(LoginRequiredMixin, DetailView):
+    model = Uniform
+    template_name = 'frontend/uniform/detail.html'
+    context_object_name = 'uniform'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({'current_page': 'uniforms'})
+        return context
     
 # admin management views here
 class UniformList(AdminRequiredMixin, ListView):

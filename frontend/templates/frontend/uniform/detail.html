@@ -1,0 +1,114 @@
+{% extends "frontend/app.html"%}
+
+{% load static %}
+
+{% block content %}
+{% include "frontend/sidebar.html" %}
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1>Browse Uniforms</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/uniforms">Browse Uniforms</a></li>
+        <li class="breadcrumb-item">{{uniform.name}}</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section">
+
+    <div class="row">
+      <div class="col-lg-12">
+
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-6 pt-3">
+
+                <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+                  <div class="carousel-inner">
+                    {% for image in uniform.uniform_images %}
+                    <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
+                      <img src="{{image.image.url}}" class="d-block w-100" alt="Slide 1">
+                    </div>
+                    {% empty %}
+                    <div class="carousel-item active">
+                      <img src="{{uniform.main_image}}" class="d-block w-100" alt="Slide 1">
+                    </div>
+                    {% endfor %}
+                  </div>
+                  <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <h4 class="card-title">
+                  {{uniform.name}}
+
+                </h4>
+                <div class="text-primary">
+                  {{uniform.inventory.quantity|default:"0"}} pcs. available | 0 sold
+                </div>
+
+                <h3 class="card-title" style="font-size: 50px;">&#x20B1; {{uniform.price}}</h3>
+
+                <section class="section profile">
+
+                  <div class="row  profile-overview">
+                    <div class="col-lg-12 ">
+
+                      <div class="row">
+                        <div class="col-lg-3 col-md-4 label ">Category</div>
+                        <div class="col-lg-9 col-md-8">{{uniform.category.name}}</div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-lg-3 col-md-4 label ">Extra Name</div>
+                        <div class="col-lg-9 col-md-8">{{uniform.extra_name}}</div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-lg-3 col-md-4 label">Barcode</div>
+                        <div class="col-lg-9 col-md-8">{{uniform.barcode}}</div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-lg-3 col-md-4 label">Size</div>
+                        <div class="col-lg-9 col-md-8">
+                          {% for size in uniform.available_sizes %}
+                          <button class="btn btn-outline-primary btn-sm">{{size}}</button>
+                          {% endfor %}
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </section>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Desciption</h5>
+
+            <p class="fst-italic">{{uniform.description|default:"Nothing to show here."}}</p>
+          </div>
+
+        </div>
+      </div>
+  </section>
+</main><!-- End #main -->
+{%endblock content%}

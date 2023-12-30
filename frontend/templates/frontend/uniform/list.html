@@ -65,7 +65,7 @@
                       </div>
 
                       <div class="card-body">
-                        <p class="card-title">{{uniform.name}}<br><small>{{uniform.extra_name|default:" "}}</small> </p>
+                        <p class="card-title text-truncate">{{uniform.name}}<br><small>{{uniform.extra_name|default:" "}}</small> </p>
                         <b>{{uniform.category.name}}</b>
                         <div>
                           <small class="text-muted">&#x20B1; {{uniform.price}} | {{uniform.inventory.quantity|default:"0"}} pcs.</small>
@@ -74,7 +74,7 @@
 
                         <div class="d-flex justify-content-end">
                           <div>
-                            <a href="#" class="btn btn-primary">View  <i class="bi bi-chevron-double-right"></i></a>
+                            <a href="/uniforms/{{uniform.id}}" class="btn btn-primary">View  <i class="bi bi-chevron-double-right"></i></a>
                           </div>
                         </div>
 
