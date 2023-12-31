@@ -49,6 +49,7 @@
               <th scope="col"></th>
               <th scope="col">Image</th>
               <th scope="col">Uniform Name</th>
+              <th scope="col">Unit Price</th>
               <th scope="col">Quantity</th>
               <th scope="col">Total Price</th>
               <th scope="col">Actions</th>
@@ -71,7 +72,8 @@
                 <span class="badge text-bg-secondary">Preview unavailable</span>
                 {% endif %}
               </td>
-              <td class="w-25">{{cart_item.uniform.name}}</td>
+              <td class="w-25">{{cart_item.uniform.name}} ({{cart_item.variant}})</td>
+              <td>&#x20B1; {{cart_item.uniform.price}}</td>
               <td>{{cart_item.quantity}} x</td>
               <td>&#x20B1; {{cart_item.total_price}}</td>
               <!-- Action Buttons -->
