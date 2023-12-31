@@ -1,4 +1,5 @@
 from django.db.models import F
+from django.db.models import Sum
 from rest_framework import serializers
 
 from . extras import CustomModelSerializer
@@ -17,6 +18,7 @@ class CartSerializer(CustomModelSerializer):
         return instance.total_price
         
     def validate(self, attrs):
+        request = self.context.get('request')
         attrs = super().validate(attrs)
         uniform = attrs['uniform']
         
@@ -26,6 +28,10 @@ class CartSerializer(CustomModelSerializer):
         if uniform.inventory.quantity < attrs['quantity']:
             raise serializers.ValidationError({"quantity": "Maximum quantity reached."})
         
+        on_cart_quantity = Cart.objects.filter(user=request.user, status='on-cart').aggregate(Sum('quantity'))['quantity__sum']
+        if on_cart_quantity and (on_cart_quantity + attrs['quantity']) > 10:
+            raise serializers.ValidationError({"quantity": "Adding to cart is only limted to 10 items only."})
+    
         return attrs
         
     def create(self, validated_data):

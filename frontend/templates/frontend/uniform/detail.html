@@ -150,8 +150,9 @@
   let currentQuantity = parseInt(quantityInput.value, 10);
   let availableQuantity = parseInt(quantityText.innerText, 10);
 
-  const showError = (element) => {
+  const showError = (element, error_msg) => {
     element.classList.remove('d-none')
+    element.innerText = error_msg
     setTimeout(() => {
       element.classList.add('d-none');
     }, 3000);
@@ -200,7 +201,7 @@
       },
       method: 'POST',
       body: JSON.stringify({
-        "quantity": currentQuantity,
+        "quantity": quantityInput.value,
         "variant": selectedSize,
         "uniform": "{{uniform.id}}"
       })
@@ -223,11 +224,11 @@
           const errors = response.data
 
           if (errors.hasOwnProperty('variant')) {
-            showError(sizeErrorText)
+            showError(sizeErrorText, 'Please select size.')
           }
 
           if (errors.hasOwnProperty('quantity')) {
-            showError(quantityErrorText)
+            showError(quantityErrorText, errors.quantity)
           }
         }
       })
