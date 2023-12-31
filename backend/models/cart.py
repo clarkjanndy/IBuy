@@ -22,8 +22,14 @@ class Cart(TimeStampedModel):
     status = models.CharField(choices=STATUS, default='on-cart', max_length=12)
     
     def delete(self, *args, **kwargs):
-        self.status = 'on-cart'
+        self.status = 'deleted'
         self.save()
+        
+        #update quantity of the selected uniform
+        uniform = self.uniform
+        inventory = uniform.inventory
+        inventory.quantity += self.quantity
+        inventory.save()
                 
     def __str__(self) -> str:
         return self.uniform.name

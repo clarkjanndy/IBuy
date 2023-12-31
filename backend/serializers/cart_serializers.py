@@ -35,6 +35,7 @@ class CartSerializer(CustomModelSerializer):
         # append current user data
         validated_data.update({"user": user})
         cart_item, created = Cart.objects.get_or_create(
+            status='on-cart',
             user=validated_data['user'],
             uniform=validated_data['uniform'],
             variant=validated_data['variant'],
@@ -47,6 +48,6 @@ class CartSerializer(CustomModelSerializer):
         
         # update the quantity of the uniform after successfully adding to cart
         uniform = cart_item.uniform
-        Inventory.objects.filter(uniform = uniform).update(quantity = F('quantity') - cart_item.quantity)
+        Inventory.objects.filter(uniform = uniform).update(quantity = F('quantity') - validated_data['quantity'])
         
         return cart_item

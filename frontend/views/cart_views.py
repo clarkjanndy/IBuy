@@ -29,7 +29,7 @@ class MyCart(LoginRequiredMixin, ListView):
         params = request.GET
         queryset = super().get_queryset()
     
-        return queryset.filter(user = request.user)
+        return queryset.filter(user = request.user, status='on-cart')
 
 
 

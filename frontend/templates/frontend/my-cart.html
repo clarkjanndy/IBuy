@@ -78,7 +78,8 @@
               <td>&#x20B1; {{cart_item.total_price}}</td>
               <!-- Action Buttons -->
               <td>
-                <button class="btn btn-danger"><i class="bi bi-trash"></i></button>
+                <button class="btn btn-danger" data-id="{{cart_item.id}}" onclick="handleDelete(this)"><i
+                    class="bi bi-trash"></i></button>
               </td>
             </tr>
             {% empty %}
@@ -112,7 +113,7 @@
               </div>
 
               <div class="form-group mx-3">
-                <button class="btn btn-danger">Delete</button>
+                <button class="btn btn-danger" onclick="handleDeleteMultiple()">Delete</button>
               </div>
             </div>
 
@@ -133,7 +134,7 @@
   </section>
 
 </main><!-- End #main -->
-
+<script src=" {% static 'frontend/vendor/others/just-validate.min.js' %}"></script>
 <script>
   const selectAllCheckbox = document.getElementById('selectAllCheckbox')
   const itemCheckboxes = document.querySelectorAll('.cart-item-checkbox')
@@ -187,7 +188,52 @@
       }
       updateSelectionTexts()
     });
-
   });
+
+  const handleDeleteMultiple = async () => {
+    if (selectedIds.length <= 0) {
+      Swal.fire({
+        title: "Error!",
+        text: "Please select an item first.",
+        icon: "error"
+      })
+      return
+    }
+
+    let deletedItems = 0
+    for (const id of selectedIds) {
+      const url = `/api/v1/carts/${id}`
+      const payload = {
+        headers: {
+          "X-CSRFToken": "{{csrf_token}}",
+          "Content-Type": "application/json"
+        },
+        method: 'DELETE',
+      }
+
+      await fetch(url, payload)
+        .then(response => response.json())
+        .then(response => {
+          // process success here
+          if (response.status === 'success') {
+            deletedItems++
+          }
+        })
+    }
+
+    Swal.fire({
+      title: "Sucess!",
+      text: `${deletedItems} cart items deleted.`,
+      icon: "success"
+    }).then((result) => {
+      window.location.reload()
+    });
+  }
+
+  const handleDelete = (button) => {
+    const id = parseInt(button.getAttribute('data-id'));
+    selectedIds = [id]
+    handleDeleteMultiple()
+  }
 </script>
 {%endblock content%}
