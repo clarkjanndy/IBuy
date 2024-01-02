@@ -1,0 +1,151 @@
+[
+    {
+        "model": "backend.faq",
+        "pk": 1,
+        "fields": {
+            "created_at": "2024-01-02T13:43:35.865Z",
+            "modified_at": "2024-01-02T13:43:35.865Z",
+            "question": "What is IBuy all about?",
+            "answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        }
+    },
+    {
+        "model": "backend.paymentoption",
+        "pk": 1,
+        "fields": {
+            "created_at": "2024-01-02T13:41:54.963Z",
+            "modified_at": "2024-01-02T13:41:54.963Z",
+            "name": "GCash",
+            "code": "GCSH",
+            "payment_instruction": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        }
+    },
+    {
+        "model": "backend.paymentoption",
+        "pk": 2,
+        "fields": {
+            "created_at": "2024-01-02T13:42:12.378Z",
+            "modified_at": "2024-01-02T13:42:12.378Z",
+            "name": "Over-the-Counter",
+            "code": "OTC",
+            "payment_instruction": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        }
+    },
+    {
+        "model": "backend.systeminformation",
+        "pk": 1,
+        "fields": {
+            "created_at": "2024-01-02T13:42:31.203Z",
+            "modified_at": "2024-01-02T13:42:31.203Z",
+            "title": "Vision",
+            "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        }
+    },
+    {
+        "model": "backend.systeminformation",
+        "pk": 2,
+        "fields": {
+            "created_at": "2024-01-02T13:42:40.885Z",
+            "modified_at": "2024-01-02T13:42:40.885Z",
+            "title": "Mission",
+            "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        }
+    },
+    {
+        "model": "backend.systeminformation",
+        "pk": 3,
+        "fields": {
+            "created_at": "2024-01-02T13:42:48.193Z",
+            "modified_at": "2024-01-02T13:42:48.193Z",
+            "title": "Goal",
+            "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        }
+    },
+    {
+        "model": "backend.systeminformation",
+        "pk": 4,
+        "fields": {
+            "created_at": "2024-01-02T13:43:02.626Z",
+            "modified_at": "2024-01-02T13:43:02.626Z",
+            "title": "Privacy Policy",
+            "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        }
+    },
+    {
+        "model": "backend.systeminformation",
+        "pk": 5,
+        "fields": {
+            "created_at": "2024-01-02T13:43:15.607Z",
+            "modified_at": "2024-01-02T13:43:15.607Z",
+            "title": "Terms and Conditions",
+            "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        }
+    },
+    {
+        "model": "backend.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$gygUNTs3tkX6WfuYfc8Gb0$PsCMrfz6iimNeMOMsIqErw04RHSM+RxdiNMR46jUqdU=",
+            "last_login": "2024-01-02T13:39:44.242Z",
+            "is_superuser": true,
+            "username": "admin",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2024-01-02T13:39:22.008Z",
+            "email": "admin@gmail.com",
+            "role": "student",
+            "middle_name": null,
+            "suffix": null,
+            "birthday": null,
+            "address": null,
+            "mobile_number": null,
+            "gender": null,
+            "student_id": null,
+            "photo": "",
+            "bio": null,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "backend.category",
+        "pk": 1,
+        "fields": {
+            "created_at": "2024-01-02T13:40:11.166Z",
+            "modified_at": "2024-01-02T13:40:11.166Z",
+            "name": "Universal"
+        }
+    },
+    {
+        "model": "backend.uniform",
+        "pk": 1,
+        "fields": {
+            "created_at": "2024-01-02T13:40:57.403Z",
+            "modified_at": "2024-01-02T13:40:57.403Z",
+            "name": "BCC Type A Uniform",
+            "extra_name": "Lower",
+            "barcode": "10012",
+            "description": "",
+            "price": "850.00",
+            "category": 1,
+            "available_sizes": [
+                "SMALL",
+                "MEDIUM"
+            ],
+            "status": "active",
+            "created_by": 1,
+            "modified_by": 1
+        }
+    },
+    {
+        "model": "backend.inventory",
+        "pk": 1,
+        "fields": {
+            "created_at": "2024-01-02T13:40:57.417Z",
+            "modified_at": "2024-01-02T13:40:57.417Z",
+            "quantity": 1000
+        }
+    }
+]
