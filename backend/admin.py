@@ -10,7 +10,8 @@ from . models import (
     Uniform, 
     UniformImage, 
     Inventory,
-    Cart
+    Cart,
+    PaymentOption
 )
 
 # Register your admin manager here
@@ -32,6 +33,10 @@ class FAQAdmin(admin.ModelAdmin):
 class SystemInformationAdmin(admin.ModelAdmin):
     list_display = ('title', 'content',)
     search_fields = ('title', 'content',)
+    
+class PaymentOptionAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code', 'created_at', 'modified_at',)
+    search_fields = ('name', 'code')
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'created_at', 'modified_at',)
@@ -75,10 +80,13 @@ class CartAdmin(admin.ModelAdmin):
     list_display = ('uniform', 'user', 'quantity', 'created_at', 'modified_at',)
     search_fields = ('uniform__name', '')
 
+
+
 # Register your models here.
 admin.site.register(User, UserAdmin)
 admin.site.register(FAQ, FAQAdmin)
 admin.site.register(SystemInformation, SystemInformationAdmin)
+admin.site.register(PaymentOption, PaymentOptionAdmin)
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Uniform, UniformAdmin)
