@@ -17,27 +17,6 @@
     </nav>
   </div><!-- End Page Title -->
 
-  <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      margin: 0;
-    }
-
-    .wrapper {
-      flex: 1;
-      padding: 20px;
-      /* Adjust the padding as needed */
-    }
-
-    .footer {
-      background-color: #f8f9fa;
-      padding: 10px 0;
-    }
-  </style>
-
-
   <section class="section profile">
     <div class="card">
       <div class="card-body">
@@ -80,7 +59,7 @@
               <td>
                 <button class="btn btn-danger" data-id="{{cart_item.id}}" onclick="handleDelete(this)"><i
                     class="bi bi-trash"></i></button>
-                
+
                 <a href="/uniforms/{{cart_item.uniform.id}}" class="btn btn-primary"><i class="bi bi-eye"></i></a>
               </td>
             </tr>
@@ -125,7 +104,7 @@
             <div style="font-size: 1.5rem; font-weight: bold;">
               <span>Total (<span id="itemSelectedText">0</span> Item): &#x20B1; <span
                   id="totalPriceText">00</span></span>
-              <button class="btn btn-primary">Checkout</button>
+              <button class="btn btn-primary" onclick="showconfirmCheckoutModal()">Checkout</button>
             </div>
           </div>
 
@@ -136,6 +115,71 @@
   </section>
 
 </main><!-- End #main -->
+
+<!-- Create Sysem Information Modal -->
+<div class="modal fade" id="confirmCheckoutModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="header-title">Order Confirmation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <table class="table" id="selectionTable">
+          <thead>
+            <tr>
+              <th scope="col">Image</th>
+              <th scope="col">Uniform Name</th>
+              <th scope="col">Unit Price</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Total Price</th>
+            </tr>
+          </thead>
+          <tbody>
+
+          </tbody>
+        </table>
+        <!-- End Table with stripped rows -->
+
+        <div class="row">
+          <div class="col-lg-8">
+
+            <div class="form-group">
+              <label style="font-weight: bold;">Select Payment Option:</label>
+              <button class="btn btn-outline-primary btn-sm" onclick="handleSelectSize(this)">GCash</button>
+              <button class="btn btn-outline-primary btn-sm" onclick="handleSelectSize(this)">Over-The-Counter</button>
+            </div>
+
+          </div>
+
+          <div class="col-lg-4 d-flex justify-content-end">
+            <div class="d-flex justify-content-end">
+              <div style="font-size: 1.5rem; font-weight: bold;">
+                <span>Total (<span id="modalItemSelectedText">0</span> Item): &#x20B1; <span
+                    id="modalTotalPriceText">00</span></span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Place Order</button>
+      </div>
+
+
+    </div>
+  </div>
+</div><!-- End Create FAQ Modal-->
+
 <script src=" {% static 'frontend/vendor/others/just-validate.min.js' %}"></script>
 <script>
   const selectAllCheckbox = document.getElementById('selectAllCheckbox')
@@ -253,6 +297,98 @@
     const id = parseInt(button.getAttribute('data-id'));
     selectedIds = [id]
     handleDeleteMultiple()
+  }
+
+  const showconfirmCheckoutModal = () => {
+    if (selectedIds.length <= 0) {
+      Swal.fire({
+        title: "Error!",
+        text: "Please select an item first.",
+        icon: "error",
+        confirmButtonColor: "#4154f1",
+      })
+      return
+    }
+
+    const tableBody = document.querySelector('#selectionTable tbody');
+    const modal = new bootstrap.Modal(document.getElementById('confirmCheckoutModal'));
+    const modalItemSelectedText = document.getElementById('modalItemSelectedText')
+    const modalTotalPriceText = document.getElementById('modalTotalPriceText')
+
+    const clearTable = () => {
+      // Remove all child elements (rows) from the tbody
+      while (tableBody.firstChild) {
+        tableBody.removeChild(tableBody.firstChild);
+      }
+    }
+
+    const addRow = (data) => {
+      let newRow = document.createElement('tr');
+
+      // Column 1
+      let imageCell = document.createElement('td');
+      let imageTagContainer = document.createElement('div')
+      imageTagContainer.classList.add('square-container-100')
+      let imageTag = document.createElement('img');
+      imageTag.classList.add('square-image')
+      imageTag.src = data.uniform_image
+      imageTagContainer.appendChild(imageTag)
+      imageCell.appendChild(imageTagContainer);
+      newRow.appendChild(imageCell);
+
+      // Column 2
+      let nameCell = document.createElement('td');
+      nameCell.classList.add('w-25')
+      nameCell.textContent = data.uniform_name
+      newRow.append(nameCell)
+
+      // Column 3
+      let unitPriceCell = document.createElement('td');
+      unitPriceCell.innerHTML = `&#x20B1; ${data.unit_price}`
+      newRow.append(unitPriceCell)
+
+      // Column 4
+      let quantityCell = document.createElement('td');
+      quantityCell.innerHTML = `${data.quantity} x`
+      newRow.append(quantityCell)
+
+      // Column 3
+      let totalPriceCell = document.createElement('td');
+      totalPriceCell.innerHTML = `&#x20B1; ${data.total_price}`
+      newRow.append(totalPriceCell)
+
+      tableBody.appendChild(newRow);
+    }
+
+    modal.show();
+    modal._element.addEventListener('hidden.bs.modal', clearTable());
+
+    const getSelectedCartDetails = async () => {
+      for (const id of selectedIds) {
+        const url = `/api/v1/carts/${id}`
+        const payload = {
+          headers: {
+            "X-CSRFToken": "{{csrf_token}}",
+            "Content-Type": "application/json"
+          },
+          method: 'GET',
+        }
+
+        await fetch(url, payload)
+          .then(response => response.json())
+          .then(response => {
+            // process success here
+            if (response.status === 'success') {
+              data = response.data
+              addRow(data)
+            }
+          })
+      }
+    }
+
+    getSelectedCartDetails()
+    modalItemSelectedText.innerText = itemSelected
+    modalTotalPriceText.innerText = totalPrice.toFixed(2);
   }
 </script>
 {%endblock content%}
