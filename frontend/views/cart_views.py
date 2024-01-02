@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.views.generic import ListView
 
-from backend.models import Uniform, Category, Cart
+from backend.models import Cart, PaymentOption
 
 from . custom_mixins import LoginRequiredMixin
 
@@ -19,6 +19,7 @@ class MyCart(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
+        context.update({'payment_options': PaymentOption.objects.all()})      
         context.update({'current_page': 'my-cart'})
         return context
 

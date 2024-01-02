@@ -148,8 +148,10 @@
 
             <div class="form-group">
               <label style="font-weight: bold;">Select Payment Option:</label>
-              <button class="btn btn-outline-primary btn-sm" onclick="handleSelectSize(this)">GCash</button>
-              <button class="btn btn-outline-primary btn-sm" onclick="handleSelectSize(this)">Over-The-Counter</button>
+
+              {% for option in payment_options %}
+              <button class="btn btn-outline-primary btn-sm" onclick="handleSelectSize(this)">{{option.name}}</button>
+              {% endfor %}
             </div>
 
           </div>
@@ -164,9 +166,6 @@
           </div>
 
         </div>
-
-
-
 
       </div>
 
