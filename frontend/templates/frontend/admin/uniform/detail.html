@@ -68,17 +68,6 @@
             </div>
 
             <div class="row">
-              <div class="col-lg-3 col-md-4 label">Pre-order Allowed</div>
-              <div class="col-lg-9 col-md-8">
-                {% if uniform.allow_pre_order %}
-                  <span class="badge text-bg-success">Yes</span>
-                {% else %}
-                  <span class="badge text-bg-danger">No</span>
-                {% endif %}
-                </div>
-            </div>
-
-            <div class="row">
               <div class="col-lg-3 col-md-4 label">Available Sizes</div>
               <div class="col-lg-9 col-md-8">
                 {% for size in uniform.available_sizes %}

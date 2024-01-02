@@ -29,7 +29,6 @@ class Uniform(TimeStampedModel):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.ForeignKey(Category, related_name='uniforms', on_delete=models.CASCADE)
     available_sizes = models.JSONField(default=list)
-    allow_pre_order = models.BooleanField(default=False)
     status = models.CharField(max_length=10, choices=STATUSES, default='active')
     created_by = models.ForeignKey(User, related_name='created_uniforms', on_delete=models.CASCADE)
     modified_by = models.ForeignKey(User, related_name='modified_uniforms', on_delete=models.CASCADE)
