@@ -1,7 +1,11 @@
 from frontend import views
 from django.urls import path
 
+from django.views.generic import RedirectView
+
 urlpatterns = [
+    path('', RedirectView.as_view(url='/login', permanent=False)),
+    
     # Auth
     path('login', views.LoginView.as_view()),
     path('register', views.RegistrationView.as_view()),

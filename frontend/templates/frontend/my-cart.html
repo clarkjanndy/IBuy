@@ -80,6 +80,8 @@
               <td>
                 <button class="btn btn-danger" data-id="{{cart_item.id}}" onclick="handleDelete(this)"><i
                     class="bi bi-trash"></i></button>
+                
+                <a href="/uniforms/{{cart_item.uniform.id}}" class="btn btn-primary"><i class="bi bi-eye"></i></a>
               </td>
             </tr>
             {% empty %}
@@ -190,44 +192,61 @@
     });
   });
 
-  const handleDeleteMultiple = async () => {
+  const handleDeleteMultiple = () => {
     if (selectedIds.length <= 0) {
       Swal.fire({
         title: "Error!",
         text: "Please select an item first.",
-        icon: "error"
+        icon: "error",
+        confirmButtonColor: "#4154f1",
       })
       return
     }
 
-    let deletedItems = 0
-    for (const id of selectedIds) {
-      const url = `/api/v1/carts/${id}`
-      const payload = {
-        headers: {
-          "X-CSRFToken": "{{csrf_token}}",
-          "Content-Type": "application/json"
-        },
-        method: 'DELETE',
+    Swal.fire({
+      title: "Are you sure?",
+      text: `This action will delete selected item from your cart.`,
+      showCancelButton: true,
+      confirmButtonColor: "#4154f1",
+      cancelButtonColor: "#d33",
+      confirmButtonText: `Yes`
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleAPI()
+      }
+    });
+
+    const handleAPI = async () => {
+      let deletedItems = 0
+      for (const id of selectedIds) {
+        const url = `/api/v1/carts/${id}`
+        const payload = {
+          headers: {
+            "X-CSRFToken": "{{csrf_token}}",
+            "Content-Type": "application/json"
+          },
+          method: 'DELETE',
+        }
+
+        await fetch(url, payload)
+          .then(response => response.json())
+          .then(response => {
+            // process success here
+            if (response.status === 'success') {
+              deletedItems++
+            }
+          })
       }
 
-      await fetch(url, payload)
-        .then(response => response.json())
-        .then(response => {
-          // process success here
-          if (response.status === 'success') {
-            deletedItems++
-          }
-        })
+      Swal.fire({
+        title: "Sucess!",
+        text: `${deletedItems} cart items deleted.`,
+        icon: "success",
+        confirmButtonColor: "#4154f1",
+      }).then((result) => {
+        window.location.reload()
+      });
     }
-
-    Swal.fire({
-      title: "Sucess!",
-      text: `${deletedItems} cart items deleted.`,
-      icon: "success"
-    }).then((result) => {
-      window.location.reload()
-    });
   }
 
   const handleDelete = (button) => {
