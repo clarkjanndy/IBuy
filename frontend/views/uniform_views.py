@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.views.generic import ListView, TemplateView, DetailView
 
-from backend.models import Uniform, Category
+from backend.models import Uniform, Category, PaymentOption
 
 from . custom_mixins import AdminRequiredMixin, LoginRequiredMixin
 
@@ -57,6 +57,7 @@ class UniformView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context.update({'payment_options': PaymentOption.objects.all()})      
         context.update({'current_page': 'uniforms'})
         return context
     

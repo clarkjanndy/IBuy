@@ -46,11 +46,11 @@ class PlaceOrder(GenericAPIView):
                 cart.status = 'purchased'
                 cart.save()
             
-            messages.success(request, message := f'Your order with reference number {order.ref_no} has been succesfully placed.')          
             return Response({
-                "sucess": True,
+                "status": "success", 
                 "data": {
-                    "message": message
+                    "message": f'Your order with reference number {order.ref_no} has been succesfully placed.',
+                    "ref_no": order.ref_no
                 }
             })
             
@@ -93,12 +93,12 @@ class BuyNow(GenericAPIView):
             inventory = uniform.inventory
             inventory.quantity -= quantity
             inventory.save()
-            
-            messages.success(request, message := f'Your order with reference number {order.ref_no} has been succesfully placed.')          
+      
             return Response({
-                "sucess": True,
+                "status": "success", 
                 "data": {
-                    "message": message
+                    "message": f'Your order with reference number {order.ref_no} has been succesfully placed.',
+                    "ref_no": order.ref_no
                 }
             })
             

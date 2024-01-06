@@ -17,11 +17,15 @@ class CategorySerializer(CustomModelSerializer):
 class UniformSerializer(CustomModelSerializer):
     quantity = serializers.IntegerField(source='inventory.quantity')
     category_name = serializers.CharField(source='category.name', read_only=True)
+    main_image = serializers.SerializerMethodField()
     VALID_SIZES = ['EXTRA SMALL', 'SMALL', 'MEDIUM', 'LARGE', 'EXTRA LARGE']
 
     class Meta:
         model = Uniform
         exclude = ('created_by', 'modified_by')
+        
+    def get_main_image(self, instance):
+        return instance.main_image
 
     def validate(self, attrs):
         attrs = super().validate(attrs)

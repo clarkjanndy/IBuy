@@ -149,9 +149,12 @@
             <div class="form-group">
               <label style="font-weight: bold;">Select Payment Option:</label>
 
-              {% for option in payment_options %}
-              <button class="btn btn-outline-primary btn-sm" onclick="handleSelectSize(this)">{{option.name}}</button>
-              {% endfor %}
+              <span class="payment-option-button-container">
+                {% for option in payment_options %}
+                <button class="btn btn-outline-primary btn-sm" onclick="handleSelectPaymentOption(this)"
+                data-id="{{option.id}}">{{option.name}}</button>
+                {% endfor %}
+              </span>
             </div>
 
           </div>
@@ -189,6 +192,7 @@
   let itemSelected = 0
   let totalPrice = 0
   let selectedIds = [];
+  let selectedPaymentOption = null
 
   const updateSelectionTexts = () => {
     itemSelectedText.innerText = itemSelected
@@ -338,7 +342,7 @@
       // Column 2
       let nameCell = document.createElement('td');
       nameCell.classList.add('w-25')
-      nameCell.textContent = data.uniform_name
+      nameCell.textContent = `${data.uniform_name} (${data.variant})`
       newRow.append(nameCell)
 
       // Column 3
@@ -388,6 +392,23 @@
     getSelectedCartDetails()
     modalItemSelectedText.innerText = itemSelected
     modalTotalPriceText.innerText = totalPrice.toFixed(2);
+  }
+
+  const handleSelectPaymentOption = (clickedButton) => {
+    // Get all buttons within the container
+    let buttons = document.querySelectorAll('.payment-option-button-container button');
+    // Loop through each button and set the class accordingly
+    buttons.forEach(function (button) {
+      if (button === clickedButton) {
+        button.classList.remove('btn-outline-primary');
+        button.classList.add('btn-primary');
+        selectedPaymentOption = button.getAttribute('data-id')
+      } else {
+        button.classList.remove('btn-primary');
+        button.classList.add('btn-outline-primary');
+      }
+    });
+    console.log(selectedPaymentOption)
   }
 </script>
 {%endblock content%}
