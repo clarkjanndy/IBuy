@@ -29,15 +29,11 @@ class RegistrationView(CreateAPIView):
         user = serializer.save()
         # login the user
         login(request, user)
-        #generate token for user
-        token, _ = Token.objects.get_or_create(user = user)
-
+          
+        messages.success(request, 'You have successfully registeed an account.')
         return Response({
             "status": "success", 
-            "data": {
-                "user": serializer.data,
-                "token": token.key
-            }
+            "data": serializer.data,
         })
         
 class LoginView(APIView):
