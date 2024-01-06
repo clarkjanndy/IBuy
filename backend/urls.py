@@ -15,6 +15,9 @@ urlpatterns = [
     path('carts', views.CartListCreate.as_view()),
     path('carts/<int:pk>', views.CartById.as_view()),
     
+    #Order
+     path('place-order', views.PlaceOrder.as_view()),
+    
     # Users
     path('users', views.UserListCreate.as_view()),
     path('users/<int:pk>', views.UserById.as_view()),
