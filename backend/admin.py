@@ -11,7 +11,10 @@ from . models import (
     UniformImage, 
     Inventory,
     Cart,
-    PaymentOption
+    PaymentOption,
+    Order,
+    OrderItem,
+    OrderHistory
 )
 
 # Register your admin manager here
@@ -79,8 +82,17 @@ class InventoryAdmin(admin.ModelAdmin):
 class CartAdmin(admin.ModelAdmin):
     list_display = ('uniform', 'user', 'quantity', 'created_at', 'modified_at',)
     search_fields = ('uniform__name', '')
-
-
+    
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('ref_no', 'user', 'payment_option', 'total', 'status', 'created_at',)
+    search_fields = ('ref_no', '')
+    
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ('order_ref_no', 'uniform', 'variant', 'unit_price', 'quantity', 'subtotal', 'created_at',)
+    search_fields = ('order__ref_no', '')
+    
+    def order_ref_no(self, object):
+        return object.order.ref_no
 
 # Register your models here.
 admin.site.register(User, UserAdmin)
@@ -94,5 +106,11 @@ admin.site.register(UniformImage, UniformImageAdmin)
 admin.site.register(Inventory, InventoryAdmin)
 
 admin.site.register(Cart, CartAdmin)
+admin.site.register(Order, OrderAdmin)
+admin.site.register(OrderItem, OrderItemAdmin)
+
+
+
+
 
 
