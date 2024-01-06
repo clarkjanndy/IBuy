@@ -41,7 +41,7 @@ class CartSerializer(CustomModelSerializer):
             raise serializers.ValidationError({"quantity": "Maximum quantity reached."})
         
         if attrs['quantity'] > 10:
-             raise serializers.ValidationError({"quantity": "Adding to cart is only limited to 10 items only."})
+            raise serializers.ValidationError({"quantity": "Adding to cart is only limited to 10 items only."})
             
         on_cart_quantity = Cart.objects.filter(user=request.user, status='on-cart').aggregate(Sum('quantity'))['quantity__sum']
         if on_cart_quantity and (on_cart_quantity + attrs['quantity']) > 10:

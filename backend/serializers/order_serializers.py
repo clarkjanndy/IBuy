@@ -40,6 +40,9 @@ class BuyNowSerializer(CustomSerializer):
         variant = attrs['variant']
         quantity = attrs['quantity']
         
+        if quantity > 10:
+            raise serializers.ValidationError({"quantity": "You are limited to buy 10 items only."})
+        
         if uniform.inventory.quantity < 1 or uniform.inventory.quantity < quantity:
             raise ValidationError({'quantity': "Maximum quantity reached."})
         
