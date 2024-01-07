@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from backend.models import Payment
+from backend.services.order_service import OrderService
 
 from . extras import CustomModelSerializer
 
@@ -33,7 +34,12 @@ class PaymentSerializer(CustomModelSerializer):
         # payment of normal users is defaulted to pending
         if not request.user.is_superuser:
             validated_data.update({"status": "pending"})
-        
+            
+        order = validated_data['order']
+        # create history 
+        service = OrderService(order)
+        service.create_history(request.user, f'Order paid via {order.payment_option}', 'to-ship')
+                
         return super().create(validated_data)
         
     def save(self, **kwargs):

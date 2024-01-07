@@ -1,13 +1,11 @@
 from django.contrib import messages
 
-from rest_framework.generics import GenericAPIView, CreateAPIView
+from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from backend.models import Payment
-from backend.serializers import PaymentSerializer, BuyNowSerializer
-from backend.exceptions import ClientError, SerializerValidationError
-from backend.services.order_service import OrderService
+from backend.serializers import PaymentSerializer
 
 __all__ = ['PaymentCreate', ]
 
