@@ -21,7 +21,7 @@ STATUS = (
 )
 
 class Order(TimeStampedModel):
-    ref_no = models.CharField(max_length=10, default=generate_reference_number, editable=False, unique=True)
+    ref_no = models.CharField(max_length=10, default=generate_reference_number, editable=False, unique=True, primary_key=True)
     user = models.ForeignKey('User', related_name='orders', on_delete=models.CASCADE)
     payment_option =  models.ForeignKey('PaymentOption', on_delete=models.CASCADE)
     total = models.DecimalField(max_digits=8, decimal_places=2, default = 0)
