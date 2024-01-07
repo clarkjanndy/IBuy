@@ -1,6 +1,7 @@
 import secrets
 import string
 
+from django.conf import settings
 from django.db import models
 from . extras import TimeStampedModel
 
@@ -27,6 +28,17 @@ class Payment(TimeStampedModel):
                 
     def __str__(self):
         return self.ref_no
+    
+    @property
+    def receipt_image_url(self):
+        if self.receipt_image:
+            return self.receipt_image.url if hasattr(self.receipt_image, 'url') else self.default_photo_url
+        
+        return self.default_photo_url
+    
+    @property
+    def default_photo_url(self):        
+        return f"{settings.STATIC_URL}frontend/img/no-image.png"
     
 class PaymentOption(TimeStampedModel):
     name = models.CharField(max_length=255)

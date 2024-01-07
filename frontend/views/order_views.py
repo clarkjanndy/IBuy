@@ -8,7 +8,8 @@ from . custom_mixins import LoginRequiredMixin
 __all__ = [
     'MyOrder', 
     'MyOrderDetail',
-    'MyOrderDetailPayment'
+    'MyOrderDetailPayment',
+    'MyOrderDetailReceipt'
 ] 
 
 # normal user views here
@@ -43,6 +44,7 @@ class MyOrder(LoginRequiredMixin, ListView):
 class MyOrderDetail(LoginRequiredMixin, DetailView):
     model = Order
     template_name = 'frontend/order/detail.html'
+    queryset = Order.objects.prefetch_related('user', 'payment_option', 'payment')
     context_object_name = 'order'
     slug_field = 'ref_no'  # Specify the field to use for the lookup
     slug_url_kwarg = 'ref_no'  # Specify the URL keyword to use for the lookup
@@ -60,6 +62,9 @@ class MyOrderDetail(LoginRequiredMixin, DetailView):
     
 class MyOrderDetailPayment(MyOrderDetail):
     template_name = 'frontend/order/detail_pay.html'
+    
+class MyOrderDetailReceipt(MyOrderDetail):
+    template_name = 'frontend/order/detail_receipt.html'
     
 
 

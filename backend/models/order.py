@@ -34,6 +34,10 @@ class Order(TimeStampedModel):
     def is_payable(self):
         return self.status == 'to-pay'
     
+    @property
+    def has_payment(self):
+        return hasattr(self, 'payment')
+    
 class OrderItem(TimeStampedModel):
     order = models.ForeignKey(Order, on_delete=models.CASCADE , related_name='items')
     uniform = models.ForeignKey('Uniform', on_delete=models.CASCADE)

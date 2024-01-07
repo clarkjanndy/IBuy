@@ -1,0 +1,76 @@
+{% extends "frontend/app.html"%}
+
+{% load static %}
+{% load extra_tags %}
+
+{% block content %}
+{% include "frontend/sidebar.html" %}
+<main id="main" class="main">
+
+
+  <div class="pagetitle">
+    <h1>My Orders</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/my-orders">My Orders</a></li>
+        <li class="breadcrumb-item"><a href="/my-orders/{{order.ref_no}}">{{order.ref_no}}</a></li>
+        <li class="breadcrumb-item"><a href="#">Payment Receipt</a></li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section profile">
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Below is the detail of your payment for order {{order.ref_no}}.</h5>
+
+            <div class="fade show active profile-overview">
+              <div class="row">
+                <div class="col-lg-3 col-md-4 label ">Payment Reference #</div>
+                <div class="col-lg-9 col-md-8">{{order.payment.ref_no}}</div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-3 col-md-4 label ">Payment Method</div>
+                <div class="col-lg-9 col-md-8">{{order.payment_option.name}}</div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-3 col-md-4 label ">Amount</div>
+                <div class="col-lg-9 col-md-8">&#x20B1; {{order.payment.amount}}</div>
+              </div> 
+              
+              <div class="row">
+                <div class="col-lg-3 col-md-4 label ">Status</div>
+                <div class="col-lg-9 col-md-8">{{order.payment.get_status_display}}</div>
+              </div> 
+
+              <div class="row">
+                <div class="col-lg-3 col-md-4 label ">Receipt</div>
+                <div class="col-lg-9 col-md-8">
+                  <div class="d-flex justify-content-center align-items-center square-container-100 ">
+                    <img class="square-image" src="{{order.payment.receipt_image_url}}" alt="uniform image">
+                  </div>
+                </div>
+              </div> 
+
+
+            </div>
+
+
+          </div><!-- End Bordered Tabs -->
+
+
+        </div>
+
+      </div>
+    </div> <!-- Add more cards as needed -->
+    </div>
+  </section>
+
+</main><!-- End #main -->
+</script>
+{%endblock content%}

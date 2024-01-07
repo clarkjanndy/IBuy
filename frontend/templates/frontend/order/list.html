@@ -72,7 +72,7 @@
             {% if order_list %}
             {% for order in order_list%}
             <div class="col-md-12">
-              <div class="card">
+              <div class="card border">
                 <div class="card-header d-flex flex-row flex-wrap justify-content-between">
                   <span>Order Reference No.: <span class="text-primary"><b>{{order.ref_no}}</b></span></span>
                   <span class="header-title">{{order.get_status_display |upper}}</span>
@@ -125,6 +125,10 @@
                       <a class="btn btn-success" href="/my-orders/{{order.ref_no}}">View Order</a>
                       {% if order.is_payable %}
                       <a class="btn btn-primary" href="/my-orders/{{order.ref_no}}/payment">Pay Now</a>
+                      {% endif %}
+
+                      {% if order.has_payment %}
+                      <a class="btn btn-secondary" href="/my-orders/{{order.ref_no}}/receipt">View Receipt</a>
                       {% endif %}
                     </div>
                   </div>

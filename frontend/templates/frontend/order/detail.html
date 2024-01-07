@@ -71,6 +71,10 @@
                 {% if order.is_payable %}
                 <a class="btn btn-primary" href="/my-orders/{{order.ref_no}}/payment">Pay Now</a>
                 {% endif %}
+
+                {% if order.has_payment %}
+                <a class="btn btn-secondary" href="/my-orders/{{order.ref_no}}/receipt">View Receipt</a>
+                {% endif %}
               </div>
             </div>
           </div>
