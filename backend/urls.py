@@ -22,6 +22,7 @@ urlpatterns = [
         
     #Payment
     path('payments', views.PaymentCreate.as_view()),
+    path('payments/<str:ref_no>', views.PaymentById.as_view()),
     
     # Users
     path('users', views.UserListCreate.as_view()),
