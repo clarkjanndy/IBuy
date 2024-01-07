@@ -51,6 +51,13 @@ urlpatterns = [
     path('admin/manage-uniforms', views.UniformList.as_view()),
     path('admin/manage-uniforms/create', views.UniformCreate.as_view()),
     path('admin/manage-uniforms/<int:pk>', views.UniformDetail.as_view()),
-     path('admin/manage-uniforms/<int:pk>/edit', views.UniformEdit  .as_view()),
+    path('admin/manage-uniforms/<int:pk>/edit', views.UniformEdit  .as_view()),
     path('admin/manage-uniforms/<int:pk>/images', views.UniformImages.as_view()),
+    
+    #Orders
+    path('admin/manage-orders', views.OrderList.as_view()),
+    path('admin/manage-orders/<str:ref_no>', views.OrderDetail.as_view()),
+    path('admin/manage-orders/<str:ref_no>/transact', views.OrderDetailTransact.as_view()),
+    path('admin/manage-orders/<str:ref_no>/receipt', views.OrderDetailReceipt.as_view()),
+    
 ]

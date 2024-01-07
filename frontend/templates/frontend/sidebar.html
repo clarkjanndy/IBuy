@@ -232,7 +232,7 @@
     </li><!-- End Uniforms Page Nav -->
 
     <li class="nav-item">
-      <a class="nav-link collapsed" href="/admin/manage-users">
+      <a class="nav-link {% if not current_page == 'manage-orders'%}collapsed{% endif %}" href="/admin/manage-orders">
         <i class="bi bi-cart-check-fill"></i>
         <span>Manage Orders</span>
       </a>

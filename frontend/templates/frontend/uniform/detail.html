@@ -465,15 +465,12 @@
         } else {
           const errors = response.data
 
-          if (errors.hasOwnProperty('variant')) {
-            showError(sizeErrorText, 'Please select size.')
-          }
-
           if (errors.hasOwnProperty('payment_option')) {
             showError(paymentOptionErrorText, 'Please select a payment option.')
           }
 
           if (errors.hasOwnProperty('quantity')) {
+            modal.hide()
             showError(quantityErrorText, errors.quantity)
           }
         }

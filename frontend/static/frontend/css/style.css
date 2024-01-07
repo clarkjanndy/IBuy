@@ -1357,6 +1357,10 @@ h6 {
   font-family: "Poppins", sans-serif;
 }
 
+.hoverable-image:hover {
+  transform:  scale(1.2);
+}
+
 @media (min-width:992px) {
   .page-container {
     max-width: 1140px;
