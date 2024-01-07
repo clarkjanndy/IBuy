@@ -12,6 +12,7 @@ from . models import (
     Inventory,
     Cart,
     PaymentOption,
+    Payment,
     Order,
     OrderItem,
     OrderHistory
@@ -100,6 +101,13 @@ class OrderHistoryAdmin(admin.ModelAdmin):
     
     def order_ref_no(self, object):
         return object.order.ref_no
+    
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('ref_no', 'order_ref_no', 'user', 'created_at',)
+    search_fields = ('order__ref_no', 'ref_no')
+    
+    def order_ref_no(self, object):
+        return object.order.ref_no
 
 # Register your models here.
 admin.site.register(User, UserAdmin)
@@ -116,6 +124,7 @@ admin.site.register(Cart, CartAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderItem, OrderItemAdmin)
 admin.site.register(OrderHistory, OrderHistoryAdmin)
+admin.site.register(Payment, PaymentAdmin)
 
 
 
