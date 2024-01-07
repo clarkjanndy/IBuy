@@ -89,7 +89,14 @@ class OrderAdmin(admin.ModelAdmin):
     
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ('order_ref_no', 'uniform', 'variant', 'unit_price', 'quantity', 'subtotal', 'created_at',)
-    search_fields = ('order__ref_no', '')
+    search_fields = ('order__ref_no',)
+    
+    def order_ref_no(self, object):
+        return object.order.ref_no
+    
+class OrderHistoryAdmin(admin.ModelAdmin):
+    list_display = ('order_ref_no', 'remarks', 'status', 'created_at',)
+    search_fields = ('order__ref_no',)
     
     def order_ref_no(self, object):
         return object.order.ref_no
@@ -108,6 +115,7 @@ admin.site.register(Inventory, InventoryAdmin)
 admin.site.register(Cart, CartAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderItem, OrderItemAdmin)
+admin.site.register(OrderHistory, OrderHistoryAdmin)
 
 
 

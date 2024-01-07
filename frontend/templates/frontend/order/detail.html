@@ -91,11 +91,11 @@
                 <div class="timeline p-4 block mb-4">
 
                   {% for history in order.history.all %}
-                  <div class="tl-item active">
+                  <div class="tl-item {% if history == order.history.all.first %} active {% endif %}">
                     <div class="tl-dot b-primary"></div>
                     <div class="tl-content">
                       <div class="">{{history.remarks}}</div>
-                      <div class="tl-date text-muted mt-1">{{history.created_at}}</div>
+                      <div class="tl-date text-muted mt-1">{{history.created_at|date:"m/d/Y, P"}}</div>
                     </div>
                   </div>
                   {% endfor %}

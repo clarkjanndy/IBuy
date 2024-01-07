@@ -62,14 +62,19 @@ class OrderHistory(TimeStampedModel):
     modified_by = models.ForeignKey('User', related_name='modified_order_history', on_delete=models.CASCADE)
     
     def save(self, *args, **kwargs):
-        # update the status of the order depending on the last OrderHistory
         order = self.order
-        order.status = self.status
-        order.save()
+        # update the status of the order if there are changes in the history status
+        if not order.status == self.status:
+            order.status = self.status
+            order.save()
+            
         super().save( *args, **kwargs)
     
     def __str__(self):
-        return self.pk
+        return self.remarks
+    
+    class Meta:
+        ordering = ('-modified_at', )
     
 
     
