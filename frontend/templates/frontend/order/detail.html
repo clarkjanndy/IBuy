@@ -1,0 +1,122 @@
+{% extends "frontend/app.html"%}
+
+{% load static %}
+{% load extra_tags %}
+
+{% block content %}
+{% include "frontend/sidebar.html" %}
+<main id="main" class="main">
+
+
+  <div class="pagetitle">
+    <h1>My Orders</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/my-orders">My Orders</a></li>
+        <li class="breadcrumb-item"><a href="#">{{order.ref_no}}</a></li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section profile">
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header d-flex flex-row flex-wrap justify-content-between">
+            <span>Order Reference No.: <span class="text-primary"><b>{{order.ref_no}}</b></span></span>
+            <span class="header-title">{{order.get_status_display |upper}}</span>
+          </div>
+          <div class="card-body">
+            <div class="row mt-3">
+              {% for item in order.items.all %}
+              <div class="col-12 mb-2">
+                <div class="d-flex">
+                  <div class="d-flex justify-content-center align-items-center square-container-100 ">
+                    <img class="square-image" src="{{item.uniform.main_image}}" alt="uniform image">
+                  </div>
+
+                  <div class="mx-3 flex-grow-1 d-flex flex-row flex-wrap justify-content-between align-items-center">
+                    <div>
+                      <div class="header-title" style="font-size: 20px;">{{item.uniform.name}}</div>
+                      <div class="text-muted" style="font-size: 15px;">Variation: {{item.variant}}</div>
+                      <div style="font-size: 15px;">{{item.quantity}} x</div>
+                    </div>
+
+                    <div class="header-title">&#x20B1; {{item.subtotal}}</div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+              <hr>
+              <div class="class d-flex justify-content-end">
+                <div>
+                  <div>Order Total: </div>
+                  <div><span class="header-title" style="font-size: 30px;">&#x20B1; {{order.total}}</span> </div>
+                </div>
+              </div>
+              <div class="class d-flex justify-content-end">
+                <div>Payable via <b>{{order.payment_option.name}}</b></div>
+              </div>
+
+            </div>
+          </div>
+          <div class="card-footer d-flex justify-content-between">
+            <div>
+              <span>Order was placed on {{order.created_at|date:"m/d/Y"}}.</span><br>
+              <span>Last update {{order.modified_at|date:"m/d/Y"}}.</span>
+            </div>
+            <div class="d-flex justify-content-end">
+              <div>
+                {% if order.is_payable %}
+                <a class="btn btn-primary" href="/my-orders/{{order.ref_no}}/pay">Pay Now</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> <!-- Add more cards as needed -->
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row mt-3">
+              <div class="header-title">Order History</div>
+
+
+              <div class="row">
+                <div class="timeline p-4 block mb-4">
+                  <div class="tl-item active">
+                    <div class="tl-dot b-primary"></div>
+                    <div class="tl-content">
+                      <div class="">@twitter thanks for you appreciation and @google thanks for you appreciation
+                      </div>
+                      <div class="tl-date text-muted mt-1">13 june 18</div>
+                    </div>
+                  </div>
+
+                  <div class="tl-item">
+                    <div class="tl-dot b-primary"></div>
+                    <div class="tl-content">
+                      <div class="">@twitter thanks for you appreciation and @google thanks for you appreciation
+                      </div>
+                      <div class="tl-date text-muted mt-1">13 june 18</div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> <!-- Add more cards as needed -->
+    </div>
+
+
+  </section>
+
+</main><!-- End #main -->
+{%endblock content%}

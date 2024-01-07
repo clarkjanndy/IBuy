@@ -57,7 +57,7 @@
               <td>&#x20B1; {{cart_item.total_price}}</td>
               <!-- Action Buttons -->
               <td>
-                <button class="btn btn-danger" data-id="{{cart_item.id}}" onclick="handleDelete(this)"><i
+                <button class="btn btn-danger" data-id="{{cart_item.id}}" onclick="handleDeleteSingle(this)"><i
                     class="bi bi-trash"></i></button>
 
                 <a href="/uniforms/{{cart_item.uniform.id}}" class="btn btn-primary"><i class="bi bi-eye"></i></a>
@@ -149,12 +149,13 @@
             <div class="form-group">
               <label style="font-weight: bold;">Select Payment Option:</label>
 
-              <span class="payment-option-button-container">
+              <div class="payment-option-button-container">
                 {% for option in payment_options %}
                 <button class="btn btn-outline-primary btn-sm" onclick="handleSelectPaymentOption(this)"
-                data-id="{{option.id}}">{{option.name}}</button>
+                  data-id="{{option.id}}">{{option.name}}</button>
                 {% endfor %}
-              </span>
+              </div>
+              <span class="text-danger d-none" id="paymentOptionErrorText"> Select a payment option.</span>
             </div>
 
           </div>
@@ -174,7 +175,7 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-primary">Place Order</button>
+        <button type="submit" class="btn btn-primary" onclick="handlePlaceOrder()">Place Order</button>
       </div>
 
 
@@ -188,6 +189,12 @@
   const itemCheckboxes = document.querySelectorAll('.cart-item-checkbox')
   const itemSelectedText = document.getElementById('itemSelectedText')
   const totalPriceText = document.getElementById('totalPriceText')
+  const paymentOptionErrorText = document.getElementById('paymentOptionErrorText');
+
+  let modal = null
+  const tableBody = document.querySelector('#selectionTable tbody');
+  const modalItemSelectedText = document.getElementById('modalItemSelectedText')
+  const modalTotalPriceText = document.getElementById('modalTotalPriceText')
 
   let itemSelected = 0
   let totalPrice = 0
@@ -197,6 +204,14 @@
   const updateSelectionTexts = () => {
     itemSelectedText.innerText = itemSelected
     totalPriceText.innerText = totalPrice.toFixed(2);
+  }
+  
+  const showError = (element, error_msg) => {
+    element.classList.remove('d-none')
+    element.innerText = error_msg
+    setTimeout(() => {
+      element.classList.add('d-none');
+    }, 3000);
   }
 
   itemCheckboxes.forEach((checkbox) => {
@@ -239,8 +254,8 @@
     });
   });
 
-  const handleDeleteMultiple = () => {
-    if (selectedIds.length <= 0) {
+  const deleteCartItems = (ids) => {
+    if (ids.length <= 0) {
       Swal.fire({
         title: "Error!",
         text: "Please select an item first.",
@@ -261,11 +276,12 @@
       if (result.isConfirmed) {
         handleAPI()
       }
+
     });
 
     const handleAPI = async () => {
       let deletedItems = 0
-      for (const id of selectedIds) {
+      for (const id of ids) {
         const url = `/api/v1/carts/${id}`
         const payload = {
           headers: {
@@ -296,10 +312,13 @@
     }
   }
 
-  const handleDelete = (button) => {
+  const handleDeleteSingle = (button) => {
     const id = parseInt(button.getAttribute('data-id'));
-    selectedIds = [id]
-    handleDeleteMultiple()
+    deleteCartItems([id])
+  }
+
+  const handleDeleteMultiple = (button) => {
+    deleteCartItems(selectedIds)
   }
 
   const showconfirmCheckoutModal = () => {
@@ -312,11 +331,6 @@
       })
       return
     }
-
-    const tableBody = document.querySelector('#selectionTable tbody');
-    const modal = new bootstrap.Modal(document.getElementById('confirmCheckoutModal'));
-    const modalItemSelectedText = document.getElementById('modalItemSelectedText')
-    const modalTotalPriceText = document.getElementById('modalTotalPriceText')
 
     const clearTable = () => {
       // Remove all child elements (rows) from the tbody
@@ -363,6 +377,7 @@
       tableBody.appendChild(newRow);
     }
 
+    modal = new bootstrap.Modal(document.getElementById('confirmCheckoutModal'));
     modal.show();
     modal._element.addEventListener('hidden.bs.modal', clearTable());
 
@@ -409,6 +424,69 @@
       }
     });
     console.log(selectedPaymentOption)
+  }
+
+  const handlePlaceOrder = () => {
+    const url = '/api/v1/place-order'
+    const payload = {
+      headers: {
+        "X-CSRFToken": "{{csrf_token}}",
+        "Content-Type": "application/json"
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        cart_id: selectedIds,
+        payment_option: selectedPaymentOption,
+      })
+    }
+
+    fetch(url, payload)
+      .then(response => response.json())
+      .then(response => {
+        // process success here
+        console.log(response)
+        if (response.status === 'success') {
+          const data = response.data
+          modal.hide()
+          Swal.fire({
+            title: "Success!",
+            html: `${data.message}<br>. You will be redirected to the order details after 10 seconds.`,
+            icon: "success",
+            confirmButtonColor: "#4154f1",
+            timer: 10000,
+            timerProgressBar: true,
+            onBeforeOpen: () => {
+              Swal.showLoading();
+            }
+          }).then((result) => {
+            window.location = `/my-orders/${data.ref_no}`
+          });
+
+        } else {
+          const errors = response.data
+
+          if (errors.hasOwnProperty('variant')) {
+            showError(sizeErrorText, 'Please select size.')
+          }
+
+          if (errors.hasOwnProperty('payment_option')) {
+            showError(paymentOptionErrorText, 'Please select a payment option.')
+          }
+
+          if (errors.hasOwnProperty('quantity')) {
+            showError(quantityErrorText, errors.quantity)
+          }
+        }
+      })
+      .catch(error => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: error,
+          confirmButtonColor: '#4154f1',
+        })
+      });
+
   }
 </script>
 {%endblock content%}

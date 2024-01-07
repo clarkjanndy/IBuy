@@ -19,6 +19,10 @@ urlpatterns = [
     
     # Cart
     path('my-cart', views.MyCart.as_view()),
+    
+    # Order
+    path('my-orders', views.MyOrder.as_view()),
+    path('my-orders/<str:ref_no>', views.MyOrderDetail.as_view()),
 
     # FAQ
     path('faq', views.FAQ.as_view()),
