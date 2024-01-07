@@ -22,6 +22,12 @@
 
     <div class="row">
       <div class="col-md-12">
+        <!-- Django messages -->
+        {% if messages %}
+        {% for message in messages %}
+        {% include 'frontend/alert.html' %}
+        {% endfor %}
+        {% endif %}
         <div class="card">
           <div class="card-header d-flex flex-row flex-wrap justify-content-between">
             <span>Order Reference No.: <span class="text-primary"><b>{{order.ref_no}}</b></span></span>
@@ -89,7 +95,12 @@
         <div class="card">
           <div class="card-body">
             <div class="row mt-3">
-              <div class="header-title">Order History</div>
+              <div class="card-header d-flex flex-row flex-wrap justify-content-between align-items-center">
+                <span class="header-title">Order History</span>
+
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createHistoryModal"><i
+                    class="bi bi-plus"></i></button>
+              </div>
 
 
               <div class="row">
@@ -113,8 +124,116 @@
       </div> <!-- Add more cards as needed -->
     </div>
 
+    <!-- Update FAQ Modal -->
+    <div class="modal fade" id="createHistoryModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="header-title">New Order Update</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="createHistoryForm">
+            <div class="modal-body">
 
+              <div class="col-lg-12 mb-2">
+                <label for="question" class="form-label">Status: </label>
+                <select name="status" class="form-select" id="status">
+                  <option value="">---</option>
+                  <option value="to-ship">To Ship</option>
+                  <option value="to-recieve">To Recieve</option>
+                  <option value="completed">Completed</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
+
+              <div class="col-lg-12">
+                <label for="remarks" class="form-label">Remarks: </label>
+                <textarea name="remarks" class="form-control" id="remarks" rows="12" placeholder="Remarks"></textarea>
+              </div>
+
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div><!-- End Update FAQ Modal-->
   </section>
-
 </main><!-- End #main -->
+<script src=" {% static 'frontend/vendor/others/just-validate.min.js' %}"></script>
+<script>
+
+  //form validator
+  const createHistoryForm = document.getElementById('createHistoryForm');
+  const createHistoryFormValidator = new window.JustValidate('#createHistoryForm', {
+    errorFieldCssClass: 'is-invalid',
+  });
+
+  // validation of form
+  createHistoryFormValidator
+    .addField('#status', [{
+      rule: 'required',
+      errorMessage: 'This field is required',
+    },])
+    .addField('#remarks', [{
+      rule: 'required',
+      errorMessage: 'This field is required',
+    },])
+    .onSuccess((event) => {
+      event.preventDefault();
+      form = event.target
+      // Make your API call here (e.g., using the fetch() method)
+      const url = '/api/v1/order-histories';
+      const formData = new FormData(form);
+      formData.append('order', '{{order.ref_no}}')
+
+      // build the payload
+      const payload = {
+        headers: {
+          "X-CSRFToken": "{{csrf_token}}"
+        },
+        method: 'POST',
+        body: formData
+      }
+
+      fetch(url, payload)
+        .then(response => response.json())
+        .then(response => {
+          // process success here
+          if (response.status === 'success') {
+            const data = response.data
+            //redirect to somewhere
+            window.location.href = `/admin/manage-orders/${data.order}`
+            // process failed here
+          } else {
+            // store error data
+            const errors = response.data
+            // create a blank variable to store error
+            const field_errors = {}
+            // add hashtags to keys
+            Object.keys(errors).forEach(key => {
+              const value = errors[key];
+              field_errors[`#${key}`] = value
+            });
+
+            // show field errors to user
+            createHistoryFormValidator.showErrors(field_errors)
+          }
+        })
+        .catch(error => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong!',
+            confirmButtonColor: '#4154f1',
+          })
+        });
+    });
+
+
+</script>
 {%endblock content%}

@@ -16,11 +16,12 @@ class PaymentSerializer(CustomModelSerializer):
         
     def validate(self, attrs):
         attrs = super().validate(attrs)
-        amount = attrs['amount']
-        order = attrs['order']
         request = self.context.get('request')
         
-        if amount < order.total:
+        amount = attrs.get('amount', 0)
+        order = attrs.get('order')
+       
+        if amount and order and amount < order.total:
             raise ValidationError({'amount': 'Amount must be greater than or equal to order total.'})
         
         if not request.user.is_superuser and not order.user == request.user:
@@ -38,15 +39,28 @@ class PaymentSerializer(CustomModelSerializer):
         order = validated_data['order']
         # create history 
         service = OrderService(order)
-        service.create_history(request.user, f'Order paid via {order.payment_option}', 'to-ship')
+        service.create_history(request.user, f'Order paid via {order.payment_option}.', 'to-ship')
                 
         return super().create(validated_data)
+    
+    def update(self, instance, validated_data):
+        request = self.context.get('request')
+        payment = super().update(instance, validated_data)
+        order = payment.order
+        
+        # create history 
+        service = OrderService(order)
+        service.create_history(request.user, f'Payment status is {payment.status}.', order.status)
+        
+        return payment
         
     def save(self, **kwargs):
         validated_data = self.validated_data
         # asign order user as user of the payment
-        order = validated_data['order']
-        validated_data.update({'user': order.user})
+        order = validated_data.get('order')
+        if order:
+            validated_data.update({'user': order.user})
+            
         return super().save(**kwargs)
         
                

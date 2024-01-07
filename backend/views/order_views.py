@@ -1,16 +1,16 @@
 from django.contrib import messages
 
-from rest_framework.generics import GenericAPIView, RetrieveAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import GenericAPIView, RetrieveAPIView, CreateAPIView
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from backend.models import Order, OrderItem, Cart
-from backend.serializers import PlaceOrderSerializer, BuyNowSerializer, OrderSerializer
+from backend.models import Order, OrderItem, Cart, OrderHistory
+from backend.serializers import PlaceOrderSerializer, OrderHistorySerializer, BuyNowSerializer, OrderSerializer
 from backend.exceptions import ClientError, SerializerValidationError
 from backend.services.order_service import OrderService
 
-__all__ = ['PlaceOrder', 'BuyNow', 'OrderDetail']
+__all__ = ['PlaceOrder', 'BuyNow', 'OrderDetail', 'OrderHistoryCreate']
 
 class PlaceOrder(GenericAPIView):
     permission_classes = (IsAuthenticated, )
@@ -129,6 +129,21 @@ class OrderDetail(RetrieveAPIView):
         response = super().get(request, *args, **kwargs)
         data = response.data
         
+        return Response({
+            "status": "success", 
+            "data": data
+        })
+
+class OrderHistoryCreate(CreateAPIView):
+    permission_classes = (IsAdminUser, )
+    queryset = OrderHistory.objects.all()
+    serializer_class = OrderHistorySerializer
+    
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        data = response.data
+        
+        messages.success(request, f"Order {data.get('order')} succesfully updated.")
         return Response({
             "status": "success", 
             "data": data

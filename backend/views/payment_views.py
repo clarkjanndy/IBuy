@@ -34,7 +34,7 @@ class PaymentById(RetrieveUpdateAPIView):
         response = super().patch(request, *args, **kwargs)
         data = response.data
         
-        messages.success(request, f"Category {data.get('name')} created successfully!")
+        messages.success(request, f"Payment succesfully {data.get('status')}.")
         return Response({
             "status": "success", 
             "data": data

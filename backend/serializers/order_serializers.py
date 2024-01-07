@@ -1,17 +1,29 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from backend.models import Order, PaymentOption, Uniform
+from backend.models import Order, PaymentOption, Uniform, OrderHistory
 
 from . extras import CustomModelSerializer, CustomSerializer
 
-__all__ = ['OrderSerializer', 'PlaceOrderSerializer', 'BuyNowSerializer']
+__all__ = ['OrderSerializer', 'OrderHistorySerializer', 'PlaceOrderSerializer', 'BuyNowSerializer']
 
 class OrderSerializer(CustomModelSerializer):
     class Meta:
         model = Order
         fields = '__all__'
         read_only_fields = ('status', )
+
+class OrderHistorySerializer(CustomModelSerializer):
+    class Meta:
+        model = OrderHistory
+        fields = '__all__'
+        read_only_fields = ('modified_by', )
+        
+    def create(self, validated_data):
+        request = self.context.get('request')
+        validated_data.update({'modified_by': request.user})
+        
+        return super().create(validated_data)
         
 class PlaceOrderSerializer(CustomSerializer):
     cart_id = serializers.JSONField()

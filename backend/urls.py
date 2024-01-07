@@ -19,6 +19,7 @@ urlpatterns = [
     path('place-order', views.PlaceOrder.as_view()),
     path('buy-now', views.BuyNow.as_view()),
     path('orders/<str:ref_no>', views.OrderDetail.as_view()),    
+    path('order-histories', views.OrderHistoryCreate.as_view()),    
         
     #Payment
     path('payments', views.PaymentCreate.as_view()),
