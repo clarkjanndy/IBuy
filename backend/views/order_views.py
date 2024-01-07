@@ -4,9 +4,10 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from backend.models import Order, OrderItem, Cart, Uniform
+from backend.models import Order, OrderItem, Cart
 from backend.serializers import PlaceOrderSerializer, BuyNowSerializer
 from backend.exceptions import ClientError, SerializerValidationError
+from backend.services.order_service import OrderService
 
 __all__ = ['PlaceOrder', 'BuyNow']
 
@@ -34,6 +35,7 @@ class PlaceOrder(GenericAPIView):
                 user = request.user,
                 payment_option = validated_data['payment_option'],
             )
+            
             # create the OrderItem(s)
             for cart in cart_items:
                 OrderItem.objects.create(
@@ -45,7 +47,11 @@ class PlaceOrder(GenericAPIView):
                 )
                 cart.status = 'purchased'
                 cart.save()
-            
+                
+            # call service to do necessary things
+            service = OrderService(order)
+            service.create_history(request.user, 'Order Placed', order.status)
+        
             return Response({
                 "status": "success", 
                 "data": {
@@ -93,6 +99,10 @@ class BuyNow(GenericAPIView):
             inventory = uniform.inventory
             inventory.quantity -= quantity
             inventory.save()
+            
+            # call service to do necessary things
+            service = OrderService(order)
+            service.create_history(request.user, 'Order Placed', order.status)
       
             return Response({
                 "status": "success", 

@@ -89,23 +89,16 @@
 
               <div class="row">
                 <div class="timeline p-4 block mb-4">
+
+                  {% for history in order.history.all %}
                   <div class="tl-item active">
                     <div class="tl-dot b-primary"></div>
                     <div class="tl-content">
-                      <div class="">@twitter thanks for you appreciation and @google thanks for you appreciation
-                      </div>
-                      <div class="tl-date text-muted mt-1">13 june 18</div>
+                      <div class="">{{history.remarks}}</div>
+                      <div class="tl-date text-muted mt-1">{{history.created_at}}</div>
                     </div>
                   </div>
-
-                  <div class="tl-item">
-                    <div class="tl-dot b-primary"></div>
-                    <div class="tl-content">
-                      <div class="">@twitter thanks for you appreciation and @google thanks for you appreciation
-                      </div>
-                      <div class="tl-date text-muted mt-1">13 june 18</div>
-                    </div>
-                  </div>
+                  {% endfor %}
                 </div>
 
               </div>

@@ -1506,8 +1506,8 @@ tl-item.active .tl-dot:before {
 .tl-date {
   font-size: .85em;
   margin-top: 2px;
-  min-width: 100px;
-  max-width: 100px
+  min-width: 200px;
+  max-width: 200px
 }
 
 .avatar {
