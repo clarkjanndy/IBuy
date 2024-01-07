@@ -23,7 +23,7 @@ class PaymentSerializer(CustomModelSerializer):
             raise ValidationError({'amount': 'Amount must be greater than or equal to order total.'})
         
         if not request.user.is_superuser and not order.user == request.user:
-            raise ValidationError({'order': 'You are unable to pay this order.'})
+            raise ValidationError({'order': 'You are unable to pay this.'})
         
         return attrs
         

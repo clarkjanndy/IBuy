@@ -7,7 +7,8 @@ from . custom_mixins import LoginRequiredMixin
 
 __all__ = [
     'MyOrder', 
-    'MyOrderDetail'
+    'MyOrderDetail',
+    'MyOrderDetailPayment'
 ] 
 
 # normal user views here
@@ -56,6 +57,14 @@ class MyOrderDetail(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context.update({'current_page': 'my-orders'})
         return context
+    
+class MyOrderDetailPayment(MyOrderDetail):
+    template_name = 'frontend/order/detail_pay.html'
+    
+
+
+
+
 
 
 

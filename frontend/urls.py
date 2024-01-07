@@ -23,6 +23,7 @@ urlpatterns = [
     # Order
     path('my-orders', views.MyOrder.as_view()),
     path('my-orders/<str:ref_no>', views.MyOrderDetail.as_view()),
+    path('my-orders/<str:ref_no>/payment', views.MyOrderDetailPayment.as_view()),
 
     # FAQ
     path('faq', views.FAQ.as_view()),
