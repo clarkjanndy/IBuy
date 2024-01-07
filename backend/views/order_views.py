@@ -1,15 +1,16 @@
 from django.contrib import messages
 
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from backend.models import Order, OrderItem, Cart
-from backend.serializers import PlaceOrderSerializer, BuyNowSerializer
+from backend.serializers import PlaceOrderSerializer, BuyNowSerializer, OrderSerializer
 from backend.exceptions import ClientError, SerializerValidationError
 from backend.services.order_service import OrderService
 
-__all__ = ['PlaceOrder', 'BuyNow']
+__all__ = ['PlaceOrder', 'BuyNow', 'OrderDetail']
 
 class PlaceOrder(GenericAPIView):
     permission_classes = (IsAuthenticated, )
@@ -117,7 +118,22 @@ class BuyNow(GenericAPIView):
         
         except ClientError as err:
             raise err
+
+class OrderDetail(RetrieveAPIView):
+    permission_classes = (IsAuthenticated, )
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    lookup_field = 'ref_no'
+    
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        data = response.data
         
+        return Response({
+            "status": "success", 
+            "data": data
+        })
+
     
     
         

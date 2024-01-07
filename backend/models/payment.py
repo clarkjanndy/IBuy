@@ -23,7 +23,7 @@ class Payment(TimeStampedModel):
     user = models.ForeignKey('User', related_name='payments', on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=8, decimal_places=2, default = 0)
     status = models.CharField(choices=STATUS, default='pending', max_length=12)
-    receipt_image = models.ImageField(upload_to='payment-receipts/')
+    receipt_image = models.ImageField(upload_to='payment-receipts/', null=True, blank=True)
                 
     def __str__(self):
         return self.ref_no

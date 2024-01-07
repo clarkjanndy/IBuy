@@ -16,6 +16,15 @@ class PaymentCreate(CreateAPIView):
     queryset = Payment.objects.prefetch_related('user', 'order')
     serializer_class = PaymentSerializer
     
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        data = response.data
+        
+        # messages.success(request, f"Category {data.get('name')} created successfully!")
+        return Response({
+            "status": "success", 
+            "data": data
+        })
        
 
     
