@@ -27,46 +27,54 @@
           <div class="card-body">
             <h5 class="card-title">You are about to pay for the order {{order.ref_no}}.</h5>
             <div class="row">
-              <div class="col-lg-8">
+              <div class="col-lg-7">
                 <div>Payment Instruction</div>
                 <div>{{order.payment_option.payment_instruction|safe}}</div>
-                <div>
-                  <div class="form-group my-3">
-                    <div>Amount to Pay </div>
-                    <div><span class="header-title" style="font-size: 30px;">&#x20B1; {{order.total}}</span> </div>
-                  </div>
-                  <div class="form-group my-3 col-lg-8">
+              </div>
+
+              <div class="col-lg-5">
+
+                <div class="form-group my-3">
+                  <div>Amount to Pay </div>
+                  <div><span class="header-title" style="font-size: 30px;">&#x20B1; {{order.total}}</span> </div>
+                </div>
+
+                <div class="form-group my-3 {% if order.payment_option.is_facilitated %}d-none{% endif %}">
+
+                  <div>
                     <label>Amount Paid</label>
                     <input type="text" name="amount" id="amount" class="form-control" placeholder="Amount Paid">
                     <span class="text-danger d-none" id="amountErrorText"> Please input amount.</span>
                   </div>
 
+                  <div>
+                    <form id="uploadImageForm">
+                      <h5 class="card-title">Upload receipt here if applicable</h5>
+                      <div id="file-drop" class="mb-3">
+                        <p class="mb-0">Drag and drop file here or click to browse</p>
+                        <input type="file" id="image" name="image" class="form-control" style="display: none;" required>
+                      </div>
+                      <span class="text-danger d-none" id="receiptErrorText"></span>
+
+                      <div class="d-flex justify-content-center align-items-center d-none" id="photoPreviewContainer">
+                        <div class="square-container-100 ">
+                          <img src="" alt="" id="photoPreview" class="square-image">
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+
+                  <div class="d-flex justify-content-end">
+                    <div>
+                      <button class="btn btn-primary" onclick="handleSubmit()">Done</button>
+                    </div>
+                  </div>
+
                 </div>
               </div>
 
-              <div class="col-lg-4">
-                <form id="uploadImageForm">
-                  <h5 class="card-title">Upload receipt here if applicable</h5>
-                  <div id="file-drop" class="mb-3">
-                    <p class="mb-0">Drag and drop file here or click to browse</p>
-                    <input type="file" id="image" name="image" class="form-control" style="display: none;" required>
-                  </div>
-                  <span class="text-danger d-none" id="receiptErrorText"></span>
-
-                  <div class="d-flex justify-content-center align-items-center d-none" id="photoPreviewContainer">
-                    <div class="square-container-100 ">
-                      <img src="" alt="" id="photoPreview" class="square-image">
-                    </div>
-                  </div>
-                </form>
-              </div>
-
             </div>
-            <div class="d-flex justify-content-end">
-              <div>
-                <button class="btn btn-primary" onclick="handleSubmit()">Done</button>
-              </div>
-            </div>
+            
           </div>
 
         </div>

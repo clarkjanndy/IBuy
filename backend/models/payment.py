@@ -32,6 +32,8 @@ class PaymentOption(TimeStampedModel):
     name = models.CharField(max_length=255)
     code = models.CharField(max_length=10, unique=True)
     payment_instruction = models.TextField()
+    is_facilitated = models.BooleanField(default=False)
+    receipt_required = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return self.name
