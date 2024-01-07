@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404
 
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, GenericAPIView
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 
 from backend.permissions import IsAdminOrReadOnly
@@ -80,7 +80,7 @@ class UniformListCreate(ListCreateAPIView):
         })
     
 class UniformById(RetrieveUpdateAPIView):
-    permission_classes = (IsAdminUser, )
+    permission_classes = (IsAuthenticated, )
     queryset = Uniform.objects.all()
     lookup_field='pk'
     serializer_class = UniformSerializer
