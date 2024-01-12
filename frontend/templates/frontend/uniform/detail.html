@@ -55,7 +55,7 @@
 
                 </h4>
                 <div class="text-primary">
-                  <span id="quantityText">{{uniform.inventory.quantity|default:"0"}}</span> pcs. available | 0 sold
+                  <span id="quantityText">{{uniform.inventory.quantity|default:"0"}}</span> pcs. available | {{uniform.sold}} sold
                 </div>
 
                 <h3 class="card-title" style="font-size: 50px;">&#x20B1; {{uniform.price}}</h3>
@@ -73,11 +73,6 @@
                       <div class="row">
                         <div class="col-lg-3 col-md-4 label ">Extra Name</div>
                         <div class="col-lg-9 col-md-8">{{uniform.extra_name}}</div>
-                      </div>
-
-                      <div class="row">
-                        <div class="col-lg-3 col-md-4 label">Barcode</div>
-                        <div class="col-lg-9 col-md-8">{{uniform.barcode}}</div>
                       </div>
 
                       <div class="row">

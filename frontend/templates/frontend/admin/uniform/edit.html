@@ -52,12 +52,6 @@
               </div>
 
               <div class="col-lg-6">
-                  <label for="barcode" class="form-label">Barcode: </label>                                       
-                  <input type="text" name="barcode" class="form-control" id="barcode"
-                      required placeholder="Barcode" value="{{uniform.barcode}}">                                            
-              </div>
-              
-              <div class="col-lg-6">
                 <label for="price" class="form-label">Price: </label>                                       
                 <input type="text" name="price" class="form-control" id="price"
                     required placeholder="Price"  value="{{uniform.price}}">                                            
@@ -130,10 +124,6 @@
             errorMessage: 'This field is required',
         },])
         .addField('#extra_name', [{
-            rule: 'required',
-            errorMessage: 'This field is required',
-        },])
-        .addField('#barcode', [{
             rule: 'required',
             errorMessage: 'This field is required',
         },])

@@ -1,8 +1,10 @@
 from django.conf import settings
 from django.db import models
+from django.db.models import Sum
 from . extras import TimeStampedModel
 
 from . user import User
+from . order import OrderItem
 __all__ = ['Category','Uniform', 'UniformImage', 'Inventory']
 
 class Category(TimeStampedModel):
@@ -24,7 +26,6 @@ class Uniform(TimeStampedModel):
 
     name = models.CharField(max_length=255)
     extra_name = models.CharField(max_length=255)
-    barcode = models.CharField(max_length=255, unique=True)
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.ForeignKey(Category, related_name='uniforms', on_delete=models.CASCADE)
@@ -35,7 +36,12 @@ class Uniform(TimeStampedModel):
     
     def __str__(self) -> str:
         return self.name
-
+    
+    @property
+    def sold(self):
+        order = OrderItem.objects.filter(uniform=self).aggregate(quantity=Sum('quantity'))        
+        return order.get('quantity') or 0
+        
     @property
     def is_active(self):
         return True if self.status == 'active' else False
