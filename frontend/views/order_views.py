@@ -3,7 +3,7 @@ from django.views.generic import ListView, DetailView
 
 from backend.models import Order
 
-from . custom_mixins import LoginRequiredMixin, AdminRequiredMixin
+from . custom_mixins import LoginRequiredMixin, AdminRequiredMixin, NormalUserRequiredMixin
 
 __all__ = [
     'OrderList',
@@ -70,7 +70,7 @@ class OrderDetailReceipt(OrderDetail):
     template_name = 'frontend/admin/order/detail_receipt.html'
     
 # normal user views here
-class MyOrder(LoginRequiredMixin, ListView):
+class MyOrder(NormalUserRequiredMixin, ListView):
     template_name = 'frontend/order/list.html'
     queryset = Order.objects.prefetch_related('user', 'items', 'items__uniform', 'items__uniform__images', 'payment_option')
     ordering = ('-modified_at', )
@@ -98,7 +98,7 @@ class MyOrder(LoginRequiredMixin, ListView):
     
         return queryset.filter(user = request.user)
     
-class MyOrderDetail(LoginRequiredMixin, DetailView):
+class MyOrderDetail(NormalUserRequiredMixin, DetailView):
     model = Order
     template_name = 'frontend/order/detail.html'
     queryset = Order.objects.prefetch_related('user', 'payment_option', 'payment')

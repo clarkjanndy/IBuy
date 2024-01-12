@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http.response import HttpResponseRedirect
 
-__all__ = ['AdminRequiredMixin', 'NotAuthenticatedMixin', 'LoginRequiredMixin']
+__all__ = ['AdminRequiredMixin', 'NotAuthenticatedMixin', 'LoginRequiredMixin', 'NormalUserRequiredMixin']
 
 class LoginRequiredMixin(UserPassesTestMixin):
     def test_func(self):
@@ -24,6 +24,16 @@ class AdminRequiredMixin(UserPassesTestMixin):
             return  HttpResponseRedirect('/profile')
         
         return  HttpResponseRedirect('/login')
+    
+class NormalUserRequiredMixin(UserPassesTestMixin):
+
+    def test_func(self):
+        request = self.request
+        return not request.user.is_superuser
+    
+    def handle_no_permission(self):
+        # redirect to dashboard if authenticated
+        return  HttpResponseRedirect('admin/dashboard')
         
 class NotAuthenticatedMixin(UserPassesTestMixin):
 

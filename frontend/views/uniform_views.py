@@ -3,7 +3,7 @@ from django.views.generic import ListView, TemplateView, DetailView
 
 from backend.models import Uniform, Category, PaymentOption
 
-from . custom_mixins import AdminRequiredMixin, LoginRequiredMixin
+from . custom_mixins import AdminRequiredMixin, LoginRequiredMixin, NormalUserRequiredMixin
 
 __all__ = [
     'UniformBrowse', 
@@ -16,7 +16,7 @@ __all__ = [
 ] 
 
 # normal user views here
-class UniformBrowse(LoginRequiredMixin, ListView):
+class UniformBrowse(NormalUserRequiredMixin, ListView):
     template_name = 'frontend/uniform/list.html'
     queryset = Uniform.objects.select_related('category').filter(status='active')
     paginate_by = 12

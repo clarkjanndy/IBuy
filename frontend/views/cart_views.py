@@ -3,14 +3,14 @@ from django.views.generic import ListView
 
 from backend.models import Cart, PaymentOption
 
-from . custom_mixins import LoginRequiredMixin
+from . custom_mixins import NormalUserRequiredMixin
 
 __all__ = [
     'MyCart', 
 ] 
 
 # normal user views here
-class MyCart(LoginRequiredMixin, ListView):
+class MyCart(NormalUserRequiredMixin, ListView):
     template_name = 'frontend/my-cart.html'
     queryset = Cart.objects.select_related('uniform', 'user')
     paginate_by = 12

@@ -278,6 +278,7 @@
 
     {% endif %}
 
+    {% if not user.is_superuser %}
     <li class="nav-item">
       <a class="nav-link {% if not current_page == 'uniforms'%}collapsed{% endif %}" href="/uniforms">
         <i class="bi bi-globe"></i>
@@ -298,6 +299,7 @@
         <span>My Orders</span>
       </a>
     </li><!-- My Orders -->
+    {% endif %}
 
 
     <li class="nav-item">
