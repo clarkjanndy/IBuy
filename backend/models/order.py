@@ -14,7 +14,7 @@ def generate_reference_number():
 
 STATUS = (
     ('to-pay', 'To Pay'),
-    ('to-ship', 'To Ship'),
+    ('to-prepare', 'To Prepare'),
     ('to-recieve', 'To Recieve'),
     ('completed', 'Completed'),
     ('cancelled', 'Cancelled'),

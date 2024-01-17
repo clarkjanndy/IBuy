@@ -39,7 +39,7 @@ class PaymentSerializer(CustomModelSerializer):
         order = validated_data['order']
         # create history 
         service = OrderService(order)
-        service.create_history(request.user, f'Order paid via {order.payment_option}.', 'to-ship')
+        service.create_history(request.user, f'Order paid via {order.payment_option}.', 'to-prepare')
                 
         return super().create(validated_data)
     
