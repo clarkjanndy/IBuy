@@ -75,8 +75,8 @@
                 <label for="status" class="form-label">Status: </label>                                     
                 <select class="form-select" name="status" id="status" >
                     <option selected disabled value="">---</option>
-                    <option value="active" {{uniform.status|is_selected:"active"}}>Active</option>
-                    <option value="inactive" {{uniform.status|is_selected:"inactive"}}>Inactive</option>
+                    <option value="in-stock" {{uniform.status|is_selected:"in-stock"}}>In-Stock</option>
+                    <option value="out-of-stock" {{uniform.status|is_selected:"out-of-stock"}}>Out-of-Stock</option>
                     <option value="draft" {{uniform.status|is_selected:"draft"}}>Draft</option>
                 </select>                                           
               </div>

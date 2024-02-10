@@ -74,8 +74,8 @@
                 <label for="status" class="form-label">Status: </label>                                     
                 <select class="form-select" name="status" id="status" >
                     <option selected disabled value="">---</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
+                    <option value="in-stock">In-Stock</option>
+                    <option value="out-of-stock">Out-of-Stock</option>
                     <option value="draft">Draft</option>
                 </select>                                           
               </div>
@@ -142,6 +142,10 @@
         .addField('#quantity', [{
             rule: 'required',
             errorMessage: 'This field is required',
+        },
+        {
+            rule: 'number',
+            errorMessage: 'Value must be a number.',
         }])
         .addField('#status', [{
             rule: 'required',

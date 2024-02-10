@@ -19,8 +19,8 @@ class Category(TimeStampedModel):
 class Uniform(TimeStampedModel):
 
     STATUSES = (
-        ('active', 'Active'),
-        ('inactive', 'Inactive'),
+        ('in-stock', 'In-Stock'),
+        ('out-of-stock', 'Out-of-Stock'),
         ('draft', 'Draft')
     )
 
@@ -30,7 +30,7 @@ class Uniform(TimeStampedModel):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.ForeignKey(Category, related_name='uniforms', on_delete=models.CASCADE)
     available_sizes = models.JSONField(default=list)
-    status = models.CharField(max_length=10, choices=STATUSES, default='active')
+    status = models.CharField(max_length=15, choices=STATUSES, default='in-stock')
     created_by = models.ForeignKey(User, related_name='created_uniforms', on_delete=models.CASCADE)
     modified_by = models.ForeignKey(User, related_name='modified_uniforms', on_delete=models.CASCADE)
     
@@ -44,7 +44,7 @@ class Uniform(TimeStampedModel):
         
     @property
     def is_active(self):
-        return True if self.status == 'active' else False
+        return True if self.status == 'in-stock' else False
     
     @property
     def uniform_images(self):

@@ -18,7 +18,7 @@ __all__ = [
 # normal user views here
 class UniformBrowse(NormalUserRequiredMixin, ListView):
     template_name = 'frontend/uniform/list.html'
-    queryset = Uniform.objects.select_related('category').filter(status='active')
+    queryset = Uniform.objects.select_related('category').filter(status='in-stock')
     paginate_by = 12
     ordering = ('-modified_at', )
 
@@ -54,6 +54,7 @@ class UniformView(LoginRequiredMixin, DetailView):
     model = Uniform
     template_name = 'frontend/uniform/detail.html'
     context_object_name = 'uniform'
+    queryset = Uniform.objects.select_related('category').filter(status='in-stock')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
