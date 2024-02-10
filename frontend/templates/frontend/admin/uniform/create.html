@@ -28,61 +28,65 @@
             <form class="row g-3 mt-3" id="createUniformForm">
 
               <div class="col-lg-6">
-                <label for="category" class="form-label">Category: </label>                                     
-                <select class="form-select" name="category" id="category" >
-                    <option selected disabled value="">---</option>
-                    {% for category in categories %}
-                    <option value="{{category.id}}">{{category.name}}</option>
-                    {% endfor %}
-                </select>                                           
+                <label for="category" class="form-label">Category: </label>
+                <select class="form-select" name="category" id="category">
+                  <option selected disabled value="">---</option>
+                  {% for category in categories %}
+                  <option value="{{category.id}}">{{category.name}}</option>
+                  {% endfor %}
+                </select>
               </div>
 
               <div class="col-lg-6">
-                  <label for="name" class="form-label">Name: </label>                                       
-                  <input type="text" name="name" class="form-control" id="name"
-                      required placeholder="Name">
+                <label for="name" class="form-label">Name: </label>
+                <input type="text" name="name" class="form-control" id="name" required placeholder="Name">
               </div>
 
               <div class="col-lg-6">
-                  <label for="extra_name" class="form-label">Extra Name: </label>                                       
-                  <input type="text" name="extra_name" class="form-control" id="extra_name"
-                      required placeholder="e.g. Lower, Upper">                                            
+                <label for="extra_name" class="form-label">Extra Name: </label>
+                <input type="text" name="extra_name" class="form-control" id="extra_name" required
+                  placeholder="e.g. Lower, Upper">
               </div>
 
               <div class="col-lg-6">
-                <label for="price" class="form-label">Price: </label>                                       
-                <input type="text" name="price" class="form-control" id="price"
-                    required placeholder="Price">                                            
+                <label for="price" class="form-label">Price: </label>
+                <input type="text" name="price" class="form-control" id="price" required placeholder="Price">
               </div>
 
               <div class="col-lg-6">
-                <label for="price" class="form-label">Available Sizes: </label>        
-                <small><i>(Type comma to separate values.)</i></small>                                
-                <input type="text" name="available_sizes" class="form-control" id="available_sizes"
-                    required placeholder="e.g Small, Medium">    
-              
-                <div id="pillContainer" class="mt-2"></div>                                       
+                <label for="price" class="form-label">Available Sizes: </label>
+                <small><i>(Type comma to separate values.)</i></small>
+                <input type="text" name="available_sizes" class="form-control" id="available_sizes" required
+                  placeholder="e.g Small, Medium">
+
+                <div id="pillContainer" class="mt-2"></div>
               </div>
 
               <div class="col-lg-6">
-                <label for="quantity" class="form-label">Quantity: </label>                                       
-                <input type="text" name="quantity" class="form-control" id="quantity"
-                    required placeholder="Quantity">                                            
+                <label for="quantity" class="form-label">Quantity: </label>
+                <input type="text" name="quantity" class="form-control" id="quantity" required placeholder="Quantity">
               </div>
 
               <div class="col-lg-6">
-                <label for="status" class="form-label">Status: </label>                                     
-                <select class="form-select" name="status" id="status" >
-                    <option selected disabled value="">---</option>
-                    <option value="in-stock">In-Stock</option>
-                    <option value="out-of-stock">Out-of-Stock</option>
-                    <option value="draft">Draft</option>
-                </select>                                           
+                <label for="status" class="form-label">Status: </label>
+                <select class="form-select" name="status" id="status">
+                  <option selected disabled value="">---</option>
+                  <option value="in-stock">In-Stock</option>
+                  <option value="out-of-stock">Out-of-Stock</option>
+                  <option value="draft">Draft</option>
+                </select>
               </div>
 
+              <div class="col-lg-6">
+                <label for="image" class="form-label">Image: </label>
+                <input type="file" name="image" class="form-control" id="image" required>
+              </div>
+
+            
               <div class="col-lg-12">
-                <label for="description" class="form-label" >Description: </label>                     
-                <textarea class="form-control" name="description" id="description" rows="5" placeholder="Description"></textarea>                                        
+                <label for="description" class="form-label">Description: </label>
+                <textarea class="form-control" name="description" id="description" rows="5"
+                  placeholder="Description"></textarea>
               </div>
 
               <div class="col-12 d-flex justify-content-end">
@@ -91,9 +95,9 @@
                   <button class="btn btn-danger" onclick="history.back()">Cancel</button>
                 </div>
               </div>
-              
-          </form>
- 
+
+            </form>
+
           </div>
         </div>
 
@@ -104,124 +108,128 @@
 </main><!-- End #main -->
 <script src=" {% static 'frontend/vendor/others/just-validate.min.js' %}"></script>
 <script>
-    const availableSizesArray = []
-    
-    //form validator
-    const createUniformForm = document.getElementById('createUniformForm');
-    const createUniformFormValidator = new window.JustValidate('#createUniformForm', {
-        errorFieldCssClass: 'is-invalid',
-    });
-    
-    // validation of form
-    createUniformFormValidator
-        .addField('#category', [{
-            rule: 'required',
-            errorMessage: 'This field is required',
-        },])
-        .addField('#name', [{
-            rule: 'required',
-            errorMessage: 'This field is required',
-        },])
-        .addField('#extra_name', [{
-            rule: 'required',
-            errorMessage: 'This field is required',
-        },])
-        .addField('#price', [{
-            rule: 'required',
-            errorMessage: 'This field is required',
-        },])
-        .addField('#available_sizes', [{
-            validator: () => {
-                if (availableSizesArray.length == 0){
-                  return false
-                }
-                return true
-            },
-            errorMessage: 'This field is required.',
-        }])
-        .addField('#quantity', [{
-            rule: 'required',
-            errorMessage: 'This field is required',
+  const availableSizesArray = []
+
+  //form validator
+  const createUniformForm = document.getElementById('createUniformForm');
+  const createUniformFormValidator = new window.JustValidate('#createUniformForm', {
+    errorFieldCssClass: 'is-invalid',
+  });
+
+  // validation of form
+  createUniformFormValidator
+    .addField('#category', [{
+      rule: 'required',
+      errorMessage: 'This field is required',
+    },])
+    .addField('#name', [{
+      rule: 'required',
+      errorMessage: 'This field is required',
+    },])
+    .addField('#extra_name', [{
+      rule: 'required',
+      errorMessage: 'This field is required',
+    },])
+    .addField('#price', [{
+      rule: 'required',
+      errorMessage: 'This field is required',
+    },])
+    .addField('#available_sizes', [{
+      validator: () => {
+        if (availableSizesArray.length == 0) {
+          return false
+        }
+        return true
+      },
+      errorMessage: 'This field is required.',
+    }])
+    .addField('#quantity', [{
+      rule: 'required',
+      errorMessage: 'This field is required',
+    },
+    {
+      rule: 'number',
+      errorMessage: 'Value must be a number.',
+    }])
+    .addField('#status', [{
+      rule: 'required',
+      errorMessage: 'This field is required',
+    },])
+    .addField('#description', [{
+      rule: 'required',
+      errorMessage: 'This field is required',
+    },])
+    .addField('#image', [ {
+      rule: 'minFilesCount',
+      value: 1,
+      errorMessage: 'This field is required',
+    },])
+    .onSuccess((event) => {
+      event.preventDefault();
+      form = event.target
+      // Make your API call here (e.g., using the fetch() method)
+      const url = '/api/v1/uniforms';
+      const formData = new FormData(form);
+
+      //attach the available sizes array
+      formData.append('available_sizes', JSON.stringify(availableSizesArray))
+
+      // build the payload
+      const payload = {
+        headers: {
+          "X-CSRFToken": "{{csrf_token}}"
         },
-        {
-            rule: 'number',
-            errorMessage: 'Value must be a number.',
-        }])
-        .addField('#status', [{
-            rule: 'required',
-            errorMessage: 'This field is required',
-        },])
-        .onSuccess((event) => {
-            event.preventDefault();
-            form = event.target
-            // Make your API call here (e.g., using the fetch() method)
-            const url = '/api/v1/uniforms'; 
-            const formData = new FormData(form);
+        method: 'POST',
+        body: formData
+      }
 
-            // convert the  formData to json
-            const formJson = {}
-            formData.forEach((value, key) => {
-              formJson[key] = value;
+      fetch(url, payload)
+        .then(response => response.json())
+        .then(response => {
+          console.log(response)
+          // process success here
+          if (response.status === 'success') {
+            const data = response.data
+            //redirect to somewhere
+            window.location.href = `/admin/manage-uniforms/${data.id}`
+
+            // process failed here
+          } else {
+            // store error data
+            const errors = response.data
+            // create a blank variable to store error
+            const field_errors = {}
+            // add hashtags to keys
+            Object.keys(errors).forEach(key => {
+              const value = errors[key];
+              field_errors[`#${key}`] = value
             });
-            //attach the available sizes array
-            formJson.available_sizes = availableSizesArray
-            // build the payload
-            const payload =  {
-                headers: {
-                  "X-CSRFToken":  "{{csrf_token}}",
-                  "Content-Type": "application/json"
-                },
-                method: 'POST',
-                body: JSON.stringify(formJson)
-            }
 
-            fetch(url, payload)
-                .then(response => response.json())
-                .then(response => {
-                    console.log(response)
-                    // process success here
-                    if (response.status === 'success'){
-                      const data = response.data
-                      //redirect to somewhere
-                      window.location.href = `/admin/manage-uniforms/${data.id}`
-                        
-                    // process failed here
-                    }else{
-                        // store error data
-                        const errors = response.data
-                        // create a blank variable to store error
-                        const field_errors = {}
-                        // add hashtags to keys
-                        Object.keys(errors).forEach(key => {
-                            const value = errors[key];
-                            field_errors[`#${key}`] = value
-                        });
-
-                        // show field errors to user
-                        createUniformFormValidator.showErrors(field_errors)
-                    }
-                })
-                .catch(error => {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Something went wrong!',
-                        confirmButtonColor: '#4154f1',
-                    })
-                });
+            // show field errors to user
+            createUniformFormValidator.showErrors(field_errors)
+          }
+        })
+        .catch(error => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong!',
+            confirmButtonColor: '#4154f1',
+          })
         });
+    });
 
-document.addEventListener('DOMContentLoaded',  () => {
+  document.addEventListener('DOMContentLoaded', () => {
     const pillContainer = document.getElementById('pillContainer');
     const availableSizesInput = document.getElementById('available_sizes');
-    
+
     // event to add the pills below the text field
-    availableSizesInput.addEventListener('keyup',  (event) => {
+    availableSizesInput.addEventListener('keyup', (event) => {
       if (event.key === ',' && availableSizesInput.value.trim() !== '') {
         let inputValue = availableSizesInput.value.trim().toUpperCase();
         inputValue = inputValue.replace(/,$/, ''); // Remove trailing comma
         availableSizesArray.push(inputValue)
-        
+
         const pill = document.createElement('span');
         pill.className = 'pill badge rounded-pill text-bg-primary';
 
@@ -234,14 +242,14 @@ document.addEventListener('DOMContentLoaded',  () => {
 
     // Function to remove a pill when the 'x' is clicked
     window.removePill = (element) => {
-        let currentPill = element.parentNode.textContent.trim();
-        currentPill = currentPill.replace(/x$/, ''); // Remove x
-        const currentIndex = availableSizesArray.indexOf(currentPill)
+      let currentPill = element.parentNode.textContent.trim();
+      currentPill = currentPill.replace(/x$/, ''); // Remove x
+      const currentIndex = availableSizesArray.indexOf(currentPill)
 
-        availableSizesArray.splice(currentIndex, 1)
-        element.parentNode.remove();
+      availableSizesArray.splice(currentIndex, 1)
+      element.parentNode.remove();
     };
-});
+  });
 
 </script>
 {%endblock content%}
