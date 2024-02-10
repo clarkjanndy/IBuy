@@ -25,7 +25,7 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Edit Uniform</h5>
-            <p>Fill out the form below to update unfirorm details of <b>{{uniform.name}}</b>.</p>
+            <p>Fill out the form below to update uniform details of <b>{{uniform.name}}</b>.</p>
 
             <form class="row g-3 mt-3" id="updateUniformForm">
 
@@ -40,15 +40,19 @@
               </div>
 
               <div class="col-lg-6">
-                  <label for="name" class="form-label">Name: </label>                                       
-                  <input type="text" name="name" class="form-control" id="name"
-                      required placeholder="Name" value="{{uniform.name}}">
+                <label for="category" class="form-label">Department: </label>
+                <select class="form-select" name="department" id="department">
+                  <option selected disabled value="">---</option>
+                  {% for department in departments %}
+                  <option value="{{department.id}}" {{uniform.department.id|is_selected:department.id}}>{{department.name}}</option>
+                  {% endfor %}
+                </select>
               </div>
 
               <div class="col-lg-6">
-                  <label for="extra_name" class="form-label">Extra Name: </label>                                       
-                  <input type="text" name="extra_name" class="form-control" id="extra_name"
-                      required placeholder="e.g. Lower, Upper" value="{{uniform.extra_name}}">                                            
+                  <label for="name" class="form-label">Name: </label>                                       
+                  <input type="text" name="name" class="form-control" id="name"
+                      required placeholder="Name" value="{{uniform.name}}">
               </div>
 
               <div class="col-lg-6">
@@ -58,18 +62,14 @@
               </div>
 
               <div class="col-lg-6">
-                <label for="price" class="form-label">Available Sizes: </label>        
-                <small><i>(Type comma to separate values.)</i></small>                                
-                <input type="text" name="available_sizes" class="form-control" id="available_sizes"
-                    required placeholder="e.g Small, Medium">    
-                <div id="pillContainer" class="mt-2"></div>                                       
+                <label for="price" class="form-label">Variants: </label>
+                <small><i>(Type comma to separate values.)</i></small>
+                <input type="text" name="variants" class="form-control" id="variants" required
+                  placeholder="e.g Small, Medium">
+
+                <div id="pillContainer" class="mt-2"></div>
               </div>
 
-              <div class="col-lg-6">
-                <label for="quantity" class="form-label">Quantity to add: <small><i>Current quantity is <b>{{uniform.inventory.quantity}}</b></i></small> </label>    
-                <input type="number" name="quantity" class="form-control w-100" id="quantity"
-                    required placeholder="Quantity to add" value="0">                      
-              </div>
 
               <div class="col-lg-6">
                 <label for="status" class="form-label">Status: </label>                                     
@@ -80,6 +80,22 @@
                     <option value="draft" {{uniform.status|is_selected:"draft"}}>Draft</option>
                 </select>                                           
               </div>
+
+              <div class="col-lg-6">
+                <label for="status" class="form-label">Unit: </label>
+                <select class="form-select" name="unit" id="unit">
+                  <option selected disabled value="">---</option>
+                  <option value="pieces" {{uniform.inventory.unit|is_selected:"pieces"}}>Pieces</option>
+                  <option value="meters" {{uniform.inventory.unit|is_selected:"meters"}}>Meters</option>
+                </select>
+              </div>
+
+              <div class="col-lg-6">
+                <label for="quantity" class="form-label">Quantity to add: <small><i>Current quantity is <b>{{uniform.inventory.quantity_text}}</b></i></small> </label>    
+                <input type="number" name="quantity" class="form-control w-100" id="quantity"
+                    required placeholder="Quantity to add" value="0">                      
+              </div>
+
 
               <div class="col-lg-12">
                 <label for="description" class="form-label" >Description: </label>                     
@@ -106,7 +122,7 @@
 <script src=" {% static 'frontend/vendor/others/just-validate.min.js' %}"></script>
 <script>
     //will store the availabe sizes of th current uniform
-    const availableSizesArray = []
+    const variantsArray = []
     
     //form validator
     const updateUniformFormValidator = new window.JustValidate('#updateUniformForm', {
@@ -119,11 +135,11 @@
             rule: 'required',
             errorMessage: 'This field is required',
         },])
-        .addField('#name', [{
+        .addField('#department', [{
             rule: 'required',
             errorMessage: 'This field is required',
         },])
-        .addField('#extra_name', [{
+        .addField('#name', [{
             rule: 'required',
             errorMessage: 'This field is required',
         },])
@@ -131,9 +147,9 @@
             rule: 'required',
             errorMessage: 'This field is required',
         },])
-        .addField('#available_sizes', [{
+        .addField('#variants', [{
             validator: () => {
-                if (availableSizesArray.length == 0){
+                if (variantsArray.length == 0){
                   return false
                 }
                 return true
@@ -155,27 +171,16 @@
             const url = '/api/v1/uniforms/{{uniform.id}}'; 
             const formData = new FormData(form);
 
-            // convert the  formData to json
-            const formJson = {}
-            formData.forEach((value, key) => {
-              formJson[key] = value;
-            });
             //attach the available sizes array
-            formJson.available_sizes = availableSizesArray
-            // compute for allow_pre_order checkbox
-            if (formJson.hasOwnProperty('allow_pre_order')){
-              formJson.allow_pre_order = true
-            }else{
-              formJson.allow_pre_order = false
-            }
+            formData.append('variants', JSON.stringify(variantsArray))
+
             // build the payload
             const payload =  {
                 headers: {
-                  "X-CSRFToken":  "{{csrf_token}}",
-                  "Content-Type": "application/json"
+                  "X-CSRFToken":  "{{csrf_token}}"
                 },
                 method: 'PATCH',
-                body: JSON.stringify(formJson)
+                body: formData
             }
 
             fetch(url, payload)
@@ -215,17 +220,17 @@
         });
 
 document.addEventListener('DOMContentLoaded',  () => {
-    const availableSizesInput = document.getElementById('available_sizes');
+    const variantsInput= document.getElementById('variants');
     const pillContainer = document.getElementById('pillContainer');
     
     // event to add the pills below the text field
-    availableSizesInput.addEventListener('keyup',  (event) => {
-      if (event.key === ',' && availableSizesInput.value.trim() !== '') {
-        let inputValue = availableSizesInput.value.trim().toUpperCase();
+    variantsInput.addEventListener('keyup',  (event) => {
+      if (event.key === ',' && variantsInput.value.trim() !== '') {
+        let inputValue = variantsInput.value.trim().toUpperCase();
         inputValue = inputValue.replace(/,$/, ''); // Remove trailing comma
-        availableSizesArray.push(inputValue)
+        variantsArray.push(inputValue)
         addPill(inputValue)
-        availableSizesInput.value = '';
+        variantsInput.value = '';
       }
     });
 
@@ -241,13 +246,13 @@ document.addEventListener('DOMContentLoaded',  () => {
     window.removePill = (element) => {
         let currentPill = element.parentNode.textContent.trim();
         currentPill = currentPill.replace(/x$/, ''); // Remove x
-        const currentIndex = availableSizesArray.indexOf(currentPill)
+        const currentIndex = variantsArray.indexOf(currentPill)
 
-        availableSizesArray.splice(currentIndex, 1)
+        variantsArray.splice(currentIndex, 1)
         element.parentNode.remove();
     };
 
-    const populateAvailableSizesArray = () =>{
+    const populateVariantsArray = () =>{
         const url = '/api/v1/uniforms/{{uniform.id}}'; 
         const payload =  {
             headers: {
@@ -259,14 +264,13 @@ document.addEventListener('DOMContentLoaded',  () => {
         fetch(url, payload)
           .then(response => response.json())
           .then(response => {
-              console.log(response)
               // process success here
               if (response.status === 'success'){
                 const data = response.data
                 
                 // add the elemet to the array and then add it to pill
-                data.available_sizes.forEach((element) => {
-                  availableSizesArray.push(element)
+                data.variants.forEach((element) => {
+                  variantsArray.push(element)
                   addPill(element)
                 });
   
@@ -281,7 +285,7 @@ document.addEventListener('DOMContentLoaded',  () => {
               })
           });
     };
-    populateAvailableSizesArray()
+    populateVariantsArray()
 });
 
 </script>

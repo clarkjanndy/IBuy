@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.views.generic import ListView, TemplateView, DetailView
 
-from backend.models import Uniform, Category, PaymentOption
+from backend.models import Uniform, Category, PaymentOption, Department
 
 from . custom_mixins import AdminRequiredMixin, LoginRequiredMixin, NormalUserRequiredMixin
 
@@ -58,7 +58,7 @@ class UniformView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update({'payment_options': PaymentOption.objects.all()})      
+        context.update({'payment_options': PaymentOption.objects.all()})           
         context.update({'current_page': 'uniforms'})
         return context
     
@@ -101,8 +101,8 @@ class UniformCreate(AdminRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         context.update({"categories": Category.objects.all()})
+        context.update({'departments': Department.objects.all()}) 
         context.update({'current_page': 'manage-uniforms'})
         return context
     
@@ -113,7 +113,8 @@ class UniformDetail(AdminRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update({'current_page': 'manage-uniforms'})
+        context.update({'current_page': 'manage-uniforms'})        
+        context.update({'departments': Department.objects.all()}) 
         return context
 
 class UniformEdit(AdminRequiredMixin, DetailView):
@@ -126,6 +127,7 @@ class UniformEdit(AdminRequiredMixin, DetailView):
 
         context.update({"categories": Category.objects.all()})
         context.update({'current_page': 'manage-uniforms'})
+        context.update({'departments': Department.objects.all()}) 
         return context
     
 class UniformImages(AdminRequiredMixin, DetailView):

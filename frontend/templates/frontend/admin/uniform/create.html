@@ -38,14 +38,18 @@
               </div>
 
               <div class="col-lg-6">
-                <label for="name" class="form-label">Name: </label>
-                <input type="text" name="name" class="form-control" id="name" required placeholder="Name">
+                <label for="category" class="form-label">Department: </label>
+                <select class="form-select" name="department" id="department">
+                  <option selected disabled value="">---</option>
+                  {% for department in departments %}
+                  <option value="{{department.id}}">{{department.name}}</option>
+                  {% endfor %}
+                </select>
               </div>
 
               <div class="col-lg-6">
-                <label for="extra_name" class="form-label">Extra Name: </label>
-                <input type="text" name="extra_name" class="form-control" id="extra_name" required
-                  placeholder="e.g. Lower, Upper">
+                <label for="name" class="form-label">Name: </label>
+                <input type="text" name="name" class="form-control" id="name" required placeholder="Name">
               </div>
 
               <div class="col-lg-6">
@@ -54,17 +58,12 @@
               </div>
 
               <div class="col-lg-6">
-                <label for="price" class="form-label">Available Sizes: </label>
+                <label for="price" class="form-label">Variants: </label>
                 <small><i>(Type comma to separate values.)</i></small>
-                <input type="text" name="available_sizes" class="form-control" id="available_sizes" required
+                <input type="text" name="variants" class="form-control" id="variants" required
                   placeholder="e.g Small, Medium">
 
                 <div id="pillContainer" class="mt-2"></div>
-              </div>
-
-              <div class="col-lg-6">
-                <label for="quantity" class="form-label">Quantity: </label>
-                <input type="text" name="quantity" class="form-control" id="quantity" required placeholder="Quantity">
               </div>
 
               <div class="col-lg-6">
@@ -77,6 +76,21 @@
                 </select>
               </div>
 
+              <div class="col-lg-6">
+                <label for="status" class="form-label">Unit: </label>
+                <select class="form-select" name="unit" id="unit">
+                  <option selected disabled value="">---</option>
+                  <option value="pieces">Pieces</option>
+                  <option value="meters">Meters</option>
+                </select>
+              </div>
+
+              <div class="col-lg-6">
+                <label for="quantity" class="form-label">Quantity: </label>
+                <input type="text" name="quantity" class="form-control" id="quantity" required placeholder="Quantity">
+              </div>
+
+          
               <div class="col-lg-6">
                 <label for="image" class="form-label">Image: </label>
                 <input type="file" name="image" class="form-control" id="image" required>
@@ -108,7 +122,7 @@
 </main><!-- End #main -->
 <script src=" {% static 'frontend/vendor/others/just-validate.min.js' %}"></script>
 <script>
-  const availableSizesArray = []
+  const variantsArray = []
 
   //form validator
   const createUniformForm = document.getElementById('createUniformForm');
@@ -122,11 +136,11 @@
       rule: 'required',
       errorMessage: 'This field is required',
     },])
-    .addField('#name', [{
+    .addField('#department', [{
       rule: 'required',
       errorMessage: 'This field is required',
     },])
-    .addField('#extra_name', [{
+    .addField('#name', [{
       rule: 'required',
       errorMessage: 'This field is required',
     },])
@@ -134,15 +148,19 @@
       rule: 'required',
       errorMessage: 'This field is required',
     },])
-    .addField('#available_sizes', [{
+    .addField('#variants', [{
       validator: () => {
-        if (availableSizesArray.length == 0) {
+        if (variantsArray.length == 0) {
           return false
         }
         return true
       },
       errorMessage: 'This field is required.',
     }])
+    .addField('#unit', [{
+      rule: 'required',
+      errorMessage: 'This field is required',
+    },])
     .addField('#quantity', [{
       rule: 'required',
       errorMessage: 'This field is required',
@@ -172,7 +190,7 @@
       const formData = new FormData(form);
 
       //attach the available sizes array
-      formData.append('available_sizes', JSON.stringify(availableSizesArray))
+      formData.append('variants', JSON.stringify(variantsArray))
 
       // build the payload
       const payload = {
@@ -221,21 +239,21 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     const pillContainer = document.getElementById('pillContainer');
-    const availableSizesInput = document.getElementById('available_sizes');
+    const variantsInput = document.getElementById('variants');
 
     // event to add the pills below the text field
-    availableSizesInput.addEventListener('keyup', (event) => {
-      if (event.key === ',' && availableSizesInput.value.trim() !== '') {
-        let inputValue = availableSizesInput.value.trim().toUpperCase();
+    variantsInput.addEventListener('keyup', (event) => {
+      if (event.key === ',' && variantsInput.value.trim() !== '') {
+        let inputValue = variantsInput.value.trim().toUpperCase();
         inputValue = inputValue.replace(/,$/, ''); // Remove trailing comma
-        availableSizesArray.push(inputValue)
+        variantsArray.push(inputValue)
 
         const pill = document.createElement('span');
         pill.className = 'pill badge rounded-pill text-bg-primary';
 
         pill.innerHTML = inputValue + '<span class="ms-2" onclick="removePill(this)" style="cursor: pointer;">x</span>&nbsp;';
         pillContainer.appendChild(pill);
-        availableSizesInput.value = '';
+        variantsInput.value = '';
 
       }
     });
@@ -244,9 +262,9 @@
     window.removePill = (element) => {
       let currentPill = element.parentNode.textContent.trim();
       currentPill = currentPill.replace(/x$/, ''); // Remove x
-      const currentIndex = availableSizesArray.indexOf(currentPill)
+      const currentIndex = variantsArray.indexOf(currentPill)
 
-      availableSizesArray.splice(currentIndex, 1)
+      variantsArray.splice(currentIndex, 1)
       element.parentNode.remove();
     };
   });

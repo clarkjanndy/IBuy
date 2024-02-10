@@ -2,8 +2,10 @@ from django.db.models import F
 from rest_framework import serializers
 
 from backend.models import Category, Uniform, Inventory, UniformImage
+from backend.utils.extras import has_duplicates
 
 from . extras import CustomModelSerializer
+
 
 __all__ = ['CategorySerializer', 'UniformSerializer', 'UniformImageSerializer']
 
@@ -15,6 +17,7 @@ class CategorySerializer(CustomModelSerializer):
 
 class UniformSerializer(CustomModelSerializer):
     quantity = serializers.IntegerField(source='inventory.quantity')
+    unit = serializers.CharField(source='inventory.unit')
     category_name = serializers.CharField(source='category.name', read_only=True)
     main_image = serializers.SerializerMethodField()
     image = serializers.ImageField(required = False)
@@ -32,8 +35,11 @@ class UniformSerializer(CustomModelSerializer):
         if attrs.get('quantity', 0) < 0:
             raise serializers.ValidationError({'quantity': 'Must be a postive number.'})
         
-        if not isinstance(attrs.get('available_sizes'), list):
-            raise serializers.ValidationError({'available_sizes': 'Please supply a valid list.'})
+        if not isinstance(attrs.get('variants'), list):
+            raise serializers.ValidationError({'variants': 'Please supply a valid list.'})
+        
+        if has_duplicates(attrs.get('variants', [])):
+            raise serializers.ValidationError({'variants': 'Field must not contain duplicates.'})
         
         return attrs
     
@@ -52,7 +58,11 @@ class UniformSerializer(CustomModelSerializer):
         uniform = super().create(validated_data)
         
         # create inventory instance
-        Inventory.objects.create(uniform = uniform, quantity = inventory.get('quantity'))
+        Inventory.objects.create(
+            uniform=uniform, 
+            quantity=inventory.get('quantity'), 
+            unit=inventory.get('unit')
+        )
         
         # create uniform image instance
         UniformImage.objects.create(uniform=uniform, image=image)
@@ -65,14 +75,18 @@ class UniformSerializer(CustomModelSerializer):
         
         # pop data that are not needed in update
         inventory = validated_data.pop('inventory')
-         # pop image do not include in create
-        image = validated_data.pop('image')
        
         validated_data.update({'modified_by': user})
         uniform = super().update(instance, validated_data)
 
         # update inventory instance
-        Inventory.objects.filter(uniform = uniform).update(quantity = F('quantity') + inventory.get('quantity'))
+        Inventory.objects.filter(
+            uniform = uniform
+        ).update(
+            quantity = F('quantity') + inventory.get('quantity'),
+            unit = inventory.get('unit')
+        )
+        
         return uniform
     
 class UniformImageSerializer(CustomModelSerializer):

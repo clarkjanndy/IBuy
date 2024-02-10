@@ -80,7 +80,7 @@ class Inventory(TimeStampedModel):
     unit = models.CharField(max_length=15, choices=UNITS, default='pieces')
     
     @property
-    def get_quantity_text(self):
+    def quantity_text(self):
         return f'{self.quantity} {self.unit}'
         
     def __str__(self) -> str:
