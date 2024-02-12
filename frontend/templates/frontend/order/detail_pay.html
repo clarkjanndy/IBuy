@@ -41,11 +41,11 @@
 
                 <div class="form-group my-3 {% if order.payment_option.is_facilitated %}d-none{% endif %}">
 
-                  <div>
+                  <!-- <div>
                     <label>Amount Paid</label>
                     <input type="text" name="amount" id="amount" class="form-control" placeholder="Amount Paid">
                     <span class="text-danger d-none" id="amountErrorText"> Please input amount.</span>
-                  </div>
+                  </div> -->
 
                   <div>
                     <form id="uploadImageForm">
@@ -137,15 +137,20 @@
   }
 
   const populateFormData = () => {
-    if (fileInput.files[0]) {
-      formData.append('receipt_image', fileInput.files[0]);
-    }
-    formData.append('amount', amount.value);
-    formData.append('order', '{{order.ref_no}}');
+   
   }
 
   const handleSubmit = async () => {
-    populateFormData()
+    // check if there are any uplaoded file
+    if (!fileInput.files[0]) {
+      showError(receiptErrorText, 'Please upload a reciept')
+      return
+    }
+    // append information to request data
+    formData.append('receipt_image', fileInput.files[0]);
+    formData.append('amount', '{{order.total}}');
+    formData.append('order', '{{order.ref_no}}');
+
     sweetalert = await Swal.fire({
       title: "Are you sure?",
       text: 'This action will post a new payment.',
