@@ -45,7 +45,7 @@ class UniformBrowse(NormalUserRequiredMixin, ListView):
         if 'q' in params:
             queryset = queryset.filter(
                 Q(name__icontains = params['q']) |
-                Q(extra_name__icontains = params['q']) 
+                Q(department__name__icontains = params['q'])
             )
         
         return queryset
@@ -90,7 +90,7 @@ class UniformList(AdminRequiredMixin, ListView):
         if 'q' in params:
             queryset = queryset.filter(
                 Q(name__icontains = params['q']) |
-                Q(extra_name__icontains = params['q']) |
+                Q(department__name__icontains = params['q']) |
                 Q(category__name__icontains = params['q'])
             )
         
