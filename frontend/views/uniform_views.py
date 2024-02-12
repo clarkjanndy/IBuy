@@ -18,7 +18,7 @@ __all__ = [
 # normal user views here
 class UniformBrowse(NormalUserRequiredMixin, ListView):
     template_name = 'frontend/uniform/list.html'
-    queryset = Uniform.objects.select_related('category').filter(status='in-stock')
+    queryset = Uniform.objects.select_related('category').filter(Q(status='in-stock') | Q(category__name = 'Universal'))
     paginate_by = 12
     ordering = ('-modified_at', )
 
@@ -32,9 +32,11 @@ class UniformBrowse(NormalUserRequiredMixin, ListView):
     def get_queryset(self):
         # Get current request
         request = self.request
+        user = request.user
         # Get query params
         params = request.GET
-        queryset = super().get_queryset()
+        # filter only uniforms from user department
+        queryset = super().get_queryset().filter(department = user.department)
         
         if 'category' in params:
             queryset = queryset.filter(

@@ -64,7 +64,6 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
                   <th scope="col">Reference #</th>
                   <th scope="col">User</th>
                   <th scope="col">Total</th>
@@ -77,12 +76,11 @@
               <tbody>
                 {% for order in order_list %}
                 <tr>
-                  <th scope="row">{{forloop.counter}}</th>
-                  <td>{{order.ref_no}}</td>
+                  <th>{{order.ref_no}}</th>
                   <td>{{order.user.get_full_name}}</td>
                   <td>&#8369; {{order.total}}</td>
                   <td>{{order.payment_option.name}}</td>
-                  <td>{{order.get_status_display}}</td>
+                  <td> <span class="badge text-bg-primary rounded-pill">{{order.get_status_display}}</span></td>
                   <td>{{order.modified_at|date:"M d, Y"}}</td><!-- Action Buttons -->
                   <td>
                     <a class="btn btn-sm btn-success" href="/admin/manage-orders/{{order.ref_no}}"><i class="bi bi-eye-fill"></i></a>
