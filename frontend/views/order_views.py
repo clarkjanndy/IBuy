@@ -72,7 +72,7 @@ class OrderDetailReceipt(OrderDetail):
 # normal user views here
 class MyOrder(NormalUserRequiredMixin, ListView):
     template_name = 'frontend/order/list.html'
-    queryset = Order.objects.prefetch_related('user', 'items', 'items__uniform', 'items__uniform__images', 'payment_option')
+    queryset = Order.objects.prefetch_related('user', 'items', 'items__uniform', 'items__uniform__images', 'payment_option', 'items__uniform__inventory')
     ordering = ('-modified_at', )
 
     def get_context_data(self, **kwargs):

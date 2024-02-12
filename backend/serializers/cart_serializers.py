@@ -9,6 +9,7 @@ __all__ = ['CartSerializer']
 
 class CartSerializer(CustomModelSerializer):
     total_price = serializers.SerializerMethodField()
+    unit = serializers.SerializerMethodField()
     unit_price = serializers.SerializerMethodField()
     uniform_image = serializers.SerializerMethodField()
     uniform_name = serializers.SerializerMethodField()
@@ -16,6 +17,9 @@ class CartSerializer(CustomModelSerializer):
     class Meta:
         model = Cart
         exclude = ('user', )
+    
+    def get_unit(self, instance):
+        return instance.uniform.inventory.unit
         
     def get_unit_price(self, instance):
         return instance.uniform.price

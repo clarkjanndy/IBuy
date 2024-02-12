@@ -71,13 +71,14 @@ class UniformImage(TimeStampedModel):
 
 class Inventory(TimeStampedModel):
     UNITS = (
-        ('pieces', 'Pieces'),
-        ('meters', 'Meters')
+        ('piece', 'Piece'),
+        ('meter', 'Meter')
     )
     
     uniform = models.OneToOneField(Uniform, on_delete=models.CASCADE, related_name='inventory', primary_key=True)
     quantity = models.PositiveIntegerField()
-    unit = models.CharField(max_length=15, choices=UNITS, default='pieces')
+    unit = models.CharField(max_length=15, choices=UNITS, default='piece')
+    
     
     @property
     def quantity_text(self):

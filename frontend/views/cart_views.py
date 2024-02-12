@@ -12,7 +12,7 @@ __all__ = [
 # normal user views here
 class MyCart(NormalUserRequiredMixin, ListView):
     template_name = 'frontend/my-cart.html'
-    queryset = Cart.objects.select_related('uniform', 'user')
+    queryset = Cart.objects.select_related('uniform', 'user', 'uniform__inventory')
     paginate_by = 12
     ordering = ('-modified_at', )
 

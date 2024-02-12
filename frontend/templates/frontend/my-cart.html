@@ -53,7 +53,7 @@
               </td>
               <td class="w-25">{{cart_item.uniform.name}} ({{cart_item.variant|default:""}})</td>
               <td>&#x20B1; {{cart_item.uniform.price}}</td>
-              <td>{{cart_item.quantity}} x</td>
+              <td>{{cart_item.quantity}}x ({{cart_item.uniform.inventory.unit}})</td>
               <td>&#x20B1; {{cart_item.total_price}}</td>
               <!-- Action Buttons -->
               <td>
@@ -366,7 +366,7 @@
 
       // Column 4
       let quantityCell = document.createElement('td');
-      quantityCell.innerHTML = `${data.quantity} x`
+      quantityCell.innerHTML = `${data.quantity}x (${data.unit})`
       newRow.append(quantityCell)
 
       // Column 3
