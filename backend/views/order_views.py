@@ -83,9 +83,9 @@ class BuyNow(GenericAPIView):
                 payment_option = validated_data['payment_option'],
             )
             
-            uniform = validated_data['uniform']
-            variant = validated_data['variant']
-            quantity = validated_data['quantity']
+            uniform = validated_data.get('uniform')
+            variant = validated_data.get('variant')
+            quantity = validated_data.get('quantity')
             
             # create the OrderItem
             OrderItem.objects.create(

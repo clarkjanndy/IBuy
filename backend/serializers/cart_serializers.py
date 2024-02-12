@@ -34,8 +34,8 @@ class CartSerializer(CustomModelSerializer):
         attrs = super().validate(attrs)
         uniform = attrs['uniform']
         
-        if not attrs['variant'] in uniform.available_sizes:
-            raise serializers.ValidationError({"varaint": "Invalid variant."})
+        if uniform.variants and not attrs['variant'] in uniform.variants:
+            raise serializers.ValidationError({"variant": "Invalid variant."})
 
         if uniform.inventory.quantity < attrs['quantity']:
             raise serializers.ValidationError({"quantity": "Maximum quantity reached."})

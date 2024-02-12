@@ -16,7 +16,7 @@ class Cart(TimeStampedModel):
     
     uniform = models.ForeignKey('Uniform', related_name='on_cart_items', on_delete=models.CASCADE)
     user = models.ForeignKey('User', related_name='cart_items', on_delete=models.CASCADE)
-    variant = models.CharField(max_length=100)
+    variant = models.CharField(max_length=100, null=True, blank=True)
     expiry_date = models.DateTimeField(default=default_expiration_date)
     quantity = models.PositiveIntegerField(default = 1)
     status = models.CharField(choices=STATUS, default='on-cart', max_length=12)

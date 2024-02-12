@@ -41,7 +41,7 @@ class Order(TimeStampedModel):
 class OrderItem(TimeStampedModel):
     order = models.ForeignKey(Order, on_delete=models.CASCADE , related_name='items')
     uniform = models.ForeignKey('Uniform', on_delete=models.CASCADE)
-    variant = models.CharField(max_length=100)
+    variant = models.CharField(max_length=100, null=True, blank=True)
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField()
     subtotal = models.DecimalField(max_digits=10, decimal_places=2)

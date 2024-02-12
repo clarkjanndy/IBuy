@@ -41,16 +41,16 @@ class PlaceOrderSerializer(CustomSerializer):
         return attrs
     
 class BuyNowSerializer(CustomSerializer):
-    uniform = serializers.PrimaryKeyRelatedField(queryset=Uniform.objects.select_related('inventory').filter(status = 'active'))
+    uniform = serializers.PrimaryKeyRelatedField(queryset=Uniform.objects.select_related('inventory').filter(status = 'in-stock'))
     payment_option = serializers.PrimaryKeyRelatedField(queryset=PaymentOption.objects.all())
     quantity = serializers.IntegerField()
-    variant = serializers.CharField()
+    variant = serializers.CharField(allow_null=True, allow_blank=True)
     
     def validate(self, attrs):
         attrs = super().validate(attrs)
-        uniform = attrs['uniform']
-        variant = attrs['variant']
-        quantity = attrs['quantity']
+        uniform = attrs.get('uniform')
+        variant = attrs.get('variant')
+        quantity = attrs.get('quantity')
         
         if quantity > 10:
             raise serializers.ValidationError({"quantity": "You are limited to buy 10 items only."})
@@ -58,7 +58,7 @@ class BuyNowSerializer(CustomSerializer):
         if uniform.inventory.quantity < 1 or uniform.inventory.quantity < quantity:
             raise ValidationError({'quantity': "Maximum quantity reached."})
         
-        if not variant in uniform.available_sizes:
+        if uniform.variants and not variant in uniform.variants:
             raise serializers.ValidationError({"varaint": "Invalid variant."})
         
         return attrs

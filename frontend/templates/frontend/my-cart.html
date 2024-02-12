@@ -51,7 +51,7 @@
                 <span class="badge text-bg-secondary">Preview unavailable</span>
                 {% endif %}
               </td>
-              <td class="w-25">{{cart_item.uniform.name}} ({{cart_item.variant}})</td>
+              <td class="w-25">{{cart_item.uniform.name}} ({{cart_item.variant|default:""}})</td>
               <td>&#x20B1; {{cart_item.uniform.price}}</td>
               <td>{{cart_item.quantity}} x</td>
               <td>&#x20B1; {{cart_item.total_price}}</td>
@@ -356,7 +356,7 @@
       // Column 2
       let nameCell = document.createElement('td');
       nameCell.classList.add('w-25')
-      nameCell.textContent = `${data.uniform_name} (${data.variant})`
+      nameCell.textContent = `${data.uniform_name} (${data.variant ? data.variant : ""})`
       newRow.append(nameCell)
 
       // Column 3
@@ -464,10 +464,6 @@
 
         } else {
           const errors = response.data
-
-          if (errors.hasOwnProperty('variant')) {
-            showError(sizeErrorText, 'Please select size.')
-          }
 
           if (errors.hasOwnProperty('payment_option')) {
             showError(paymentOptionErrorText, 'Please select a payment option.')

@@ -55,7 +55,7 @@
 
                 </h4>
                 <div class="text-primary">
-                  <span id="quantityText">{{uniform.inventory.quantity|default:"0"}}</span> pcs. available | {{uniform.sold}} sold
+                  <span id="quantityText">{{uniform.inventory.quantity_text|default:"0"}}</span> available | {{uniform.sold}} sold
                 </div>
 
                 <h3 class="card-title" style="font-size: 50px;">&#x20B1; {{uniform.price}}</h3>
@@ -71,18 +71,24 @@
                       </div>
 
                       <div class="row">
-                        <div class="col-lg-3 col-md-4 label ">Extra Name</div>
-                        <div class="col-lg-9 col-md-8">{{uniform.extra_name}}</div>
+                        <div class="col-lg-3 col-md-4 label ">Department</div>
+                        <div class="col-lg-9 col-md-8">{{uniform.department.name}}</div>
                       </div>
 
                       <div class="row">
-                        <div class="col-lg-3 col-md-4 label">Size</div>
+                        <div class="col-lg-3 col-md-4 label">Variants</div>
                         <div class="col-lg-9 col-md-8 size-button-container">
-                          {% for size in uniform.available_sizes %}
-                          <button class="btn btn-outline-primary btn-sm"
-                            onclick="handleSelectSize(this)">{{size}}</button>
-                          {% endfor %}
-                          <div class="text-danger d-none" id="sizeErrorText">Select a size.</div>
+                          {% if uniform.variants %}
+                          <select class="form-select w-75" name="variant" id="variantSelect">
+                              <option disabled selected value="">---</option>
+                              {% for v in uniform.variants %}
+                                <option value="{{v}}">{{v}}</option>
+                              {% endfor %}
+                          </select>
+                          {% else %}
+                              <span class="badge text-bg-secondary rounded-pill">no available variant</span>
+                          {% endif %}
+                          <div class="text-danger d-none" id="variantErrorText">Select a variant.</div>
                         </div>
                       </div>
 
@@ -99,7 +105,7 @@
                                 onclick="incrementQuantity()">+</button>
                             </div>
 
-                            <div>&nbsp;{{uniform.inventory.quantity}} pcs. available
+                            <div>&nbsp;{{uniform.inventory.quantity_text}} available
                             </div>
                           </div>
 
@@ -209,7 +215,8 @@
   const quantityText = document.getElementById("quantityText")
   const quantityInput = document.getElementById('quantityInput');
   const quantityErrorText = document.getElementById('quantityErrorText');
-  const sizeErrorText = document.getElementById('sizeErrorText');
+  const variantSelect = document.getElementById('variantSelect');
+  const variantErrorText = document.getElementById('variantErrorText');
   const paymentOptionErrorText = document.getElementById('paymentOptionErrorText');
 
   let modal = null
@@ -217,7 +224,7 @@
   const modalItemSelectedText = document.getElementById('modalItemSelectedText')
   const modalTotalPriceText = document.getElementById('modalTotalPriceText')
 
-  let selectedSize = null
+  let selectedVariant = null
   let selectedPaymentOption = null
   let currentQuantity = parseInt(quantityInput.value, 10);
   let availableQuantity = parseInt(quantityText.innerText, 10);
@@ -228,22 +235,6 @@
     setTimeout(() => {
       element.classList.add('d-none');
     }, 3000);
-  }
-
-  const handleSelectSize = (clickedButton) => {
-    // Get all buttons within the container
-    let buttons = document.querySelectorAll('.size-button-container button');
-    // Loop through each button and set the class accordingly
-    buttons.forEach(function (button) {
-      if (button === clickedButton) {
-        button.classList.remove('btn-outline-primary');
-        button.classList.add('btn-primary');
-        selectedSize = button.innerText
-      } else {
-        button.classList.remove('btn-primary');
-        button.classList.add('btn-outline-primary');
-      }
-    });
   }
 
   const handleSelectPaymentOption = (clickedButton) => {
@@ -290,7 +281,7 @@
       method: 'POST',
       body: JSON.stringify({
         quantity: quantityInput.value,
-        variant: selectedSize,
+        variant: variantSelect ? variantSelect.value || null : null,
         uniform: "{{uniform.id}}"
       })
     }
@@ -313,7 +304,7 @@
           const errors = response.data
 
           if (errors.hasOwnProperty('variant')) {
-            showError(sizeErrorText, 'Please select size.')
+            showError(variantErrorText, 'Please select variant.')
           }
 
           if (errors.hasOwnProperty('quantity')) {
@@ -332,8 +323,9 @@
   }
 
   const showConfirmBuyNowModal = async () => {
-    if (selectedSize == null) {
-      showError(sizeErrorText, 'Please select size.')
+    selectedVariant = variantSelect ? variantSelect.value || null : null
+    if (variantSelect && selectedVariant == null) {
+      showError(variantErrorText, 'Please select variant.')
       return
     }
 
@@ -363,7 +355,7 @@
       // Column 2
       let nameCell = document.createElement('td');
       nameCell.classList.add('w-25')
-      nameCell.textContent = `${data.name} (${data.variant})`
+      nameCell.textContent = `${data.name} (${data.variant ? data.variant : ""})`
       newRow.append(nameCell)
 
       // Column 3
@@ -408,7 +400,7 @@
     rowData = {
       image: uniformDetails.main_image,
       name: uniformDetails.name,
-      variant: selectedSize,
+      variant: selectedVariant,
       price: uniformDetails.price,
       quantity: currentQuantity,
       total_price: parseFloat(uniformDetails.price) * parseInt(currentQuantity)
@@ -432,7 +424,7 @@
         uniform: "{{uniform.id}}",
         payment_option: selectedPaymentOption,
         quantity: currentQuantity,
-        variant: selectedSize
+        variant: variantSelect ? variantSelect.value || null : null,
       })
     }
 
@@ -459,6 +451,7 @@
 
         } else {
           const errors = response.data
+          console.log(errors)
 
           if (errors.hasOwnProperty('payment_option')) {
             showError(paymentOptionErrorText, 'Please select a payment option.')
