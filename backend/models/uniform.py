@@ -82,7 +82,7 @@ class Inventory(TimeStampedModel):
     
     @property
     def quantity_text(self):
-        return f'{self.quantity} {self.unit}'
+        return f'{self.quantity} {self.unit}(s)'
         
     def __str__(self) -> str:
         return self.uniform.name
