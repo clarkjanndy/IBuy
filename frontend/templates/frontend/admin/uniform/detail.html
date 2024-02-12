@@ -43,36 +43,38 @@
             <h5 class="card-title">General Information</h5>
 
             <div class="row">
-              <div class="col-lg-3 col-md-4 label ">Category</div>
+              <div class="col-lg-3 col-md-4 label ">Category:</div>
               <div class="col-lg-9 col-md-8">{{uniform.category.name}}</div>
             </div>
 
             <div class="row">
-              <div class="col-lg-3 col-md-4 label ">Name</div>
+              <div class="col-lg-3 col-md-4 label ">Department:</div>
+              <div class="col-lg-9 col-md-8">{{uniform.department.name}} ({{uniform.department.abbreviation}})</div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-4 label ">Name:</div>
               <div class="col-lg-9 col-md-8">{{uniform.name}}</div>
             </div>
 
             <div class="row">
-              <div class="col-lg-3 col-md-4 label ">Extra Name</div>
-              <div class="col-lg-9 col-md-8">{{uniform.extra_name}}</div>
-            </div>
-
-            <div class="row">
-              <div class="col-lg-3 col-md-4 label">Price</div>
+              <div class="col-lg-3 col-md-4 label">Price:</div>
               <div class="col-lg-9 col-md-8">&#8369; {{uniform.price}}</div>
             </div>
 
             <div class="row">
-              <div class="col-lg-3 col-md-4 label">Available Sizes</div>
+              <div class="col-lg-3 col-md-4 label">Variants :</div>
               <div class="col-lg-9 col-md-8">
-                {% for size in uniform.available_sizes %}
+                {% for size in uniform.variants %}
                   <span class="badge text-bg-primary rounded-pill">{{size}}</span>
+                {% empty %}
+                 <span class="badge text-bg-secondary rounded-pill">no available variant</span>
                 {% endfor %}
               </div>
             </div>
 
             <div class="row">
-              <div class="col-lg-3 col-md-4 label">Status</div>
+              <div class="col-lg-3 col-md-4 label">Status:</div>
               <div class="col-lg-9 col-md-8">
                 <span class="badge text-bg-{% if uniform.is_active %}success{% else %}secondary{% endif %}">{{uniform.status}}</span>
               </div>
@@ -83,34 +85,34 @@
             <h5 class="card-title">Inventory Information</h5>
 
             <div class="row">
-              <div class="col-lg-3 col-md-4 label ">Quantity</div>
-              <div class="col-lg-9 col-md-8">{{uniform.inventory.quantity}}</div>
+              <div class="col-lg-3 col-md-4 label ">Quantity:</div>
+              <div class="col-lg-9 col-md-8">{{uniform.inventory.quantity_text}}</div>
             </div>
 
             <div class="row">
-              <div class="col-lg-3 col-md-4 label ">Last Updated</div>
+              <div class="col-lg-3 col-md-4 label ">Last Updated:</div>
               <div class="col-lg-9 col-md-8">{{uniform.inventory.modified_at|date:"E d, Y"}}</div>
             </div>
 
             <h5 class="card-title">Other Information</h5>
 
             <div class="row">
-              <div class="col-lg-3 col-md-4 label ">Created by</div>
+              <div class="col-lg-3 col-md-4 label ">Created by:</div>
               <div class="col-lg-9 col-md-8">{{uniform.created_by.get_full_name}}</div>
             </div>
 
             <div class="row">
-              <div class="col-lg-3 col-md-4 label ">Modified by</div>
+              <div class="col-lg-3 col-md-4 label ">Modified by:</div>
               <div class="col-lg-9 col-md-8">{{uniform.modified_by.get_full_name}}</div>
             </div>
 
             <div class="row">
-              <div class="col-lg-3 col-md-4 label ">Created Date</div>
+              <div class="col-lg-3 col-md-4 label ">Created Date:</div>
               <div class="col-lg-9 col-md-8">{{uniform.created_at|date:"E d, Y"}}</div>
             </div>
 
             <div class="row">
-              <div class="col-lg-3 col-md-4 label ">Last Updated</div>
+              <div class="col-lg-3 col-md-4 label ">Last Updated:</div>
               <div class="col-lg-9 col-md-8">{{uniform.modified_at|date:"E d, Y"}}</div>
             </div>
           </div>

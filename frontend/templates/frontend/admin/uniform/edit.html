@@ -147,15 +147,6 @@
             rule: 'required',
             errorMessage: 'This field is required',
         },])
-        .addField('#variants', [{
-            validator: () => {
-                if (variantsArray.length == 0){
-                  return false
-                }
-                return true
-            },
-            errorMessage: 'This field is required.',
-        }])
         .addField('#quantity', [{
             rule: 'required',
             errorMessage: 'This field is required',
