@@ -137,6 +137,12 @@
       rule: 'required',
       errorMessage: 'This field is required',
     },])
+    .addField('#department', [{
+      validator: () => {
+          return true
+      },
+      errorMessage: 'Nothing to show here.',
+     }])
     .addField('#name', [{
       rule: 'required',
       errorMessage: 'This field is required',

@@ -41,6 +41,11 @@ class UniformSerializer(CustomModelSerializer):
         if has_duplicates(attrs.get('variants', [])):
             raise serializers.ValidationError({'variants': 'Field must not contain duplicates.'})
         
+        if attrs.get('department') and attrs.get('category').name == 'Universal':
+            raise serializers.ValidationError({'department': 'Keep this field blank for Universal categories.'})
+        
+        print(attrs)
+        
         return attrs
     
     def create(self, validated_data):

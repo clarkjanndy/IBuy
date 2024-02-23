@@ -41,13 +41,14 @@
 
               <div class="col-lg-6">
                 <label for="category" class="form-label">Department: </label>
+                <small><i class="bi bi-exclamation-circle"> Keep this field blank for Universal categories</i></small>
                 <select class="form-select" name="department" id="department">
                   <option selected value="">---</option>
                   {% for department in departments %}
                   <option value="{{department.id}}" {{uniform.department.id|is_selected:department.id}}>{{department.name}}</option>
                   {% endfor %}
                 </select>
-                <small><i class="bi bi-exclamation-circle"> Keep this field blank for Universal categories</i></small>
+                
               </div>
 
               <div class="col-lg-6">
@@ -140,6 +141,12 @@
             rule: 'required',
             errorMessage: 'This field is required',
         },])
+        .addField('#department', [{
+            validator: () => {
+                return true
+            },
+            errorMessage: 'Nothing to show here.',
+        }])
         .addField('#price', [{
             rule: 'required',
             errorMessage: 'This field is required',
