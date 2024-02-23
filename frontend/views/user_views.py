@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.views import View
 from django.views.generic import ListView, TemplateView, DetailView
 
-from backend.models import User
+from backend.models import User, Department
 
 from .custom_mixins import AdminRequiredMixin, LoginRequiredMixin
 
@@ -46,6 +46,7 @@ class UserCreate(AdminRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({'current_page': 'manage-user'})
+        context.update({'departments': Department.objects.all()})
         return context
     
 class UserDetail(AdminRequiredMixin, DetailView):
@@ -56,6 +57,7 @@ class UserDetail(AdminRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({'current_page': 'manage-user'})
+        context.update({'departments': Department.objects.all()})
         return context
     
 class UserMyProfile(LoginRequiredMixin, TemplateView):
@@ -64,6 +66,7 @@ class UserMyProfile(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({'current_page': 'my-profile'})
+        context.update({'departments': Department.objects.all()})
         return context
 
 

@@ -77,6 +77,11 @@
                   <div class="col-lg-9 col-md-8">{{user.get_full_name}}</div>
                 </div>
 
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label ">Department</div>
+                  <div class="col-lg-9 col-md-8">{{user.department.name|default:"N/A"}}</div>
+                </div>
+
                 {% if not user.is_superuser %}
                 <div class="row">
                   <div class="col-lg-3 col-md-4 label ">Student Id</div>
@@ -172,6 +177,19 @@
                       <input name="suffix" type="text" class="form-control" id="suffix" value="{{user.suffix}}">
                     </div>
                   </div>
+
+                  <div class="row mb-3">
+                    <label for="suffix" class="col-md-4 col-lg-3 col-form-label">Department</label>
+                    <div class="col-md-8 col-lg-9">
+                      <select class="form-select" name="department" id="department">
+                        <option selected value="">---</option>
+                        {% for department in departments %}
+                        <option value="{{department.id}}" {{user.department|is_selected:department}}>{{department.name}}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                  
 
                   {% if not user.is_superuser %}
                   <div class="row mb-3">
