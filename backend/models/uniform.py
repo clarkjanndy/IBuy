@@ -24,7 +24,7 @@ class Uniform(TimeStampedModel):
         ('draft', 'Draft')
     )
     
-    department = models.ForeignKey(Department, related_name='uniforms', on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, related_name='uniforms', on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
