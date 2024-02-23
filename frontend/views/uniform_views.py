@@ -1,4 +1,6 @@
+from typing import Any
 from django.db.models import Q
+from django.db.models.query import QuerySet
 from django.views.generic import ListView, TemplateView, DetailView
 
 from backend.models import Uniform, Category, PaymentOption, Department
@@ -18,7 +20,7 @@ __all__ = [
 # normal user views here
 class UniformBrowse(NormalUserRequiredMixin, ListView):
     template_name = 'frontend/uniform/list.html'
-    queryset = Uniform.objects.select_related('category').filter(Q(status='in-stock') | Q(category__name = 'Universal'))
+    queryset = Uniform.objects.select_related('category').filter(Q(status='in-stock'))
     paginate_by = 12
     ordering = ('-modified_at', )
 
@@ -36,7 +38,7 @@ class UniformBrowse(NormalUserRequiredMixin, ListView):
         # Get query params
         params = request.GET
         # filter only uniforms from user department
-        queryset = super().get_queryset().filter(department = user.department)
+        queryset = super().get_queryset().filter(Q (department = user.department) | Q(category__name = 'Universal'))
         
         if 'category' in params:
             queryset = queryset.filter(
@@ -57,6 +59,10 @@ class UniformView(LoginRequiredMixin, DetailView):
     template_name = 'frontend/uniform/detail.html'
     context_object_name = 'uniform'
     queryset = Uniform.objects.select_related('category').filter(status='in-stock')
+    
+    def get_queryset(self):
+        user = self.request.user
+        return super().get_queryset().filter(Q (department = user.department) | Q(category__name = 'Universal'))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
