@@ -37,6 +37,10 @@ urlpatterns = [
     # System Information
     path('system-informations', views.SystemInformationListCreate.as_view()),
     path('system-informations/<int:pk>', views.SystemInformationById.as_view()),
+    
+    # Expense
+    path('expenses', views.ExpenseListCreate.as_view()),
+    path('expenses/<int:pk>', views.ExpenseById.as_view()),
 
     # Uniforms
     path('categories', views.CategoryListCreate.as_view()),
