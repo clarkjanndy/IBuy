@@ -60,4 +60,7 @@ urlpatterns = [
     path('admin/manage-orders/<str:ref_no>/transact', views.OrderDetailTransact.as_view()),
     path('admin/manage-orders/<str:ref_no>/receipt', views.OrderDetailReceipt.as_view()),
     
+    #Expense
+    path('admin/manage-expenses', views.ExpenseList.as_view()),
+    
 ]
