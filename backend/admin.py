@@ -16,7 +16,8 @@ from . models import (
     Order,
     OrderItem,
     OrderHistory,
-    Expense
+    Expense,
+    Notification,
 )
 
 # Register your admin manager here
@@ -113,6 +114,11 @@ class PaymentAdmin(admin.ModelAdmin):
 class ExpenseAdmin(admin.ModelAdmin):
     list_display = ('name', 'kind', 'amount', 'remarks', 'created_by', 'modified_by')
     search_fields = ('name', 'kind', 'amount', 'remarks', 'created_by', 'modified_by')
+
+
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('user', 'level', 'status', 'created_at')
+    search_fields = ('user', 'level', 'status', 'created_at')
      
 
 # Register your models here.
@@ -132,6 +138,7 @@ admin.site.register(OrderItem, OrderItemAdmin)
 admin.site.register(OrderHistory, OrderHistoryAdmin)
 admin.site.register(Payment, PaymentAdmin)
 admin.site.register(Expense, ExpenseAdmin)
+admin.site.register(Notification, NotificationAdmin)
 
 
 
