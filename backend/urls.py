@@ -37,10 +37,6 @@ urlpatterns = [
     # System Information
     path('system-informations', views.SystemInformationListCreate.as_view()),
     path('system-informations/<int:pk>', views.SystemInformationById.as_view()),
-    
-    # Expense
-    path('expenses', views.ExpenseListCreate.as_view()),
-    path('expenses/<int:pk>', views.ExpenseById.as_view()),
 
     # Uniforms
     path('categories', views.CategoryListCreate.as_view()),
@@ -50,4 +46,10 @@ urlpatterns = [
     path('uniforms/<int:pk>/images', views.UniformImageListCreate.as_view()),
     path('uniforms/<int:uniform_pk>/images/<int:pk>', views.UniformImageById.as_view()),
 
+    # Expense
+    path('expenses', views.ExpenseListCreate.as_view()),
+    path('expenses/<int:pk>', views.ExpenseById.as_view()),
+    
+    #Notification
+    path('notifications', views.NotificationList.as_view()),
 ]
