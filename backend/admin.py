@@ -15,7 +15,8 @@ from . models import (
     Payment,
     Order,
     OrderItem,
-    OrderHistory
+    OrderHistory,
+    Expense
 )
 
 # Register your admin manager here
@@ -108,6 +109,11 @@ class PaymentAdmin(admin.ModelAdmin):
     
     def order_ref_no(self, object):
         return object.order.ref_no
+    
+class ExpenseAdmin(admin.ModelAdmin):
+    list_display = ('name', 'kind', 'amount', 'remarks', 'created_by', 'modified_by')
+    search_fields = ('name', 'kind', 'amount', 'remarks', 'created_by', 'modified_by')
+     
 
 # Register your models here.
 admin.site.register(User, UserAdmin)
@@ -125,6 +131,7 @@ admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderItem, OrderItemAdmin)
 admin.site.register(OrderHistory, OrderHistoryAdmin)
 admin.site.register(Payment, PaymentAdmin)
+admin.site.register(Expense, ExpenseAdmin)
 
 
 
