@@ -15,69 +15,22 @@
 
         <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
           <i class="bi bi-bell"></i>
-          <span class="badge bg-primary badge-number">4</span>
+          <span class="badge bg-danger badge-number d-none" id="notificationCount">4</span>
         </a><!-- End Notification Icon -->
 
-        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" ">
           <li class="dropdown-header">
-            You have 4 new notifications
-            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">Mark All as Read</span></a>
           </li>
           <li>
             <hr class="dropdown-divider">
           </li>
 
-          <li class="notification-item">
-            <i class="bi bi-exclamation-circle text-warning"></i>
-            <div>
-              <h4>Lorem Ipsum</h4>
-              <p>Quae dolorem earum veritatis oditseno</p>
-              <p>30 min. ago</p>
-            </div>
-          </li>
+          <div id="notificationContainer">
 
-          <li>
-            <hr class="dropdown-divider">
-          </li>
+          </div>
 
-          <li class="notification-item">
-            <i class="bi bi-x-circle text-danger"></i>
-            <div>
-              <h4>Atque rerum nesciunt</h4>
-              <p>Quae dolorem earum veritatis oditseno</p>
-              <p>1 hr. ago</p>
-            </div>
-          </li>
 
-          <li>
-            <hr class="dropdown-divider">
-          </li>
-
-          <li class="notification-item">
-            <i class="bi bi-check-circle text-success"></i>
-            <div>
-              <h4>Sit rerum fuga</h4>
-              <p>Quae dolorem earum veritatis oditseno</p>
-              <p>2 hrs. ago</p>
-            </div>
-          </li>
-
-          <li>
-            <hr class="dropdown-divider">
-          </li>
-
-          <li class="notification-item">
-            <i class="bi bi-info-circle text-primary"></i>
-            <div>
-              <h4>Dicta reprehenderit</h4>
-              <p>Quae dolorem earum veritatis oditseno</p>
-              <p>4 hrs. ago</p>
-            </div>
-          </li>
-
-          <li>
-            <hr class="dropdown-divider">
-          </li>
           <li class="dropdown-footer">
             <a href="#">Show all notifications</a>
           </li>
@@ -255,8 +208,10 @@
 </aside><!-- End Sidebar-->
 
 <script>
-
   const logoutButton = document.getElementById('logoutButton')
+  const notificationCount = document.getElementById('notificationCount')
+  const notificationContainer = document.getElementById('notificationContainer')
+
   logoutButton.addEventListener('click', function () {
     const url = '/api/v1/logout';
     const payload = {
@@ -285,5 +240,85 @@
         })
       });
   });
+
+  const formatDate = (dateString) => {
+        // Parse the date string
+        let date = new Date(dateString);
+        // Define options for formatting
+        let options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour12: true,
+        };
+        // Format the date
+        let formattedDate = date.toLocaleDateString('en-US', options);
+        return formattedDate
+  }
+
+  const renderNotification = (notification) => {
+        // Create a new HTML structure using JavaScript
+        var newItem = document.createElement('li');
+        newItem.className = 'notification-item';
+        newItem.style.cursor = 'pointer'
+        newItem.setAttribute('link', notification.link)
+
+        // Create the first div with nested div and icon
+        newItem.innerHTML = `
+          <i class="bi bi-bell-fill text-${notification.level}"></i>
+          <div ${notification.status == 'unseen' ? 'style="font-weight: bold;"':''}>
+            <p>${notification.content}</p>
+            <p> ${formatDate(notification.modified_at)}</p>
+          </div>
+        `;
+      
+        var newItemDivider = document.createElement('li');
+        newItemDivider.innerHTML = `<hr class="dropdown-divider"> `;
+        
+        // add event to redirect to notif link
+        newItem.addEventListener('click', function() {
+            window.location.href = this.getAttribute('link')
+        });
+
+        notificationContainer.appendChild(newItem);
+        notificationContainer.appendChild(newItemDivider);
+    }
+
+    const getNotifications = async () => {
+        const url = '/api/v1/notifications';
+        const payload = {
+            method: 'GET',
+            headers: {
+                "X-CSRFToken": "{{csrf_token}}",
+                "Content-Type": 'application/json'
+            }
+        }
+
+        fetch(url, payload)
+            .then(response => response.json())
+            .then(response => {
+                data = response.data
+                notifications = data.rows
+                count = data.count
+
+                if (count){
+                    notificationCount.classList.remove('d-none')
+                    notificationCount.innerText = count
+                }
+
+                notifications.forEach((obj) => {
+                    renderNotification(obj)
+                })
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error,
+                    confirmButtonColor: '#4154f1',
+                })
+            });
+    }
+    getNotifications()
 
 </script>

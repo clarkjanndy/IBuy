@@ -12,7 +12,7 @@ __all__ = ['NotificationList']
 
 class NotificationList(ListAPIView):
     permission_classes = (IsAdminOrReadOnly, )
-    queryset = Notification.objects.all()
+    queryset = Notification.objects.all().order_by('-status', '-modified_at')
     serializer_class = NotificationSerializer
     
     def get_queryset(self):
@@ -24,5 +24,8 @@ class NotificationList(ListAPIView):
 
         return Response({
             "status": "success", 
-            "data": response.data
+            "data": {
+                "count": len(response.data),
+                "rows": response.data
+            }
         })

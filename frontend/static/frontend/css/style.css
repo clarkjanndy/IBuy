@@ -500,6 +500,7 @@ h6 {
 
 .header-nav .notifications {
   inset: 8px -15px auto auto !important;
+  width: 300px !important;
 }
 
 .header-nav .notifications .notification-item {
@@ -523,11 +524,10 @@ h6 {
 .header-nav .notifications .notification-item p {
   font-size: 13px;
   margin-bottom: 3px;
-  color: #919191;
 }
 
 .header-nav .notifications .notification-item:hover {
-  background-color: #f6f9ff;
+  background-color: #cacbd0;
 }
 
 .header-nav .messages {
