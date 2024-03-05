@@ -26,8 +26,8 @@
             <p>Manage Expenses both cash and material.</p>
 
             <div class="d-flex justify-content-end mb-3">
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createFaqModal">
-                <i class="bi bi-plus-circle-fill"></i> Add
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createExpensesModal">
+                <i class="bi bi-plus-circle-fill"></i> Add Expenses
               </button>
             </div>
 
@@ -87,10 +87,10 @@
                   <td>{{exp.modified_by.get_full_name}}</td>
                   <!-- Action Buttons -->
                   <td>
-                    <button class="btn btn-sm btn-primary" record-id="{{faq.id}}" data-bs-toggle="modal" data-bs-target="#updateFaqModal" >
+                    <button class="btn btn-sm btn-primary" record-id="{{exp.id}}" data-bs-toggle="modal" data-bs-target="#updateExpenseModal" >
                       <i class="bi bi-pencil-square"></i>
                     </button>
-                    <button class="btn btn-sm btn-danger" record-id="{{faq.id}}" onclick="handleDelete(this)"><i
+                    <button class="btn btn-sm btn-danger" record-id="{{exp.id}}" onclick="handleDelete(this)"><i
                         class="bi bi-trash"></i></button>
                   </td>
                 </tr>
@@ -156,25 +156,39 @@
     </div>
   </section>
 
-  <!-- Create FAQ Modal -->
-  <div class="modal fade" id="createFaqModal" tabindex="-1">
+  <!-- Create Expenses Modal -->
+  <div class="modal fade" id="createExpensesModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Add FAQ</h5>
+          <h5 class="modal-title">Add Expenses</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form id="createFaqForm">
+        <form id="createExpenseForm">
           <div class="modal-body">
 
-            <div class="col-lg-12">
-              <label for="question" class="form-label">Question: </label>
-              <input type="text" name="question" class="form-control" id="question" placeholder="Question">
+            <div class="col-lg-12 mb-2">
+              <label for="question" class="form-label">Name: </label>
+              <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+            </div>
+
+            <div class="col-lg-12 mb-2">
+              <label for="question" class="form-label">Kind: </label>
+              <select class="form-select" name="kind" id="kind">
+                <option selected value="">---</option>
+                <option value="cost">Cost</option>
+                <option value="material">Material</option>
+              </select>      
+            </div>
+
+            <div class="col-lg-12 mb-2">
+              <label for="question" class="form-label">Amount: </label>
+              <input type="text" name="amount" class="form-control" id="amount" placeholder="Amount">
             </div>
 
             <div class="col-lg-12">
-              <label for="answer" class="form-label">Answer: </label>
-              <textarea name="answer" class="form-control" id="answer" rows="12" placeholder="Answer"></textarea>
+              <label for="answer" class="form-label">Remarks: </label>
+              <textarea name="remarks" class="form-control" id="remarks" rows="10" placeholder="Remarks"></textarea>
             </div>
 
           </div>
@@ -187,27 +201,41 @@
         </form>
       </div>
     </div>
-  </div><!-- End Create FAQ Modal-->
+  </div><!-- End Create Expense Modal-->
 
-  <!-- Update FAQ Modal -->
-  <div class="modal fade" id="updateFaqModal" tabindex="-1">
+  <!-- Update Expenses Modal -->
+  <div class="modal fade" id="updateExpenseModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Update FAQ</h5>
+          <h5 class="modal-title">Update Expenses</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form id="updateFaqForm">
+        <form id="updateExpenseForm">
           <div class="modal-body">
 
-            <div class="col-lg-12">
-              <label for="question" class="form-label">Question: </label>
-              <input type="text" name="question" class="form-control" id="question" placeholder="Question">
+            <div class="col-lg-12 mb-2">
+              <label for="question" class="form-label">Name: </label>
+              <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+            </div>
+
+            <div class="col-lg-12 mb-2">
+              <label for="question" class="form-label">Kind: </label>
+              <select class="form-select" name="kind" id="kind">
+                <option selected value="">---</option>
+                <option value="cost">Cost</option>
+                <option value="material">Material</option>
+              </select>      
+            </div>
+
+            <div class="col-lg-12 mb-2">
+              <label for="question" class="form-label">Amount: </label>
+              <input type="text" name="amount" class="form-control" id="amount" placeholder="Amount">
             </div>
 
             <div class="col-lg-12">
-              <label for="answer" class="form-label">Answer: </label>
-              <textarea name="answer" class="form-control" id="answer" rows="12" placeholder="Answer"></textarea>
+              <label for="answer" class="form-label">Remarks: </label>
+              <textarea name="remarks" class="form-control" id="remarks" rows="10" placeholder="Remarks"></textarea>
             </div>
 
           </div>
@@ -220,32 +248,39 @@
         </form>
       </div>
     </div>
-  </div><!-- End Update FAQ Modal-->
+  </div><!-- Update Create Expense Modal-->
 
 
 </main><!-- End #main -->
 <script src=" {% static 'frontend/vendor/others/just-validate.min.js' %}"></script>
 <script>
 //form validator for create FAQ
-const createFaqForm = document.getElementById('createFaqForm');
-const createFaqFormValidator = new window.JustValidate('#createFaqForm', {
+const createExpenseForm = document.getElementById('createExpenseForm');
+const createExpenseFormValidator = new window.JustValidate('#createExpenseForm', {
 errorFieldCssClass: 'is-invalid',
 });
 
-createFaqFormValidator
-    .addField('#question', [{
+createExpenseFormValidator
+    .addField('#name', [{
         rule: 'required',
-        errorMessage: 'This field is required',
+        errorMessage: 'This field is required.',
     },])
-    .addField('#answer', [{
+    .addField('#kind', [{
         rule: 'required',
-        errorMessage: 'This field is required',
+        errorMessage: 'This field is required.',
     },])
+    .addField('#amount', [{
+        rule: 'required',
+        errorMessage: 'This field is required.',
+    },{
+        rule: 'number',
+        errorMessage: 'Please input a valid number.',
+    }])
     .onSuccess((event) => {
         event.preventDefault();
         form = event.target
         // Make your API call here (e.g., using the fetch() method)
-        const url = '/api/v1/faqs'; 
+        const url = '/api/v1/expenses'; 
         const formData = new FormData(form);
         const payload =  {
             headers: {
@@ -262,6 +297,18 @@ createFaqFormValidator
                 if (response.status === 'success'){
                   //redirect to user profile
                   location.reload()
+                }else{
+                  // store error data
+                  const errors = response.data
+                  // create a blank variable to store error
+                  const field_errors = {}
+                  // add hashtags to keys
+                  Object.keys(errors).forEach(key => {
+                      const value = errors[key];
+                      field_errors[`#${key}`] = value
+                  });
+                  // show field errors to user
+                  createExpenseFormValidator.showErrors(field_errors)
                 }
             })
             .catch(error => {
@@ -275,14 +322,14 @@ createFaqFormValidator
     })
 
 const handleUpdateModal = () => {
-    const updateFaqModal = document.getElementById('updateFaqModal');
-    updateFaqModal.addEventListener('show.bs.modal', (event) => {
+    const updateExpenseModal = document.getElementById('updateExpenseModal');
+    updateExpenseModal.addEventListener('show.bs.modal', (event) => {
         // Button that triggered the modal
         const button = event.relatedTarget;
         // Extract info from data-bs-* attributes
         const recordID = button.getAttribute('record-id');
         // Make your API call here (e.g., using the fetch() method)
-        const url = `/api/v1/faqs/${recordID}`;
+        const url = `/api/v1/expenses/${recordID}`;
         const payload = {
           headers: {
             "X-CSRFToken": "{{csrf_token}}"
@@ -293,14 +340,18 @@ const handleUpdateModal = () => {
           .then(response => response.json())
           .then(response => {
             // Update the modal's content.
-            const form = updateFaqModal.querySelector('#updateFaqForm');
-            const question = updateFaqModal.querySelector('#question');
-            const answer = updateFaqModal.querySelector('#answer');
+            const form = updateExpenseModal.querySelector('#updateExpenseForm');
+            const name = form.querySelector('#name');
+            const kind = form.querySelector('#kind');
+            const amount = form.querySelector('#amount');
+            const remarks = form.querySelector('#remarks');
             data = response.data
             
             form.setAttribute('record-id', data.id);
-            question.value = data.question
-            answer.value = data.answer
+            name.value = data.name
+            kind.value = data.kind
+            amount.value = data.amount
+            remarks.value = data.remarks
           })
           .catch(error => {
             Swal.fire({
@@ -315,20 +366,27 @@ const handleUpdateModal = () => {
 handleUpdateModal();
 
 //form validator for update FAQ
-const updateFaqForm = document.getElementById('updateFaqForm');
-const updateFaqFormValidator = new window.JustValidate('#updateFaqForm', {
+const updateExpenseForm = document.getElementById('updateExpenseForm');
+const updateExpenseFormValidator = new window.JustValidate('#updateExpenseForm', {
   errorFieldCssClass: 'is-invalid',
 });
 
-updateFaqFormValidator
-    .addField('#question', [{
+updateExpenseFormValidator
+    .addField('#name', [{
         rule: 'required',
-        errorMessage: 'This field is required',
+        errorMessage: 'This field is required.',
     },])
-    .addField('#answer', [{
+    .addField('#kind', [{
         rule: 'required',
-        errorMessage: 'This field is required',
+        errorMessage: 'This field is required.',
     },])
+    .addField('#amount', [{
+        rule: 'required',
+        errorMessage: 'This field is required.',
+    },{
+        rule: 'number',
+        errorMessage: 'Please input a valid number.',
+    }])
     .onSuccess((event) => {
         event.preventDefault();
         // Make your API call here (e.g., using the fetch() method)
@@ -336,7 +394,7 @@ updateFaqFormValidator
         recordID = form.getAttribute('record-id');
 
         // create the payload data
-        const url = `/api/v1/faqs/${recordID}`; 
+        const url = `/api/v1/expenses/${recordID}`; 
         const formData = new FormData(form);
         const payload =  {
             headers: {
@@ -353,6 +411,18 @@ updateFaqFormValidator
                 if (response.status === 'success'){
                   //redirect to user profile
                   location.reload()
+                }else{
+                  // store error data
+                  const errors = response.data
+                  // create a blank variable to store error
+                  const field_errors = {}
+                  // add hashtags to keys
+                  Object.keys(errors).forEach(key => {
+                      const value = errors[key];
+                      field_errors[`#${key}`] = value
+                  });
+                  // show field errors to user
+                  updateExpenseFormValidator.showErrors(field_errors)
                 }
             })
             .catch(error => {
@@ -378,7 +448,7 @@ const handleDelete = (button) => {
   }).then((result) => {
     if (result.isConfirmed) {
       // Make your API call here (e.g., using the fetch() method)
-      const url = `/api/v1/faqs/${recordID}`;
+      const url = `/api/v1/expenses/${recordID}`;
       const payload = {
         headers: {
           "X-CSRFToken": "{{csrf_token}}"
@@ -386,16 +456,17 @@ const handleDelete = (button) => {
         method: 'DELETE',
       }
       fetch(url, payload)
-        .then(response => response.json())
+        .then(response => response.json() )
         .then(response => {
           // reload page to get fresh data
           location.reload();
         })
         .catch(error => {
+          
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'Something went wrong!',
+            text: error,
             confirmButtonColor: '#4154f1',
           })
         });
