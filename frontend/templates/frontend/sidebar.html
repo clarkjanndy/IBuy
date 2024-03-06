@@ -268,7 +268,7 @@
           <i class="bi bi-bell-fill text-${notification.level}"></i>
           <div ${notification.status == 'unseen' ? 'style="font-weight: bold;"':''}>
             <p>${notification.content}</p>
-            <p> ${formatDate(notification.modified_at)}</p>
+            <p class="text-muted"> ${formatDate(notification.modified_at)}</p>
           </div>
         `;
       

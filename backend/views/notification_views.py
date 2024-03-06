@@ -17,7 +17,7 @@ class NotificationList(ListAPIView):
     
     def get_queryset(self):
         user = self.request.user
-        return super().get_queryset().filter(user=user)
+        return super().get_queryset().filter(user=user)[:5]
     
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)

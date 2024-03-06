@@ -1,9 +1,10 @@
-from collections.abc import Iterable
 import secrets
 import string
 
 from django.db import models
 from . extras import TimeStampedModel
+from . notification import Notification
+
 
 __all__ = ['Order', 'OrderItem', 'OrderHistory']
 
@@ -65,20 +66,44 @@ class OrderHistory(TimeStampedModel):
     status = models.CharField(choices=STATUS, default='to-pay', max_length=12)
     modified_by = models.ForeignKey('User', related_name='modified_order_history', on_delete=models.CASCADE)
     
+    class Meta:
+        ordering = ('-modified_at', )
+    
+    def __str__(self):
+        return self.remarks
+    
     def save(self, *args, **kwargs):
         order = self.order
         # update the status of the order if there are changes in the history status
         if not order.status == self.status:
             order.status = self.status
-            order.save()
+            order.save()     
+            self.notify_user_order_status_changes()
             
         super().save( *args, **kwargs)
     
-    def __str__(self):
-        return self.remarks
+    def notify_user_order_status_changes(self):
+        level_map = {
+            'to-pay': 'primary',
+            'to-prepare': 'primary',
+            'to-recieve': 'primary',
+            'completed': 'success',
+            'cancelled': 'danger'
+        }
+        
+        content = f'Your order with reference number {self.order.ref_no} is now in the {self.get_status_display()} status.'
+        Notification.objects.create(
+            user = self.order.user,
+            level = level_map.get(self.status),
+            content = content,
+            link = f'/my-orders/{self.order.ref_no}'
+        )
+        
+        print(f'User has been notified about order status change of order {self.order.ref_no}.')
+        
     
-    class Meta:
-        ordering = ('-modified_at', )
+    
+  
     
 
     

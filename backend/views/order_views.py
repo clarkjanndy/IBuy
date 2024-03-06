@@ -51,7 +51,7 @@ class PlaceOrder(GenericAPIView):
                 
             # call service to do necessary things
             service = OrderService(order)
-            service.create_history(request.user, 'Order Placed', order.status)
+            service.post_order_placement_process(user=request.user)
         
             return Response({
                 "status": "success", 
@@ -103,7 +103,7 @@ class BuyNow(GenericAPIView):
             
             # call service to do necessary things
             service = OrderService(order)
-            service.create_history(request.user, 'Order Placed', order.status)
+            service.post_order_placement_process(user=request.user)
       
             return Response({
                 "status": "success", 
