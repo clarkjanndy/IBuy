@@ -63,4 +63,7 @@ urlpatterns = [
     #Expense
     path('admin/manage-expenses', views.ExpenseList.as_view()),
     
+    #Report
+    path('admin/reports', views.ReportView.as_view()),
+    
 ]

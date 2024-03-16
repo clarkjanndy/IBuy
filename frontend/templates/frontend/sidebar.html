@@ -110,6 +110,14 @@
       </a>
     </li><!-- End Dashboard Nav -->
 
+    
+    <li class="nav-item">
+      <a class="nav-link {% if not current_page == 'reports'%}collapsed{% endif %}" href="/admin/reports">
+        <i class="bi bi-body-text"></i>
+        <span>Reports</span>
+      </a>
+    </li><!-- End Uniforms Page Nav -->
+
     <li class="nav-item">
       <a class="nav-link {% if not current_page == 'manage-uniforms'%}collapsed{% endif %}"
         href="/admin/manage-uniforms">
@@ -131,7 +139,6 @@
         <span>Manage Expenses</span>
       </a>
     </li><!-- End Uniforms Page Nav -->
-
 
     <li class="nav-item">
       <a class="nav-link {% if not current_page == 'manage-user'%}collapsed{% endif %}" href="/admin/manage-users">
