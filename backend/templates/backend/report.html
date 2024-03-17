@@ -1,0 +1,152 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sales and Expense Report</title>
+</head>
+
+<style>
+    .center {
+        text-align: center;
+    }
+
+    .bordered-table {
+        border: 1px solid gray;
+    }
+
+    .padded-td {
+        padding-top: 2px;
+        padding-left: 2px;
+    }
+
+    .part-header{
+        background-color: #012970;
+        color: white;
+        font-weight: bold;
+    }
+
+    .table-header{
+        font-weight: bold;
+    }
+
+</style>
+
+<body>
+    <!-- Heading -->
+    <table class="center">
+        <tr>
+            <td>
+                <img src="{{base_64_bcc_logo}}" alt="" width="100">
+            </td>
+            <td>
+                Republic of the Phillipines<br>
+                Province of Bohol<br>
+                Municipality of Buenavista<br>
+                Buenavista Community College<br>
+                iBuy<br>
+                Date: <u>{% now "F d, Y" %}</u>
+            </td>
+            <td>
+                <img src="{{base_64_ibuy_logo}}" alt="" width="150">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <br>
+                <h1>Sales and Expense Report</h1>
+                <br>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Contents  starts here-->
+
+    <!-- Sales -->
+    <table class="bordered-table">
+        <!-- Part Heading -->
+        <tr class="part-header">
+            <td class="padded-td" colspan="6">Part I. Sales</td>
+        </tr>
+
+        <!-- Table Headers -->
+        <tr class="table-header"> 
+            <td class="padded-td">Ref #</td>
+            <td class="padded-td">Date</td>
+            <td class="padded-td">Order Ref #</td>
+            <td class="padded-td">Ordered By (Student ID)</td>
+            <td class="padded-td">Payment Option</td>
+            <td class="padded-td">Amount</td>
+        </tr>
+
+        <!-- Table Contents -->
+        {% for sales in data.sales.objects %}
+        <tr>
+            <td class="padded-td">{{sales.ref_no}}</td>
+            <td class="padded-td">{{sales.modified_at|date:"F d, Y"}}</td>
+            <td class="padded-td">{{sales.order.ref_no}}</td>
+            <td class="padded-td">{{sales.order.user.student_id|default:"N/A"}}</td>
+            <td class="padded-td">{{sales.order.payment_option}}</td>
+            <td class="padded-td">{{sales.amount|floatformat:"2"|intcomma}}</td>
+        </tr>
+        {% endfor %}
+
+        <!-- Table Footer -->
+        <tr> 
+            <td class="padded-td" colspan="5"><b>Total</b></td>
+            <td class="padded-td"><b>{{data.sales.total|floatformat:"2"|intcomma}}</b></td>
+        </tr>
+    </table>
+
+    <br>
+
+    <!-- Expenses -->
+    <table class="bordered-table">
+        <!-- Part Heading -->
+        <tr class="part-header">
+            <td class="padded-td" colspan="5">Part I. Expenses</td>
+        </tr>
+
+        <!-- Table Headers -->
+        <tr class="table-header"> 
+            <td class="padded-td">Name</td>
+            <td class="padded-td">Kind</td>
+            <td class="padded-td">Last Modified By</td>
+            <td class="padded-td">Last Modified Date</td>
+            <td class="padded-td">Amount</td>
+        </tr>
+
+        <!-- Table Contents -->
+        {% for expense in data.expenses.objects %}
+        <tr>
+            <td class="padded-td">{{expense.name}}</td>
+            <td class="padded-td">{{expense.get_kind_display}}</td>
+            <td class="padded-td">{{expense.modified_by.get_full_name|default:"N/A"}}</td>
+            <td class="padded-td">{{expense.modified_at|date:"F d, Y"}}</td>
+            <td class="padded-td">{{expense.amount|floatformat:"2"|intcomma}}</td>
+        </tr>
+        {% endfor %}
+
+        <!-- Table Footer -->
+        <tr> 
+            <td class="padded-td" colspan="4"><b>Total</b></td>
+            <td class="padded-td"><b>{{data.expenses.total|floatformat:"2"|intcomma}}</b></td>
+        </tr>
+    </table>
+
+    <br>
+
+    <!-- Profit -->
+    <table class="bordered-table" style="font-size: 15px;">
+        <tr> 
+            <td class="padded-td"><b>Total Profit</b></td>
+            <td class="padded-td"><b>{{data.total_profit|floatformat:"2"|intcomma}}</b></td>
+        </tr>
+    </table>
+
+
+
+</body>
+
+</html>

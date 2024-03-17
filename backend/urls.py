@@ -50,6 +50,9 @@ urlpatterns = [
     path('expenses', views.ExpenseListCreate.as_view()),
     path('expenses/<int:pk>', views.ExpenseById.as_view()),
     
-    #Notification
+    # Notification
     path('notifications', views.NotificationList.as_view()),
+    
+    # Notification
+    path('report-pdf', views.ReportPDF.as_view()),
 ]

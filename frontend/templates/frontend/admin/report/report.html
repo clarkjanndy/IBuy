@@ -27,25 +27,24 @@
 
             <div class="row">
               <div class="col-lg-3">
-                <form class="border p-3">
-                  <div>Controls</div>
+                <form class="border p-3" id="formReport">
+                  <!-- <div>
+                    <span class="badge">asd</span>
+                  </div> -->
+
                   <div class="row">
                     <div class="form-group col-lg-12 col-sm-6 mb-2">
-                      <label>Year: </label>
-                      <select class="form-select">
-                        <option>---</option>
-                      </select>
+                      <label>From: </label>
+                      <input type="month" class="form-control" id="dateFieldFrom">
                     </div>
 
                     <div class="form-group col-lg-12 col-sm-6 mb-2">
-                      <label>Month: </label>
-                      <select class="form-select">
-                        <option>---</option>
-                      </select>
+                      <label>To: </label>
+                      <input type="month" class="form-control" id="dateFieldTo">
                     </div>
 
                     <div class="col-lg-12 d-flex justify-content-end">
-                      <button class="btn btn-primary">Generate</button>
+                      <button class="btn btn-primary" id="buttonGenerate">Generate</button>
                     </div>
                   </div>
                 </form>
@@ -71,14 +70,39 @@
 </main><!-- End #main -->
 <script src=" {% static 'frontend/vendor/others/just-validate.min.js' %}"></script>
 <script>
-  // URL of the PDF file
-  var pdfUrl = 'https://css4.pub/2015/icelandic/dictionary.pdf';
+  const formReport = document.getElementById('formReport')
+  const dateFieldFrom = document.getElementById('dateFieldFrom')
+  const dateFieldTo = document.getElementById('dateFieldTo')
+  const pdfViewer = document.getElementById('pdfViewer');
 
-  // Get the iframe element
-  var iframe = document.getElementById('pdfViewer');
+  const buildURL = (from, to) => {
+    url = `/api/v1/report-pdf?${from ? 'from=' + from: ''}&${to ? 'to=' + to: ''}`
+    return url
+  }
 
-  // Set the src attribute to the PDF URL
-  iframe.src = pdfUrl;
+  const renderPDF = (link) => {
+    // Set the src attribute to the PDF URL
+    pdfViewer.src = link;
+  }
+
+  formReport.addEventListener('submit', (evt) => {
+    evt.preventDefault()
+    url = buildURL(dateFieldFrom.value, dateFieldTo.value)
+    renderPDF(url)
+  })
+
+  document.addEventListener('DOMContentLoaded', () => {
+      // set from to one month ago and to to current date
+      const currentDate = new Date()
+      const dateOneMonthAgo = new Date()
+      dateOneMonthAgo.setMonth(dateOneMonthAgo.getMonth() - 1);
+
+      dateFieldFrom.value = dateOneMonthAgo.toISOString().slice(0,7);
+      dateFieldTo.value = currentDate.toISOString().slice(0,7);
+
+      url = buildURL(dateFieldFrom.value , dateFieldTo.value)
+      renderPDF(url)
+  })
 </script>
 
 {%endblock content%}
