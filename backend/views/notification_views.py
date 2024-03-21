@@ -76,7 +76,7 @@ class NotificationMarkReadAll(GenericAPIView):
     
     def get_queryset(self):
         request = self.request
-        return super().get_queryset().filter(user = request.user)
+        return super().get_queryset().filter(user = request.user, status='unseen')
         
     def post(self, request, *args, **kwargs):
         self.get_queryset().update(status='seen')
