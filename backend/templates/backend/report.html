@@ -112,8 +112,8 @@
         <tr class="table-header"> 
             <td class="padded-td">Name</td>
             <td class="padded-td">Kind</td>
+            <td class="padded-td">Billing Month</td>
             <td class="padded-td">Last Modified By</td>
-            <td class="padded-td">Last Modified Date</td>
             <td class="padded-td">Amount</td>
         </tr>
 
@@ -122,8 +122,8 @@
         <tr>
             <td class="padded-td">{{expense.name}}</td>
             <td class="padded-td">{{expense.get_kind_display}}</td>
+            <td class="padded-td">{{expense.billing_month|date:"F, Y"}}</td>
             <td class="padded-td">{{expense.modified_by.get_full_name|default:"N/A"}}</td>
-            <td class="padded-td">{{expense.modified_at|date:"F d, Y"}}</td>
             <td class="padded-td">{{expense.amount|floatformat:"2"|intcomma}}</td>
         </tr>
         {% endfor %}
