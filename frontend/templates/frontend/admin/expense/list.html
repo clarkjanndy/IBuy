@@ -69,7 +69,7 @@
                   <th scope="col">Name</th>
                   <th scope="col">Kind</th>
                   <th scope="col">Amount</th>
-                  <th scope="col">Date Created</th>
+                  <th scope="col">Billing Month</th>
                   <th scope="col">Last Modified By</th>
                   <th scope="col">Actions</th>
                 </tr>
@@ -83,7 +83,7 @@
                   <td>&#8369; {{exp.amount}}</td>
                   <!-- <td class="text-break w-25">{{faq.question}}</td>
                   <td class="text-truncate w-25">{{faq.answer}}</td> -->
-                  <td>{{exp.modified_at|date:"M d, Y"}}</td>
+                  <td>{{exp.billing_month|date:"F, Y"}}</td>
                   <td>{{exp.modified_by.get_full_name}}</td>
                   <!-- Action Buttons -->
                   <td>
@@ -182,6 +182,11 @@
             </div>
 
             <div class="col-lg-12 mb-2">
+              <label for="billing_month" class="form-label">Billing Month: </label>
+              <input type="month" name="billing_month" class="form-control" id="billing_month" placeholder="">
+            </div>
+
+            <div class="col-lg-12 mb-2">
               <label for="question" class="form-label">Amount: </label>
               <input type="text" name="amount" class="form-control" id="amount" placeholder="Amount">
             </div>
@@ -229,6 +234,11 @@
             </div>
 
             <div class="col-lg-12 mb-2">
+              <label for="billing_month" class="form-label">Billing Month: </label>
+              <input type="month" name="billing_month" class="form-control" id="billing_month" placeholder="">
+            </div>
+
+            <div class="col-lg-12 mb-2">
               <label for="question" class="form-label">Amount: </label>
               <input type="text" name="amount" class="form-control" id="amount" placeholder="Amount">
             </div>
@@ -269,6 +279,10 @@ createExpenseFormValidator
         rule: 'required',
         errorMessage: 'This field is required.',
     },])
+    .addField('#billing_month', [{
+        rule: 'required',
+        errorMessage: 'This field is required.',
+    },])
     .addField('#amount', [{
         rule: 'required',
         errorMessage: 'This field is required.',
@@ -276,12 +290,18 @@ createExpenseFormValidator
         rule: 'number',
         errorMessage: 'Please input a valid number.',
     }])
+    .addField('#remarks', [{
+        rule: 'required',
+        errorMessage: 'This field is required.',
+    },])
     .onSuccess((event) => {
         event.preventDefault();
         form = event.target
         // Make your API call here (e.g., using the fetch() method)
         const url = '/api/v1/expenses'; 
         const formData = new FormData(form);
+        formData.set('billing_month', `${formData.get('billing_month')}-1`)
+
         const payload =  {
             headers: {
               "X-CSRFToken":  "{{csrf_token}}"
@@ -289,6 +309,7 @@ createExpenseFormValidator
             method: 'POST',
             body: formData
         }
+        console.log(formData.get('billing_month'))
         fetch(url, payload)
             .then(response => response.json())
             .then(response => {
@@ -343,13 +364,15 @@ const handleUpdateModal = () => {
             const form = updateExpenseModal.querySelector('#updateExpenseForm');
             const name = form.querySelector('#name');
             const kind = form.querySelector('#kind');
+            const billing_month = form.querySelector('#billing_month');
             const amount = form.querySelector('#amount');
             const remarks = form.querySelector('#remarks');
             data = response.data
-            
+
             form.setAttribute('record-id', data.id);
             name.value = data.name
             kind.value = data.kind
+            billing_month.value = data.billing_month.slice(0, 7)
             amount.value = data.amount
             remarks.value = data.remarks
           })
@@ -380,6 +403,10 @@ updateExpenseFormValidator
         rule: 'required',
         errorMessage: 'This field is required.',
     },])
+    .addField('#billing_month', [{
+        rule: 'required',
+        errorMessage: 'This field is required.',
+    },])
     .addField('#amount', [{
         rule: 'required',
         errorMessage: 'This field is required.',
@@ -387,6 +414,10 @@ updateExpenseFormValidator
         rule: 'number',
         errorMessage: 'Please input a valid number.',
     }])
+    .addField('#remarks', [{
+        rule: 'required',
+        errorMessage: 'This field is required.',
+    },])
     .onSuccess((event) => {
         event.preventDefault();
         // Make your API call here (e.g., using the fetch() method)
@@ -396,6 +427,8 @@ updateExpenseFormValidator
         // create the payload data
         const url = `/api/v1/expenses/${recordID}`; 
         const formData = new FormData(form);
+        formData.set('billing_month', `${formData.get('billing_month')}-1`)
+
         const payload =  {
             headers: {
               "X-CSRFToken":  "{{csrf_token}}"
