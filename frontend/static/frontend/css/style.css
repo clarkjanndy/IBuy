@@ -829,6 +829,11 @@ h6 {
   background: #f6f6fe;
 }
 
+.dashboard .expenses-card .card-icon {
+  color: #c241f1;
+  background: #f6f6fe;
+}
+
 .dashboard .revenue-card .card-icon {
   color: #2eca6a;
   background: #e0f8e9;
