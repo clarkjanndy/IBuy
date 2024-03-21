@@ -52,6 +52,8 @@ urlpatterns = [
     
     # Notification
     path('notifications', views.NotificationList.as_view()),
+    path('notifications/<int:pk>/mark-as-read', views.NotificationMarkRead.as_view()),
+    path('notifications/mark-as-read-all', views.NotificationMarkReadAll.as_view()),
     
     # Notification
     path('report-pdf', views.ReportPDF.as_view()),
