@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from backend.models import Payment
+from backend.models import Payment, OrderHistory
 from backend.services.order_service import OrderService
 
 from . extras import CustomModelSerializer
@@ -37,9 +37,14 @@ class PaymentSerializer(CustomModelSerializer):
             validated_data.update({"status": "pending"})
             
         order = validated_data['order']
+        
         # create history 
-        service = OrderService(order)
-        service.create_history(request.user, f'Order paid via {order.payment_option}.', 'to-prepare')
+        OrderHistory.objects.create(
+            order = order,
+            remarks = f'Order paid via {order.payment_option}.',
+            status = 'to-prepare',
+            modified_by = request.user
+        )
                 
         return super().create(validated_data)
     
@@ -48,9 +53,13 @@ class PaymentSerializer(CustomModelSerializer):
         payment = super().update(instance, validated_data)
         order = payment.order
         
-        # create history 
-        service = OrderService(order)
-        service.create_history(request.user, f'Payment status is {payment.status}.', order.status)
+        # create history
+        OrderHistory.objects.create(
+            order = order,
+            remarks = f'Payment {payment.status}.',
+            status = order.status,
+            modified_by = request.user
+        )
         
         return payment
         

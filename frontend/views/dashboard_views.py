@@ -17,10 +17,12 @@ class DashboardView(AdminRequiredMixin, TemplateView):
         sales_sum =  analytics.sales_sum()
         expenses_sum = analytics.expenses_sum()
         profit_sum = sales_sum - expenses_sum
+        order_recent = analytics.order_recent
         
         context.update({'users': user_count})
         context.update({'sales': sales_sum})
         context.update({'expenses': expenses_sum})
         context.update({'profit': profit_sum})
+        context.update({'order_recent': order_recent})
         
         return context

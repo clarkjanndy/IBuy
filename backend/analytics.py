@@ -44,7 +44,7 @@ def expenses_sum(date_from=None, date_to=None, return_objects=False):
 def user_count():
     return User.count()
 
-def order_recent(num_rows=10):
+def order_recent(num_rows=6):
     if not num_rows:
         return []
     
