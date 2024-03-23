@@ -70,7 +70,7 @@
                   <th scope="col">Kind</th>
                   <th scope="col">Amount</th>
                   <th scope="col">Billing Month</th>
-                  <th scope="col">Last Modified By</th>
+                  <th scope="col">Date Created</th>
                   <th scope="col">Actions</th>
                 </tr>
               </thead>
@@ -84,7 +84,7 @@
                   <!-- <td class="text-break w-25">{{faq.question}}</td>
                   <td class="text-truncate w-25">{{faq.answer}}</td> -->
                   <td>{{exp.billing_month|date:"F, Y"}}</td>
-                  <td>{{exp.modified_by.get_full_name}}</td>
+                  <td>{{exp.created_at|date:"F d, Y"}}</td>
                   <!-- Action Buttons -->
                   <td>
                     <button class="btn btn-sm btn-primary" record-id="{{exp.id}}" data-bs-toggle="modal" data-bs-target="#updateExpenseModal" >
