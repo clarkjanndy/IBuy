@@ -50,3 +50,12 @@ class User(AbstractUser):
     def default_photo_url(self):        
         return f"{settings.STATIC_URL}frontend/img/default-profile.webp"
     
+    @classmethod
+    def count(cls):
+        query = cls.objects.filter(is_active=True)        
+        return query.aggregate(count=models.Count('id'))['count']
+        
+        
+        
+       
+    
