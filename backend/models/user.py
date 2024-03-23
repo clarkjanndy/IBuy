@@ -52,7 +52,7 @@ class User(AbstractUser):
     
     @classmethod
     def count(cls):
-        query = cls.objects.filter(is_active=True)        
+        query = cls.objects.all()        
         return query.aggregate(count=models.Count('id'))['count']
         
         

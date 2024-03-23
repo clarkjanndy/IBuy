@@ -39,7 +39,7 @@ class Uniform(TimeStampedModel):
     
     @property
     def sold(self):
-        order = OrderItem.objects.filter(uniform=self).aggregate(quantity=Sum('quantity'))        
+        order = OrderItem.objects.select_related('payment').filter(uniform=self, order__payment__status='approved').aggregate(quantity=Sum('quantity'))        
         return order.get('quantity') or 0
         
     @property

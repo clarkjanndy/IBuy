@@ -55,6 +55,10 @@ urlpatterns = [
     path('notifications/<int:pk>/mark-as-read', views.NotificationMarkRead.as_view()),
     path('notifications/mark-as-read-all', views.NotificationMarkReadAll.as_view()),
     
-    # Notification
+    # Reports
     path('report-pdf', views.ReportPDF.as_view()),
+    
+    # Analytics
+    path('analytics/sales-expense-pie-chart', views.SalesExpensePieChart.as_view()),
+    path('analytics/report-bar-graph', views.ReportBarGraph.as_view()),
 ]
