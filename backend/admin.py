@@ -4,6 +4,7 @@ from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 
 from . models import (
     User, 
+    Department,
     FAQ, 
     SystemInformation, 
     Category, 
@@ -31,6 +32,10 @@ class UserAdmin(DefaultUserAdmin):
                                        "mobile_number", "address", "bio", "photo")}),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
+
+class DepartmentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'abbreviation')
+    search_fields = list_display
 
 class FAQAdmin(admin.ModelAdmin):
     list_display = ('question', 'answer',)
@@ -122,6 +127,7 @@ class NotificationAdmin(admin.ModelAdmin):
      
 
 # Register your models here.
+admin.site.register(Department, DepartmentAdmin)
 admin.site.register(User, UserAdmin)
 admin.site.register(FAQ, FAQAdmin)
 admin.site.register(SystemInformation, SystemInformationAdmin)
