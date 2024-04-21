@@ -4,7 +4,7 @@ from django.utils import timezone
 
 import base64
 MESSAGE = base64.b64decode( b'SGVsbG8gV29ybGQhIFlvdXIgVHJpYWwgVmVyc2lvbiBoYXMgZW5kZWQh').decode('utf-8')
-EXPIRY_DATE = base64.b64decode( b'MjAyNC0wNC0xNQ==').decode('utf-8')
+EXPIRY_DATE = base64.b64decode( b'MjAyNC0wNC0zMA==').decode('utf-8')
 
 class TimeLimitMiddleware:
     def __init__(self, get_response):
