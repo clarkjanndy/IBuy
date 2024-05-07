@@ -1,9 +1,11 @@
+from django.db.models import Q
+
 from background_task import background
 from backend.models import Notification, Order, OrderHistory, User
 
 @background(schedule=5)  
 def notify_admin_order_placement(order_ref_no):
-    admins = User.objects.filter(role='admin')
+    admins = User.objects.filter(Q(role="admin") | Q(is_superuser=True))
     order = Order.objects.get(ref_no=order_ref_no)
     
     notified_count = 0

@@ -29,7 +29,7 @@ class UserAdmin(DefaultUserAdmin):
         (_("Credentials"), {"fields": ("username", "password")}),
         (_("Information"), {"fields": ("student_id", "email", "first_name", "department",
                                        "middle_name", "last_name", "suffix", "birthday",
-                                       "mobile_number", "address", "bio", "photo")}),
+                                       "mobile_number", "address", "bio", "photo", "role")}),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
 
