@@ -1,7 +1,7 @@
 from datetime import datetime
 from decimal import Decimal
 
-from django.db.models import Sum, Count, Func, Value, F, CharField, ExpressionWrapper
+from django.db.models import Sum, Count, Func, Value, F, CharField, ExpressionWrapper, Q
 from django.db.models.functions import  ExtractYear, ExtractMonth, Concat
 from backend.models import Payment, User, Expense, Order, OrderItem
 
@@ -25,15 +25,15 @@ def sales_sum(date_from=None, date_to=None, return_objects=False):
     return total_sales
 
 def expenses_sum(date_from=None, date_to=None, return_objects=False):
-    expenses = Expense.objects.all().order_by('billing_month')
+    expenses = Expense.objects.all().order_by('billing_date')
     
     if date_from:
         _date_from = datetime.strptime(date_from, '%Y-%m')
-        expenses = expenses.filter(billing_month__year__gte=_date_from.year, billing_month__month__gte=_date_from.month)
+        expenses = expenses.filter(billing_date__year__gte=_date_from.year, billing_date__month__gte=_date_from.month)
         
     if date_to:
         _date_to = datetime.strptime(date_to, '%Y-%m')
-        expenses = expenses.filter(billing_month__year__lte=_date_to.year, billing_month__month__lte=_date_to.month)
+        expenses = expenses.filter(billing_date__year__lte=_date_to.year, billing_date__month__lte=_date_to.month)
     
     total_expenses = expenses.aggregate(total=Sum('amount')).get('total') if expenses else Decimal(0)
         
@@ -100,8 +100,8 @@ def report_bar_graph():
    
    # get expenses
    expenses = Expense.objects.all().annotate(
-       month=ExtractMonth('billing_month'),
-       year=ExtractYear('billing_month')
+       month=ExtractMonth('billing_date'),
+       year=ExtractYear('billing_date')
    ).values('month', 'year').annotate(
        total=Sum('amount'),
        month_year=ExpressionWrapper(
@@ -144,4 +144,14 @@ def report_bar_graph():
        "series": series,
        "categories": categories
    }
+   
+def capitals():
+    qs = Expense.objects.exclude(Q(capital_type__isnull=True) | Q(capital_type='')).\
+        values('capital_type').\
+        annotate(total_amount = Sum('amount'))
+        
+    return qs
+
+print(capitals())
+    
     

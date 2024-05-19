@@ -76,7 +76,7 @@
             <td class="padded-td">Ref #</td>
             <td class="padded-td">Date</td>
             <td class="padded-td">Order Ref #</td>
-            <td class="padded-td">Ordered By (Student ID)</td>
+            <td class="padded-td">Student</td>
             <td class="padded-td">Payment Option</td>
             <td class="padded-td">Amount</td>
         </tr>
@@ -87,7 +87,7 @@
             <td class="padded-td">{{sales.ref_no}}</td>
             <td class="padded-td">{{sales.modified_at|date:"F d, Y"}}</td>
             <td class="padded-td">{{sales.order.ref_no}}</td>
-            <td class="padded-td">{{sales.order.user.student_id|default:"N/A"}}</td>
+            <td class="padded-td">{{sales.order.user.get_full_name|default:"N/A"}}</td>
             <td class="padded-td">{{sales.order.payment_option}}</td>
             <td class="padded-td">{{sales.amount|floatformat:"2"|intcomma}}</td>
         </tr>
@@ -113,8 +113,8 @@
         <tr class="table-header"> 
             <td class="padded-td">Name</td>
             <td class="padded-td">Kind</td>
-            <td class="padded-td">Billing Month</td>
-            <td class="padded-td">Last Modified By</td>
+            <td class="padded-td">Capital Type</td>
+            <td class="padded-td">Billing Date</td>           
             <td class="padded-td">Amount</td>
         </tr>
 
@@ -123,8 +123,8 @@
         <tr>
             <td class="padded-td">{{expense.name}}</td>
             <td class="padded-td">{{expense.get_kind_display}}</td>
-            <td class="padded-td">{{expense.billing_month|date:"F, Y"}}</td>
-            <td class="padded-td">{{expense.modified_by.get_full_name|default:"N/A"}}</td>
+            <td class="padded-td">{{expense.get_capital_type_display|default:"N/A"}}</td>
+            <td class="padded-td">{{expense.billing_date|date:"F d, Y"}}</td>
             <td class="padded-td">{{expense.amount|floatformat:"2"|intcomma}}</td>
         </tr>
         {% endfor %}

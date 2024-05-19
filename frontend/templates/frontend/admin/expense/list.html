@@ -68,8 +68,9 @@
                   <th scope="col">#</th>
                   <th scope="col">Name</th>
                   <th scope="col">Kind</th>
+                  <th scope="col">Capital Type</th>
                   <th scope="col">Amount</th>
-                  <th scope="col">Billing Month</th>
+                  <th scope="col">Billing Date</th>
                   <th scope="col">Date Created</th>
                   <th scope="col">Actions</th>
                 </tr>
@@ -80,10 +81,11 @@
                   <th scope="row">{{forloop.counter}}</th>
                   <td>{{exp.name}}</td>
                   <td>{{exp.get_kind_display}}</td>
+                  <td>{{exp.get_capital_type_display|default:"N/A"}}</td>
                   <td>&#8369; {{exp.amount}}</td>
                   <!-- <td class="text-break w-25">{{faq.question}}</td>
                   <td class="text-truncate w-25">{{faq.answer}}</td> -->
-                  <td>{{exp.billing_month|date:"F, Y"}}</td>
+                  <td>{{exp.billing_date|date:"F d, Y"}}</td>
                   <td>{{exp.created_at|date:"F d, Y"}}</td>
                   <!-- Action Buttons -->
                   <td>
@@ -173,7 +175,7 @@
             </div>
 
             <div class="col-lg-12 mb-2">
-              <label for="question" class="form-label">Kind: </label>
+              <label for="kind" class="form-label">Kind: </label>
               <select class="form-select" name="kind" id="kind">
                 <option selected value="">---</option>
                 <option value="cost">Cost</option>
@@ -182,8 +184,17 @@
             </div>
 
             <div class="col-lg-12 mb-2">
-              <label for="billing_month" class="form-label">Billing Month: </label>
-              <input type="month" name="billing_month" class="form-control" id="billing_month" placeholder="">
+              <label for="capital_type" class="form-label">Capital Type: </label>
+              <select class="form-select" name="capital_type" id="capital_type">
+                <option selected value="">---</option>
+                <option value="cloth_capital">Cloth Capital</option>
+                <option value="departmental_uniform_capital">Departmental Uniform Capital</option>
+              </select>      
+            </div>
+
+            <div class="col-lg-12 mb-2">
+              <label for="billing_date" class="form-label">Billing Date: </label>
+              <input type="date" name="billing_date" class="form-control" id="billing_date" placeholder="">
             </div>
 
             <div class="col-lg-12 mb-2">
@@ -193,7 +204,7 @@
 
             <div class="col-lg-12">
               <label for="answer" class="form-label">Remarks: </label>
-              <textarea name="remarks" class="form-control" id="remarks" rows="10" placeholder="Remarks"></textarea>
+              <input  name="remarks" class="form-control" id="remarks" placeholder="Remarks">
             </div>
 
           </div>
@@ -234,8 +245,17 @@
             </div>
 
             <div class="col-lg-12 mb-2">
-              <label for="billing_month" class="form-label">Billing Month: </label>
-              <input type="month" name="billing_month" class="form-control" id="billing_month" placeholder="">
+              <label for="capital_type" class="form-label">Capital Type: </label>
+              <select class="form-select" name="capital_type" id="capital_type">
+                <option selected value="">---</option>
+                <option value="cloth_capital">Cloth Capital</option>
+                <option value="departmental_uniform_capital">Departmental Uniform Capital</option>
+              </select>      
+            </div>
+
+            <div class="col-lg-12 mb-2">
+              <label for="billing_date" class="form-label">Billing Date: </label>
+              <input type="date" name="billing_date" class="form-control" id="billing_date" placeholder="">
             </div>
 
             <div class="col-lg-12 mb-2">
@@ -245,7 +265,7 @@
 
             <div class="col-lg-12">
               <label for="answer" class="form-label">Remarks: </label>
-              <textarea name="remarks" class="form-control" id="remarks" rows="10" placeholder="Remarks"></textarea>
+              <input  name="remarks" class="form-control" id="remarks" placeholder="Remarks">
             </div>
 
           </div>
@@ -279,7 +299,7 @@ createExpenseFormValidator
         rule: 'required',
         errorMessage: 'This field is required.',
     },])
-    .addField('#billing_month', [{
+    .addField('#billing_date', [{
         rule: 'required',
         errorMessage: 'This field is required.',
     },])
@@ -300,7 +320,6 @@ createExpenseFormValidator
         // Make your API call here (e.g., using the fetch() method)
         const url = '/api/v1/expenses'; 
         const formData = new FormData(form);
-        formData.set('billing_month', `${formData.get('billing_month')}-1`)
 
         const payload =  {
             headers: {
@@ -364,7 +383,8 @@ const handleUpdateModal = () => {
             const form = updateExpenseModal.querySelector('#updateExpenseForm');
             const name = form.querySelector('#name');
             const kind = form.querySelector('#kind');
-            const billing_month = form.querySelector('#billing_month');
+            const capital_type = form.querySelector('#capital_type');
+            const billing_date = form.querySelector('#billing_date');
             const amount = form.querySelector('#amount');
             const remarks = form.querySelector('#remarks');
             data = response.data
@@ -372,7 +392,8 @@ const handleUpdateModal = () => {
             form.setAttribute('record-id', data.id);
             name.value = data.name
             kind.value = data.kind
-            billing_month.value = data.billing_month.slice(0, 7)
+            capital_type.value = data.capital_type
+            billing_date.value = data.billing_date
             amount.value = data.amount
             remarks.value = data.remarks
           })
@@ -380,7 +401,7 @@ const handleUpdateModal = () => {
             Swal.fire({
               icon: 'error',
               title: 'Oops...',
-              text: 'Something went wrong!',
+              text: error,
               confirmButtonColor: '#4154f1',
             })
           });
@@ -403,7 +424,7 @@ updateExpenseFormValidator
         rule: 'required',
         errorMessage: 'This field is required.',
     },])
-    .addField('#billing_month', [{
+    .addField('#billing_date', [{
         rule: 'required',
         errorMessage: 'This field is required.',
     },])

@@ -1,4 +1,7 @@
 from django import template
+from backend.models import Expense
+
+EXPENSE_CAPITAL_TYPE_MAPPING = Expense.capital_type_mapping()
 
 register = template.Library()
 
@@ -30,6 +33,11 @@ def long_gender(string: str):
     }
 
     return MAPPING.get(string)
+
+
+@register.filter()
+def to_human_readable(string: str):    
+    return EXPENSE_CAPITAL_TYPE_MAPPING.get(string)
 
 
 
