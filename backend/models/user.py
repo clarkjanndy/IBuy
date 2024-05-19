@@ -8,6 +8,9 @@ __all__ = ['User', 'Department']
 class Department(TimeStampedModel):
     name = models.CharField(max_length=255)
     abbreviation = models.CharField(max_length=10)    
+    
+    def __str__(self) -> str:
+        return f"{self.name}"
 
 class User(AbstractUser):
     ROLES = (

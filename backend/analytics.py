@@ -151,7 +151,5 @@ def capitals():
         annotate(total_amount = Sum('amount'))
         
     return qs
-
-print(capitals())
     
     
