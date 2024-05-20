@@ -19,7 +19,7 @@ class CartSerializer(CustomModelSerializer):
         exclude = ('user', )
     
     def get_unit(self, instance):
-        return instance.uniform.inventory.unit
+        return instance.uniform.unit
         
     def get_unit_price(self, instance):
         return instance.uniform.price
@@ -38,10 +38,10 @@ class CartSerializer(CustomModelSerializer):
         attrs = super().validate(attrs)
         uniform = attrs['uniform']
         
-        if uniform.variants.all and not attrs['variant'] in uniform.variants:
-            raise serializers.ValidationError({"variant": "Invalid variant."})
+        # if uniform.variants.all and not attrs['variant'] in uniform.variants:
+        #     raise serializers.ValidationError({"variant": "Invalid variant."})
 
-        if uniform.inventory.quantity < attrs['quantity']:
+        if uniform.quantity < attrs['quantity']:
             raise serializers.ValidationError({"quantity": "Maximum quantity reached."})
         
         if attrs['quantity'] > 10:
@@ -73,6 +73,6 @@ class CartSerializer(CustomModelSerializer):
         
         # update the quantity of the uniform after successfully adding to cart
         uniform = cart_item.uniform
-        Inventory.objects.filter(uniform = uniform).update(quantity = F('quantity') - validated_data['quantity'])
+        Variant.objects.filter(uniform = uniform, name = validated_data['variant']).update(quantity = F('quantity') - validated_data['quantity'])
         
         return cart_item

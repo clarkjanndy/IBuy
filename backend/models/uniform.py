@@ -46,7 +46,12 @@ class Uniform(TimeStampedModel):
     def sold(self):
         order = OrderItem.objects.select_related('payment').filter(uniform=self, order__payment__status='approved').aggregate(quantity=Sum('quantity'))        
         return order.get('quantity') or 0
-        
+    
+    @property
+    def quantity(self):
+        variants = self.variants.all().aggregate(quantity = Sum('quantity'))
+        return variants['quantity'] or 0
+                        
     @property
     def is_active(self):
         return True if self.status == 'in-stock' else False

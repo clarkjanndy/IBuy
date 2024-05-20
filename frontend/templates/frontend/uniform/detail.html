@@ -1,6 +1,7 @@
 {% extends "frontend/app.html"%}
 
 {% load static %}
+{% load humanize %}
 
 {% block content %}
 {% include "frontend/sidebar.html" %}
@@ -55,7 +56,7 @@
 
                 </h4>
                 <div class="text-primary">
-                  <span id="quantityText">{{uniform.inventory.quantity_text|default:"0"}}</span> available | {{uniform.sold}} sold
+                  <span id="quantityText">{{uniform.quantity|default:"0"|floatformat:"2"|intcomma}} {{uniform.unit}}(s)</span> available | {{uniform.sold}} sold
                 </div>
 
                 <h3 class="card-title" style="font-size: 50px;">&#x20B1; {{uniform.price}}</h3>
@@ -80,9 +81,9 @@
                         <div class="col-lg-9 col-md-8 size-button-container">
                           {% if uniform.variants %}
                           <select class="form-select w-75" name="variant" id="variantSelect">
-                              <option disabled selected value="">---</option>
-                              {% for v in uniform.variants %}
-                                <option value="{{v}}">{{v}}</option>
+                              <!-- <option disabled selected value="">---</option> -->
+                              {% for v in uniform.variants.all %}
+                                <option value="{{v.name}}" {% if v.name == "DEFAULT" %} selected {% endif %}>{{v.name}}</option>
                               {% endfor %}
                           </select>
                           {% else %}
@@ -98,14 +99,14 @@
 
                           <div class="d-flex align-items-center">
                             <div class="input-group" style="width: 120px;">
-                              <button class="btn btn-outline-secondary" type="button"
-                                onclick="decrementQuantity()">-</button>
+                              <!-- <button class="btn btn-outline-secondary" type="button"
+                                onclick="decrementQuantity()">-</button> -->
                               <input type="text" class="form-control text-center" id="quantityInput" value="1">
-                              <button class="btn btn-outline-secondary" type="button"
-                                onclick="incrementQuantity()">+</button>
+                              <!-- <button class="btn btn-outline-secondary" type="button"
+                                onclick="incrementQuantity()">+</button> -->
                             </div>
 
-                            <div>&nbsp;{{uniform.inventory.quantity_text}} available
+                            <div>&nbsp;{{uniform.quantity|floatformat:"2"|intcomma}} available
                             </div>
                           </div>
 
@@ -226,8 +227,8 @@
 
   let selectedVariant = null
   let selectedPaymentOption = null
-  let currentQuantity = parseInt(quantityInput.value, 10);
-  let availableQuantity = parseInt(quantityText.innerText, 10);
+  let currentQuantity = parseFloat(quantityInput.value, 10);
+  let availableQuantity = parseFloat(quantityText.innerText, 10);
 
   const showError = (element, error_msg) => {
     element.classList.remove('d-none')
@@ -251,6 +252,15 @@
         button.classList.add('btn-outline-primary');
       }
     });
+  }
+
+  quantityInput.onkeyup = (event) => {
+      event.preventDefault()
+      currentQuantity = parseFloat(quantityInput.value, 10);
+
+      if (currentQuantity > availableQuantity) {
+         showError(quantityErrorText, 'Maximum quantity reached.')
+      }
   }
 
   const incrementQuantity = () => {
