@@ -65,8 +65,8 @@
             <div class="row">
               <div class="col-lg-3 col-md-4 label">Variants :</div>
               <div class="col-lg-9 col-md-8">
-                {% for size in uniform.variants %}
-                  <span class="badge text-bg-primary rounded-pill">{{size}}</span>
+                {% for variant in uniform.variants.all %}
+                  <span class="badge text-bg-primary rounded-pill">{{variant.name}}</span>
                 {% empty %}
                  <span class="badge text-bg-secondary rounded-pill">no available variant</span>
                 {% endfor %}
@@ -86,14 +86,20 @@
 
             <div class="row">
               <div class="col-lg-3 col-md-4 label ">Quantity:</div>
-              <div class="col-lg-9 col-md-8">{{uniform.inventory.quantity_text}}</div>
+              <div class="col-lg-9 col-md-8">
+                <table class="table table-bordered">
+                  <th class="label">Variant</th>
+                  <th class="label">Quantity</th>
+                  {% for variant in uniform.variants.all %}
+                  <tr>
+                    <td>{{variant.name}}</td>
+                    <td>{{variant.quantity}}</td>
+                  </tr>
+                  {% endfor %}
+                </table>
+              </div>
             </div>
-
-            <div class="row">
-              <div class="col-lg-3 col-md-4 label ">Last Updated:</div>
-              <div class="col-lg-9 col-md-8">{{uniform.inventory.modified_at|date:"E d, Y"}}</div>
-            </div>
-
+            
             <h5 class="card-title">Other Information</h5>
 
             <div class="row">

@@ -30,13 +30,14 @@
             <form class="row g-3 mt-3" id="updateUniformForm">
 
               <div class="col-lg-6">
-                <label for="category" class="form-label">Category: </label>                                     
-                <select class="form-select" name="category" id="category" >
-                    <option selected disabled value="">---</option>
-                    {% for category in categories %}
-                    <option value="{{category.id}}" {{uniform.category.id|is_selected:category.id}}>{{category.name}}</option>
-                    {% endfor %}
-                </select>                                           
+                <label for="category" class="form-label">Category: </label>
+                <select class="form-select" name="category" id="category">
+                  <option selected disabled value="">---</option>
+                  {% for category in categories %}
+                  <option value="{{category.id}}" {{uniform.category.id|is_selected:category.id}}>{{category.name}}
+                  </option>
+                  {% endfor %}
+                </select>
               </div>
 
               <div class="col-lg-6">
@@ -45,63 +46,82 @@
                 <select class="form-select" name="department" id="department">
                   <option selected value="">---</option>
                   {% for department in departments %}
-                  <option value="{{department.id}}" {{uniform.department.id|is_selected:department.id}}>{{department.name}}</option>
+                  <option value="{{department.id}}" {{uniform.department.id|is_selected:department.id}}>
+                    {{department.name}}</option>
                   {% endfor %}
                 </select>
-                
+
               </div>
 
               <div class="col-lg-6">
-                  <label for="name" class="form-label">Name: </label>                                       
-                  <input type="text" name="name" class="form-control" id="name"
-                      required placeholder="Name" value="{{uniform.name}}">
+                <label for="name" class="form-label">Name: </label>
+                <input type="text" name="name" class="form-control" id="name" required placeholder="Name"
+                  value="{{uniform.name}}">
               </div>
 
               <div class="col-lg-6">
-                <label for="price" class="form-label">Price: </label>                                       
-                <input type="text" name="price" class="form-control" id="price"
-                    required placeholder="Price"  value="{{uniform.price}}">                                            
+                <label for="price" class="form-label">Price: </label>
+                <input type="text" name="price" class="form-control" id="price" required placeholder="Price"
+                  value="{{uniform.price}}">
               </div>
 
               <div class="col-lg-6">
-                <label for="price" class="form-label">Variants: </label>
-                <small><i>(Type comma to separate values.)</i></small>
-                <input type="text" name="variants" class="form-control" id="variants" required
-                  placeholder="e.g Small, Medium">
-
-                <div id="pillContainer" class="mt-2"></div>
-              </div>
-
-
-              <div class="col-lg-6">
-                <label for="status" class="form-label">Status: </label>                                     
-                <select class="form-select" name="status" id="status" >
-                    <option selected disabled value="">---</option>
-                    <option value="in-stock" {{uniform.status|is_selected:"in-stock"}}>In-Stock</option>
-                    <option value="out-of-stock" {{uniform.status|is_selected:"out-of-stock"}}>Out-of-Stock</option>
-                    <option value="draft" {{uniform.status|is_selected:"draft"}}>Draft</option>
-                </select>                                           
+                <label for="status" class="form-label">Status: </label>
+                <select class="form-select" name="status" id="status">
+                  <option selected disabled value="">---</option>
+                  <option value="in-stock" {{uniform.status|is_selected:"in-stock"}}>In-Stock</option>
+                  <option value="out-of-stock" {{uniform.status|is_selected:"out-of-stock"}}>Out-of-Stock</option>
+                  <option value="draft" {{uniform.status|is_selected:"draft"}}>Draft</option>
+                </select>
               </div>
 
               <div class="col-lg-6">
                 <label for="status" class="form-label">Unit: </label>
                 <select class="form-select" name="unit" id="unit">
                   <option selected disabled value="">---</option>
-                  <option value="piece" {{uniform.inventory.unit|is_selected:"piece"}}>Piece</option>
-                  <option value="meter" {{uniform.inventory.unit|is_selected:"meter"}}>Meter</option>
+                  <option value="piece" {{uniform.unit|is_selected:"piece"}}>Piece</option>
+                  <option value="meter" {{uniform.unit|is_selected:"meter"}}>Meter</option>
                 </select>
               </div>
 
               <div class="col-lg-6">
-                <label for="quantity" class="form-label">Quantity to add: <small><i>Current quantity is <b>{{uniform.inventory.quantity_text}}</b></i></small> </label>    
-                <input type="number" name="quantity" class="form-control w-100" id="quantity"
-                    required placeholder="Quantity to add" value="0">                      
+              </div>
+
+              <div class="col-lg-6">
+
+                <label for="quantity" class="form-label">Variant: </label>
+                <div>
+                  <table id="variant_table" class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>---</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                  <small><i class="bi bi-exclamation-circle"> Leave <b>`DEFAULT`</b> as is if no other
+                      variants.</i></small>
+                  <div class="text-primary d-flex justify-content-end mt-2">
+                    <a class="btn btn-sm btn-primary" onclick="addRow()">
+                      Add Variant
+                    </a>
+                  </div>
+                  <div>
+
+                  </div>
+                </div>
+
+
               </div>
 
 
               <div class="col-lg-12">
-                <label for="description" class="form-label" >Description: </label>                     
-                <textarea class="form-control" name="description" id="description" rows="5" placeholder="Description">{{uniform.description}}</textarea>                                        
+                <label for="description" class="form-label">Description: </label>
+                <textarea class="form-control" name="description" id="description" rows="5"
+                  placeholder="Description">{{uniform.description}}</textarea>
               </div>
 
               <div class="col-12 d-flex justify-content-end">
@@ -110,9 +130,9 @@
                   <button class="btn btn-danger" onclick="history.back()">Cancel</button>
                 </div>
               </div>
-              
-          </form>
- 
+
+            </form>
+
           </div>
         </div>
 
@@ -123,165 +143,189 @@
 </main><!-- End #main -->
 <script src=" {% static 'frontend/vendor/others/just-validate.min.js' %}"></script>
 <script>
-    //will store the availabe sizes of th current uniform
-    const variantsArray = []
-    
-    //form validator
-    const updateUniformFormValidator = new window.JustValidate('#updateUniformForm', {
-        errorFieldCssClass: 'is-invalid',
-    });
-    
-    // validation of form
-    updateUniformFormValidator
-        .addField('#category', [{
-            rule: 'required',
-            errorMessage: 'This field is required',
-        },])
-        .addField('#name', [{
-            rule: 'required',
-            errorMessage: 'This field is required',
-        },])
-        .addField('#department', [{
-            validator: () => {
-                return true
-            },
-            errorMessage: 'Nothing to show here.',
-        }])
-        .addField('#price', [{
-            rule: 'required',
-            errorMessage: 'This field is required',
-        },])
-        .addField('#quantity', [{
-            rule: 'required',
-            errorMessage: 'This field is required',
-        }])
-        .addField('#status', [{
-            rule: 'required',
-            errorMessage: 'This field is required',
-        },])
-        .onSuccess((event) => {
-            event.preventDefault();
-            form = event.target
-            // Make your API call here (e.g., using the fetch() method)
-            const url = '/api/v1/uniforms/{{uniform.id}}'; 
-            const formData = new FormData(form);
+  //form validator
+  const updateUniformFormValidator = new window.JustValidate('#updateUniformForm', {
+    errorFieldCssClass: 'is-invalid',
+  });
 
-            //attach the available sizes array
-            formData.append('variants', JSON.stringify(variantsArray))
+  // validation of form
+  updateUniformFormValidator
+    .addField('#category', [{
+      rule: 'required',
+      errorMessage: 'This field is required',
+    },])
+    .addField('#name', [{
+      rule: 'required',
+      errorMessage: 'This field is required',
+    },])
+    .addField('#department', [{
+      validator: () => {
+        return true
+      },
+      errorMessage: 'Nothing to show here.',
+    }])
+    .addField('#price', [{
+      rule: 'required',
+      errorMessage: 'This field is required',
+    },])
+    .addField('#status', [{
+      rule: 'required',
+      errorMessage: 'This field is required',
+    },])
+    .onSuccess((event) => {
+      event.preventDefault();
+      form = event.target
+      // Make your API call here (e.g., using the fetch() method)
+      const url = '/api/v1/uniforms/{{uniform.id}}';
+      const formData = new FormData(form);
 
-            // build the payload
-            const payload =  {
-                headers: {
-                  "X-CSRFToken":  "{{csrf_token}}"
-                },
-                method: 'PATCH',
-                body: formData
-            }
+      //attach the available sizes array
+      formData.append('variant_list', JSON.stringify(variantsArray))
 
-            fetch(url, payload)
-                .then(response => response.json())
-                .then(response => {
-                    console.log(response)
-                    // process success here
-                    if (response.status === 'success'){
-                      const data = response.data
-                      //redirect to somewhere
-                      window.location.href = `/admin/manage-uniforms/${data.id}`
-                        
-                    // process failed here
-                    }else{
-                        // store error data
-                        const errors = response.data
-                        // create a blank variable to store error
-                        const field_errors = {}
-                        // add hashtags to keys
-                        Object.keys(errors).forEach(key => {
-                            const value = errors[key];
-                            field_errors[`#${key}`] = value
-                        });
+      // build the payload
+      const payload = {
+        headers: {
+          "X-CSRFToken": "{{csrf_token}}"
+        },
+        method: 'PATCH',
+        body: formData
+      }
 
-                        // show field errors to user
-                        updateUniformFormValidator.showErrors(field_errors)
-                    }
-                })
-                .catch(error => {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Something went wrong!',
-                        confirmButtonColor: '#4154f1',
-                    })
-                });
+      fetch(url, payload)
+        .then(response => response.json())
+        .then(response => {
+          console.log(response)
+          // process success here
+          if (response.status === 'success') {
+            const data = response.data
+            //redirect to somewhere
+            window.location.href = `/admin/manage-uniforms/${data.id}`
+
+            // process failed here
+          } else {
+            // store error data
+            const errors = response.data
+            // create a blank variable to store error
+            const field_errors = {}
+            // add hashtags to keys
+            Object.keys(errors).forEach(key => {
+              const value = errors[key];
+              field_errors[`#${key}`] = value
+            });
+
+            // show field errors to user
+            updateUniformFormValidator.showErrors(field_errors)
+          }
+        })
+        .catch(error => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong!',
+            confirmButtonColor: '#4154f1',
+          })
         });
+    });
 
-document.addEventListener('DOMContentLoaded',  () => {
-    const variantsInput= document.getElementById('variants');
-    const pillContainer = document.getElementById('pillContainer');
-    
-    // event to add the pills below the text field
-    variantsInput.addEventListener('keyup',  (event) => {
-      if (event.key === ',' && variantsInput.value.trim() !== '') {
-        let inputValue = variantsInput.value.trim().toUpperCase();
-        inputValue = inputValue.replace(/,$/, ''); // Remove trailing comma
-        variantsArray.push(inputValue)
-        addPill(inputValue)
-        variantsInput.value = '';
+  let variantsArray = []
+  const initializeVariantsArray = async () => {
+    const url = '/api/v1/uniforms/{{uniform.id}}';
+    const payload = {
+      headers: {
+        "X-CSRFToken": "{{csrf_token}}",
+        "Content-Type": "application/json"
+      },
+      method: 'GET'
+    }
+    const response = await fetch(url, payload)
+    const data = await response.json()
+    variantsArray = data.data.variant_list
+  };
+
+  const deleteRow = (index) => {
+    variantsArray.splice(index, 1);
+    updateTable();
+  }
+
+  const addRow = (index) => {
+    variantsArray.push({ name: "", quantity: 0 })
+    updateTable();
+  }
+
+  const updateTable = async () => {
+    const tableBody = document.querySelector('#variant_table tbody');
+    tableBody.innerHTML = "";
+
+    console.log("DEBUG", variantsArray)
+
+    console.log(variantsArray.length)
+
+    variantsArray.forEach((obj, index) => {
+      if (variantsArray.length > 1 && obj.name === "DEFAULT") {
+        variantsArray.shift()
       }
     });
 
-    const addPill = (text) => {
-      const pill = document.createElement('span');
-      pill.className = 'pill badge rounded-pill text-bg-primary';
+    variantsArray.forEach((obj, index) => {
+      const row = document.createElement('tr');
+      const nameInput = document.createElement('input')
+      const quantityInput = document.createElement('input')
+      const deleteButton = document.createElement('button');
 
-      pill.innerHTML = text + '<span class="ms-2" onclick="removePill(this)" style="cursor: pointer;">x</span>';
-      pillContainer.appendChild(pill);
-    }
-
-    // Function to remove a pill when the 'x' is clicked
-    window.removePill = (element) => {
-        let currentPill = element.parentNode.textContent.trim();
-        currentPill = currentPill.replace(/x$/, ''); // Remove x
-        const currentIndex = variantsArray.indexOf(currentPill)
-
-        variantsArray.splice(currentIndex, 1)
-        element.parentNode.remove();
-    };
-
-    const populateVariantsArray = () =>{
-        const url = '/api/v1/uniforms/{{uniform.id}}'; 
-        const payload =  {
-            headers: {
-              "X-CSRFToken":  "{{csrf_token}}",
-              "Content-Type": "application/json"
-            },
-            method: 'GET'
+      nameInput.className = "form-control"
+      nameInput.style.textTransform = 'uppercase'
+      nameInput.value = obj.name
+      nameInput.disabled = obj.name === "DEFAULT"
+      nameInput.onkeypress = (event) => {
+        if (event.key == "Enter") {
+          event.preventDefault()
         }
-        fetch(url, payload)
-          .then(response => response.json())
-          .then(response => {
-              // process success here
-              if (response.status === 'success'){
-                const data = response.data
-                
-                // add the elemet to the array and then add it to pill
-                data.variants.forEach((element) => {
-                  variantsArray.push(element)
-                  addPill(element)
-                });
-  
-              }
-          })
-          .catch(error => {
-              Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: 'Something went wrong!',
-                  confirmButtonColor: '#4154f1',
-              })
-          });
-    };
-    populateVariantsArray()
-});
+      }
+      nameInput.onkeyup = (event) => {
+        if (nameInput.value) {
+          variantsArray[index] = { name: nameInput.value, quantity: quantityInput.value }
+        }
+      }
+
+      quantityInput.className = "form-control"
+      quantityInput.type = 'number'
+      quantityInput.value = obj.quantity
+      quantityInput.onkeypress = (event) => {
+        if (event.key == "Enter") {
+          event.preventDefault()
+        }
+      }
+      quantityInput.onkeyup = (event) => {
+        if (nameInput.value) {
+          variantsArray[index] = { name: nameInput.value, quantity: quantityInput.value }
+        }
+      }
+
+      deleteButton.className = "btn btn-sm btn-danger"
+      deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
+      deleteButton.onclick = () => deleteRow(index);
+      deleteButton.disabled = variantsArray.length <= 1
+
+      const nameCell = document.createElement('td');
+      nameCell.append(nameInput)
+
+      const quantityCell = document.createElement('td');
+      quantityCell.appendChild(quantityInput);
+
+      const actionCell = document.createElement('td');
+      actionCell.appendChild(deleteButton);
+
+      row.appendChild(nameCell);
+      row.appendChild(quantityCell);
+      row.appendChild(actionCell);
+      tableBody.appendChild(row);
+    });
+  }
+
+  (async function () {
+    await initializeVariantsArray();
+    updateTable()
+  })();
 
 </script>
 {%endblock content%}

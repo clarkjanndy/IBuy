@@ -9,8 +9,8 @@ from . models import (
     SystemInformation, 
     Category, 
     Uniform, 
-    UniformImage, 
-    Inventory,
+    Variant,
+    UniformImage,
     Cart,
     PaymentOption,
     Payment,
@@ -60,22 +60,19 @@ class UniformAdmin(admin.ModelAdmin):
     def category(self, object):
         return object.category.name
     
+class VariantAdmin(admin.ModelAdmin):
+    list_display = ('uniform', 'name', 'quantity', 'created_at', 'modified_at',)
+    search_fields = ('uniform__name', 'name')
+
+    def uniform(self, object):
+        return object.uniform.name
+    
 class UniformImageAdmin(admin.ModelAdmin):
     list_display = ('uniform', 'image', 'created_at', 'modified_at',)
     search_fields = ('uniform__name', )
 
     def uniform(self, object):
         return object.uniform.name
-
-class InventoryAdmin(admin.ModelAdmin):
-    list_display = ('uniform', 'price', 'quantity', 'created_at', 'modified_at',)
-    search_fields = ('uniform__name', )
-
-    def uniform(self, object):
-        return object.uniform.name
-    
-    def price(self, object):
-        return object.uniform.price
 
 class InventoryAdmin(admin.ModelAdmin):
     list_display = ('uniform', 'price', 'quantity', 'created_at', 'modified_at',)
@@ -135,8 +132,8 @@ admin.site.register(PaymentOption, PaymentOptionAdmin)
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Uniform, UniformAdmin)
+admin.site.register(Variant, VariantAdmin)
 admin.site.register(UniformImage, UniformImageAdmin)
-admin.site.register(Inventory, InventoryAdmin)
 
 admin.site.register(Cart, CartAdmin)
 admin.site.register(Order, OrderAdmin)

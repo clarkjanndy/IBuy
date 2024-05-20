@@ -19,7 +19,7 @@ class Expense(TimeStampedModel):
     kind = models.CharField(max_length=20, choices=KIND, default='cost')
     capital_type = models.CharField(max_length=50, choices=CAPITAL_TYPE, blank=True, null=True)
     billing_date = models.DateField()
-    amount = models.DecimalField(max_digits=6, decimal_places=2)
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
     remarks = models.TextField()
     created_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='expenses_created')
     modified_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='expenses_modified')

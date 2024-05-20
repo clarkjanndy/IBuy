@@ -59,7 +59,7 @@ class CategoryById(RetrieveUpdateAPIView):
 
 class UniformListCreate(ListCreateAPIView):
     permission_classes = (IsAdminOrReadOnly, )
-    queryset = Uniform.objects.select_related('category', 'inventory').all()
+    queryset = Uniform.objects.select_related('category').all()
     serializer_class = UniformSerializer
 
     def post(self, request, *args, **kwargs):

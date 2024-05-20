@@ -1,7 +1,9 @@
+from decimal import Decimal
+
 from django.db.models import F
 from rest_framework import serializers
 
-from backend.models import Category, Uniform, Inventory, UniformImage
+from backend.models import Category, Uniform, UniformImage, Variant
 from backend.utils.extras import has_duplicates
 
 from . extras import CustomModelSerializer
@@ -15,12 +17,18 @@ class CategorySerializer(CustomModelSerializer):
         fields = ('name',)
 
 
+class VariantSerializer(CustomModelSerializer):
+    class Meta:
+        model = Variant
+        fields = ("name", "quantity")
+
 class UniformSerializer(CustomModelSerializer):
-    quantity = serializers.IntegerField(source='inventory.quantity')
-    unit = serializers.CharField(source='inventory.unit')
+    # quantity = serializers.IntegerField(source='inventory.quantity')
+    # unit = serializers.CharField(source='inventory.unit')
     category_name = serializers.CharField(source='category.name', read_only=True)
     main_image = serializers.SerializerMethodField()
     image = serializers.ImageField(required = False)
+    variant_list = serializers.JSONField(write_only=True)
 
     class Meta:
         model = Uniform
@@ -28,48 +36,46 @@ class UniformSerializer(CustomModelSerializer):
         
     def get_main_image(self, instance):
         return instance.main_image
+    
+    def get__variants(self, instance):
+        return {}
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
-
-        if attrs.get('quantity', 0) < 0:
-            raise serializers.ValidationError({'quantity': 'Must be a postive number.'})
         
-        if not isinstance(attrs.get('variants'), list):
+        if not isinstance(attrs.get('variant_list'), list):
             raise serializers.ValidationError({'variants': 'Please supply a valid list.'})
-        
-        if has_duplicates(attrs.get('variants', [])):
-            raise serializers.ValidationError({'variants': 'Field must not contain duplicates.'})
         
         if attrs.get('department') and attrs.get('category').name == 'Universal':
             raise serializers.ValidationError({'department': 'Keep this field blank for Universal categories.'})
-        
-        print(attrs)
         
         return attrs
     
     def create(self, validated_data):
         request = self.context.get('request')
         user = request.user
-    
-        # pop data that are not needed in create
-        inventory = validated_data.pop('inventory')
+
         # pop image do not include in create
         image = validated_data.pop('image')
+        variant_list = validated_data.pop('variant_list')
        
         # append current user data
         validated_data.update({'created_by': user})
         validated_data.update({'modified_by': user})
+        print(validated_data)
         uniform = super().create(validated_data)
         
-        # create inventory instance
-        Inventory.objects.create(
-            uniform=uniform, 
-            quantity=inventory.get('quantity'), 
-            unit=inventory.get('unit')
-        )
-        
-        # create uniform image instance
+        # create or update each variant
+        variant_list = [variant for variant in variant_list if variant['name'] and variant['quantity']]
+        for variant in variant_list:
+            variant_obj, created = Variant.objects.get_or_create(uniform=uniform, name=variant['name'].upper(),
+                defaults = {"quantity": variant['quantity']}
+            )
+            if not created:
+                variant_obj.quantity = variant_obj.quantity + Decimal(variant['quantity'])
+                variant_obj.save()
+            
+        # create uniform image instance 
         UniformImage.objects.create(uniform=uniform, image=image)
         
         return uniform
@@ -79,21 +85,34 @@ class UniformSerializer(CustomModelSerializer):
         user = request.user
         
         # pop data that are not needed in update
-        inventory = validated_data.pop('inventory')
+        variant_list = validated_data.pop('variant_list')
        
         validated_data.update({'modified_by': user})
         uniform = super().update(instance, validated_data)
 
-        # update inventory instance
-        Inventory.objects.filter(
-            uniform = uniform
-        ).update(
-            quantity = F('quantity') + inventory.get('quantity'),
-            unit = inventory.get('unit')
-        )
+        # create or update each variant
+        variant_list = [variant for variant in variant_list if variant['name'] and variant['quantity']]
+        for variant in variant_list:
+            variant_obj, created = Variant.objects.get_or_create(uniform=uniform, name=variant['name'].upper(),
+                defaults = {"quantity": variant['quantity'] }
+            )
+            if not created:
+                variant_obj.quantity = Decimal(variant['quantity'])
+                variant_obj.save()
         
         return uniform
     
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)   
+        
+        # get all variants associated to the uniform
+        variants = Variant.objects.filter(uniform__id = representation['id'])
+        serializer = VariantSerializer(variants, many=True)
+        representation['variant_list'] = serializer.data
+                
+        return representation
+
+ 
 class UniformImageSerializer(CustomModelSerializer):
     
     class Meta:

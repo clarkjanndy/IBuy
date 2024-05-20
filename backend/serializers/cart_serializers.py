@@ -3,7 +3,7 @@ from django.db.models import Sum
 from rest_framework import serializers
 
 from . extras import CustomModelSerializer
-from backend.models import Cart, Inventory
+from backend.models import Cart, Variant
 
 __all__ = ['CartSerializer']
 
@@ -38,7 +38,7 @@ class CartSerializer(CustomModelSerializer):
         attrs = super().validate(attrs)
         uniform = attrs['uniform']
         
-        if uniform.variants and not attrs['variant'] in uniform.variants:
+        if uniform.variants.all and not attrs['variant'] in uniform.variants:
             raise serializers.ValidationError({"variant": "Invalid variant."})
 
         if uniform.inventory.quantity < attrs['quantity']:
