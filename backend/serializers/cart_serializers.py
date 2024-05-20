@@ -41,8 +41,12 @@ class CartSerializer(CustomModelSerializer):
         # if uniform.variants.all and not attrs['variant'] in uniform.variants:
         #     raise serializers.ValidationError({"variant": "Invalid variant."})
 
-        if uniform.quantity < attrs['quantity']:
-            raise serializers.ValidationError({"quantity": "Maximum quantity reached."})
+        variant = uniform.variants.filter(name = attrs['variant']).first()        
+        if not variant:
+            raise serializers.ValidationError({"varaint": "Invalid variant."})
+            
+        if variant.quantity < 1 or variant.quantity < attrs['quantity']:
+            raise serializers.ValidationError({'quantity': "Maximum quantity reached."})
         
         if attrs['quantity'] > 10:
             raise serializers.ValidationError({"quantity": "Adding to cart is only limited to 10 items only."})

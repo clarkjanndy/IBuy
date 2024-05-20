@@ -1,11 +1,12 @@
 from django.contrib import messages
+from django.db.models import F
 
 from rest_framework.generics import GenericAPIView, RetrieveAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from backend.models import Order, OrderItem, Cart, OrderHistory
+from backend.models import Order, OrderItem, Cart, OrderHistory, Variant
 from backend.serializers import PlaceOrderSerializer, OrderHistorySerializer, BuyNowSerializer, OrderSerializer
 from backend.exceptions import ClientError, SerializerValidationError
 from backend.services.order_service import OrderService
@@ -96,11 +97,9 @@ class BuyNow(GenericAPIView):
                 quantity = quantity,
             )
             
-            #update inventory
-            inventory = uniform.inventory
-            inventory.quantity -= quantity
-            inventory.save()
-            
+            # update varaint quantity 
+            Variant.objects.filter(uniform = uniform, name = validated_data['variant']).update(quantity = F('quantity') - validated_data['quantity'])
+        
             # call service to do necessary things
             service = OrderService(order)
             service.post_order_placement_process(user=request.user)

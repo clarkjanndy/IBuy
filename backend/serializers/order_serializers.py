@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from backend.models import Order, PaymentOption, Uniform, OrderHistory
+from backend.models import Order, PaymentOption, Uniform, OrderHistory, Variant
 
 from . extras import CustomModelSerializer, CustomSerializer
 
@@ -41,9 +41,9 @@ class PlaceOrderSerializer(CustomSerializer):
         return attrs
     
 class BuyNowSerializer(CustomSerializer):
-    uniform = serializers.PrimaryKeyRelatedField(queryset=Uniform.objects.select_related('inventory').filter(status = 'in-stock'))
+    uniform = serializers.PrimaryKeyRelatedField(queryset=Uniform.objects.filter(status = 'in-stock'))
     payment_option = serializers.PrimaryKeyRelatedField(queryset=PaymentOption.objects.all())
-    quantity = serializers.IntegerField()
+    quantity = serializers.DecimalField(max_digits=10, decimal_places=2)
     variant = serializers.CharField(allow_null=True, allow_blank=True)
     
     def validate(self, attrs):
@@ -55,12 +55,13 @@ class BuyNowSerializer(CustomSerializer):
         if quantity > 10:
             raise serializers.ValidationError({"quantity": "You are limited to buy 10 items only."})
         
-        if uniform.inventory.quantity < 1 or uniform.inventory.quantity < quantity:
-            raise ValidationError({'quantity': "Maximum quantity reached."})
-        
-        if uniform.variants and not variant in uniform.variants:
+        variant = uniform.variants.filter(name = variant).first()        
+        if not variant:
             raise serializers.ValidationError({"varaint": "Invalid variant."})
-        
+            
+        if variant.quantity < 1 or variant.quantity < quantity:
+            raise ValidationError({'quantity': "Maximum quantity reached."})
+           
         return attrs
         
                
