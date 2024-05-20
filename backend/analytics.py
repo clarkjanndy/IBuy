@@ -3,7 +3,7 @@ from decimal import Decimal
 
 from django.db.models import Sum, Count, Func, Value, F, CharField, ExpressionWrapper, Q
 from django.db.models.functions import  ExtractYear, ExtractMonth, Concat
-from backend.models import Payment, User, Expense, Order, OrderItem
+from backend.models import Payment, User, Expense, Order, OrderItem, Uniform
 
 
 def sales_sum(date_from=None, date_to=None, return_objects=False):
@@ -57,7 +57,7 @@ def uniform_sales_ranking(num_rows=6):
         ).values(
             'uniform',
             'uniform__name',
-            'uniform__inventory__unit',
+            'uniform__unit',
             'uniform__price',
             'uniform__images__image'
         ).filter(
@@ -150,6 +150,10 @@ def capitals():
         values('capital_type').\
         annotate(total_amount = Sum('amount'))
         
+    return qs
+
+def inventory(num_rows=10):
+    qs = Uniform.objects.all().order_by('-modified_at')[:num_rows]
     return qs
     
     

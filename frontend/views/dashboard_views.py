@@ -19,8 +19,9 @@ class DashboardView(AdminRequiredMixin, TemplateView):
         expenses_sum = analytics.expenses_sum()
         profit_sum = sales_sum - expenses_sum
         capitals = analytics.capitals()
-        order_recent = analytics.order_recent
-        uniform_sales_ranking = analytics.uniform_sales_ranking()
+        order_recent = analytics.order_recent()
+        # uniform_sales_ranking = analytics.uniform_sales_ranking()
+        inventory = analytics.inventory()
      
         
         context.update({'users': user_count})
@@ -29,6 +30,6 @@ class DashboardView(AdminRequiredMixin, TemplateView):
         context.update({'profit': profit_sum})
         context.update({'capitals': capitals})
         context.update({'order_recent': order_recent})
-        context.update({'uniform_sales_ranking': uniform_sales_ranking})
+        context.update({'inventory': inventory})
         
         return context

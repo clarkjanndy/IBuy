@@ -458,7 +458,7 @@
               </div> -->
 
               <div class="card-body pb-0">
-                <h5 class="card-title">Top Selling</h5>
+                <h5 class="card-title">Inventory</h5>
 
                 <table class="table table-borderless">
                   <thead>
@@ -467,34 +467,43 @@
                       <th scope="row">#</th>
                       <th scope="col">Image</th>
                       <th scope="col">Name</th>
+                      <th scope="col">Unit</th>
+                      <th scope="col">Quantity</th>
                       <th scope="col">Price</th>
-                      <th scope="col">Sold</th>
-                      <th scope="col">Revenue</th>
                     </tr>
 
                   </thead>
                   <tbody>
-                    {% for uniform in uniform_sales_ranking %}
+                    {% for uniform in inventory %}
                     <tr>
                       <th scope="row">{{forloop.counter}}</th>
                       <td>
-                        {% if uniform.uniform__images__image %}
+                        {% if uniform.main_image %}
                         <div class="d-flex justify-content-center align-items-center square-container-100 ">
-                          <img style="max-width: 100%; height: auto; object-fit: cover;"
-                            src="{{ MEDIA_URL }}{{uniform.uniform__images__image}}" alt="uniform image">
+                          <img style="max-width: 100%; height: auto; object-fit: cover;" src="{{uniform.main_image}}"
+                            alt="uniform image">
                         </div>
                         {% else %}
                         <span class="badge text-bg-secondary">Preview unavailable</span>
                         {% endif %}
                       </td>
-                      <td><a href="/admin/manage-uniforms/{{uniform.uniform}}">{{uniform.uniform__name}}</a></td>
-                      <td>&#8369; {{uniform.uniform__price|floatformat:"2"|intcomma}}</td>
-                      <td>{{uniform.total_sold}} {{uniform.uniform__inventory__unit}} (s) </td>
-                      <td>&#8369; {{uniform.total_revenue|floatformat:"2"|intcomma}}</td>
+                      <td><a href="/admin/manage-uniforms/{{uniform.uniform}}">{{uniform.name}}</a></td>
+                      <td>{{uniform.unit}}</td>
+                      <td>
+                        <table class="table">
+                          {% for v in uniform.variants.all %}
+                          <tr>
+                            <td>{{v.name}}</td>
+                            <td><b>{{v.quantity}}</b></td>
+                          </tr>
+                          {% endfor %}
+                        </table>
+                      </td>
+                      <td>&#8369; {{uniform.price|floatformat:"2"|intcomma}}</td>
                     </tr>
                     {% empty %}
                     <tr>
-                      <td colspan="5">
+                      <td colspan="6">
                         <div class="d-flex justify-content-center">No recent order fetched<div>
                       </td>
                     </tr>
