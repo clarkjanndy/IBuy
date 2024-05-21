@@ -4,6 +4,7 @@ from rest_framework.exceptions import ValidationError
 from backend.models import Order, PaymentOption, Uniform, OrderHistory, Variant
 
 from . extras import CustomModelSerializer, CustomSerializer
+from backend.utils.extras import is_fractional_part_zero
 
 __all__ = ['OrderSerializer', 'OrderHistorySerializer', 'PlaceOrderSerializer', 'BuyNowSerializer']
 
@@ -61,6 +62,9 @@ class BuyNowSerializer(CustomSerializer):
             
         if variant.quantity < 1 or variant.quantity < quantity:
             raise ValidationError({'quantity': "Maximum quantity reached."})
+        
+        if not is_fractional_part_zero(quantity) and not uniform.is_allowed_non_whole_quantity:
+            raise ValidationError({"quantity": "Invalid quantity. Please input a whole number."})
            
         return attrs
         

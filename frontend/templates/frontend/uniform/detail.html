@@ -228,7 +228,7 @@
   let selectedVariant = null
   let selectedPaymentOption = null
   let currentQuantity = parseFloat(quantityInput.value, 10);
-  let availableQuantity = parseFloat(quantityText.innerText, 10);
+  let availableQuantity = "{{uniform.quantity}}"
 
   const showError = (element, error_msg) => {
     element.classList.remove('d-none')
@@ -257,6 +257,9 @@
   quantityInput.onkeyup = (event) => {
       event.preventDefault()
       currentQuantity = parseFloat(quantityInput.value, 10);
+
+      console.log("CURRENT", currentQuantity)
+      console.log("AVAIL", availableQuantity)
 
       if (currentQuantity > availableQuantity) {
          showError(quantityErrorText, 'Maximum quantity reached.')
@@ -413,13 +416,13 @@
       variant: selectedVariant,
       price: uniformDetails.price,
       quantity: currentQuantity,
-      total_price: parseFloat(uniformDetails.price) * parseInt(currentQuantity)
+      total_price: parseFloat(uniformDetails.price) * parseFloat(currentQuantity)
     }
 
     // add to table and show texts
     addRow(rowData)
     modalItemSelectedText.innerText = 1
-    modalTotalPriceText.innerText = parseFloat(uniformDetails.price) * parseInt(currentQuantity)
+    modalTotalPriceText.innerText = parseFloat(uniformDetails.price) * parseFloat(currentQuantity)
   }
 
   const handlePlaceOrder = () => {

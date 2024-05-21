@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 from . extras import CustomModelSerializer
 from backend.models import Cart, Variant
+from backend.utils.extras import is_fractional_part_zero
 
 __all__ = ['CartSerializer']
 
@@ -37,23 +38,26 @@ class CartSerializer(CustomModelSerializer):
         request = self.context.get('request')
         attrs = super().validate(attrs)
         uniform = attrs['uniform']
+        quantity = attrs['quantity']
         
         # if uniform.variants.all and not attrs['variant'] in uniform.variants:
         #     raise serializers.ValidationError({"variant": "Invalid variant."})
-
         variant = uniform.variants.filter(name = attrs['variant']).first()        
         if not variant:
             raise serializers.ValidationError({"varaint": "Invalid variant."})
             
-        if variant.quantity < 1 or variant.quantity < attrs['quantity']:
+        if variant.quantity < 1 or variant.quantity < quantity:
             raise serializers.ValidationError({'quantity': "Maximum quantity reached."})
         
         if attrs['quantity'] > 10:
             raise serializers.ValidationError({"quantity": "Adding to cart is only limited to 10 items only."})
             
         on_cart_quantity = Cart.objects.filter(user=request.user, status='on-cart').aggregate(Sum('quantity'))['quantity__sum']
-        if on_cart_quantity and (on_cart_quantity + attrs['quantity']) > 10:
+        if on_cart_quantity and (on_cart_quantity + quantity) > 10:
             raise serializers.ValidationError({"quantity": "Adding to cart is only limited to 10 items only."})
+        
+        if not is_fractional_part_zero(quantity) and not uniform.is_allowed_non_whole_quantity:
+            raise serializers.ValidationError({"quantity": "Invalid quantity. Please input a whole number."})
     
         return attrs
         

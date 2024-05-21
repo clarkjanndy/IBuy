@@ -51,6 +51,11 @@ class Uniform(TimeStampedModel):
     def quantity(self):
         variants = self.variants.all().aggregate(quantity = Sum('quantity'))
         return variants['quantity'] or 0
+    
+    @property
+    def is_allowed_non_whole_quantity(self):
+        # allow non_whole only on meters
+        return self.unit == 'meter'        
                         
     @property
     def is_active(self):
