@@ -35,7 +35,7 @@ class ExpenseList(AdminRequiredMixin, ListView):
             queryset = queryset.filter(
                 Q(name__icontains = params['q']) |
                 Q(kind__icontains = params['q']) |
-                Q(billing_month__icontains = params['q']) |
+                Q(billing_date__icontains = params['q']) |
                 Q(amount__icontains = params['q']) 
             )
         return queryset
